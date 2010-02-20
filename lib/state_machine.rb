@@ -1,12 +1,11 @@
 require "state_machine/event"
-require "state_machine/exceptions"
 require "state_machine/machine"
 require "state_machine/state"
 require "state_machine/state_transition"
 
 module StateMachine
-  def self.included(base)
-    base.extend(ClassMethods)
+  class InvalidTransition < Exception
+
   end
 
   module ClassMethods
@@ -38,6 +37,10 @@ module StateMachine
       undef_method(name) if method_defined?(name)
       class_eval "def #{name}; current_state.to_s == %(#{state_name}) end"
     end
+  end
+
+  def self.included(base)
+    base.extend(ClassMethods)
   end
 
   def current_state(name = nil, new_state = nil, persist = false)

@@ -7,4 +7,5 @@ $LOAD_PATH.unshift(File.dirname(__FILE__))
 require "state_machine"
 
 class Test::Unit::TestCase
+
 end
