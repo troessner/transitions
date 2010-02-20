@@ -4,10 +4,6 @@ class CreateTrafficLights < ActiveRecord::Migration
   def self.up
     create_table(:traffic_lights) { |t| t.string :state }
   end
-
-  def self.down
-    drop_table(:traffic_lights)
-  end
 end
 
 class TrafficLight < ActiveRecord::Base
@@ -41,7 +37,6 @@ end
 class TestActiveRecord < Test::Unit::TestCase
   def setup
     ActiveRecord::Base.establish_connection(:adapter  => "sqlite3", :database => ":memory:")
-    ActiveRecord::Base.default_timezone = :utc
     ActiveRecord::Migration.verbose = false
     CreateTrafficLights.migrate(:up)
 
