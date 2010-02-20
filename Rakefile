@@ -7,8 +7,8 @@ begin
   require "jeweler"
   Jeweler::Tasks.new do |gem|
     gem.name = "state_machine"
-    gem.summary = %Q{TODO: one-line summary of your gem}
-    gem.description = %Q{TODO: longer description of your gem}
+    gem.summary = %Q{State machine extracted from ActiveModel}
+    # gem.description = %Q{TODO: longer description of your gem}
     gem.email = "qoobaa+github@gmail.com"
     gem.homepage = "http://github.com/qoobaa/state_machine"
     gem.authors = ["Jakub Kuźma"]
