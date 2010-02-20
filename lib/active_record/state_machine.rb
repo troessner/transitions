@@ -1,9 +1,9 @@
 module ActiveRecord
   module StateMachine
     extend ActiveSupport::Concern
-    include ::StateMachine
 
     included do
+      include ::StateMachine
       before_validation :set_initial_state
       validates_presence_of :state
     end

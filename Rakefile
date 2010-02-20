@@ -14,7 +14,7 @@ begin
     gem.authors = ["Jakub Kuźma"]
     gem.add_development_dependency "test-unit", ">= 2"
     gem.add_development_dependency "mocha"
-    gem.add_development_dependency "sqlite3"
+    gem.add_development_dependency "sqlite3-ruby"
     gem.add_development_dependency "activerecord"
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
