@@ -10,7 +10,6 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Jakub Kuźma"]
   s.date = %q{2010-02-20}
-  s.description = %q{TODO: longer description of your gem}
   s.email = %q{qoobaa+github@gmail.com}
   s.extra_rdoc_files = [
     "LICENSE",
@@ -29,6 +28,7 @@ Gem::Specification.new do |s|
      "lib/state_machine/machine.rb",
      "lib/state_machine/state.rb",
      "lib/state_machine/state_transition.rb",
+     "state_machine.gemspec",
      "test/helper.rb",
      "test/test_active_record.rb",
      "test/test_event.rb",
@@ -42,7 +42,7 @@ Gem::Specification.new do |s|
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.3.5}
-  s.summary = %q{TODO: one-line summary of your gem}
+  s.summary = %q{State machine extracted from ActiveModel}
   s.test_files = [
     "test/test_state_transition.rb",
      "test/test_state.rb",
