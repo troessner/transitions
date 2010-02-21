@@ -1,5 +1,5 @@
 require "rubygems"
-gem "test-unit"
+gem "test-unit" # enforce gem usage on 1.8.x
 require "test/unit"
 require "active_record"
 require "mocha"
