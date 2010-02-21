@@ -1,9 +1,19 @@
 = state_machine
 
-Description goes here.
+The gem is based on Rick Olson's code of ActiveModel::StateMachine,
+axed from ActiveModel in {this
+commit}[http://github.com/rails/rails/commit/db49c706b62e7ea2ab93f05399dbfddf5087ee0c].
+
+== Installation
+
+Currently there's no gem released on gemcutter (we need a different
+name). However it's fully usable in bundler, you can just paste the
+following line into the Gemfile:
+
+  gem "state_machine", :git => "git://github.com/qoobaa/state_machine.git"
 
 == Note on Patches/Pull Requests
- 
+
 * Fork the project.
 * Make your feature addition or bug fix.
 * Add tests for it. This is important so I don't break it in a
