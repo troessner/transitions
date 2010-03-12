@@ -43,7 +43,7 @@ module StateMachine
 
     def fire_event(event, record, persist, *args)
       state_index[record.current_state(@name)].call_action(:exit, record)
-      if new_state = @events[event].fire(record, *args)
+      if new_state = @events[event].fire(record, nil, *args)
         state_index[new_state].call_action(:enter, record)
 
         if record.respond_to?(event_fired_callback)
@@ -94,3 +94,4 @@ module StateMachine
     end
   end
 end
+
