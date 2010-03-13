@@ -4,13 +4,13 @@
 # -*- encoding: utf-8 -*-
 
 Gem::Specification.new do |s|
-  s.name = %q{state_machine}
+  s.name = %q{transitions}
   s.version = "0.0.4"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Jakub Kuźma"]
-  s.date = %q{2010-02-21}
-  s.email = %q{qoobaa+github@gmail.com}
+  s.date = %q{2010-03-14}
+  s.email = %q{qoobaa@gmail.com}
   s.extra_rdoc_files = [
     "LICENSE",
      "README.rdoc"
@@ -28,30 +28,31 @@ Gem::Specification.new do |s|
      "lib/state_machine/machine.rb",
      "lib/state_machine/state.rb",
      "lib/state_machine/state_transition.rb",
-     "state_machine.gemspec",
      "test/helper.rb",
      "test/test_active_record.rb",
      "test/test_event.rb",
+     "test/test_event_arguments.rb",
      "test/test_event_being_fired.rb",
      "test/test_machine.rb",
      "test/test_state.rb",
      "test/test_state_transition.rb",
      "test/test_state_transition_guard_check.rb"
   ]
-  s.homepage = %q{http://github.com/qoobaa/state_machine}
+  s.homepage = %q{http://github.com/qoobaa/transitions}
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
-  s.rubygems_version = %q{1.3.5}
+  s.rubygems_version = %q{1.3.6}
   s.summary = %q{State machine extracted from ActiveModel}
   s.test_files = [
-    "test/test_state_transition.rb",
-     "test/test_state.rb",
-     "test/test_active_record.rb",
-     "test/test_event.rb",
-     "test/test_machine.rb",
+    "test/helper.rb",
      "test/test_state_transition_guard_check.rb",
+     "test/test_active_record.rb",
+     "test/test_machine.rb",
+     "test/test_state_transition.rb",
+     "test/test_event_arguments.rb",
+     "test/test_state.rb",
      "test/test_event_being_fired.rb",
-     "test/helper.rb"
+     "test/test_event.rb"
   ]
 
   if s.respond_to? :specification_version then
