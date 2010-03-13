@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{transitions}
-  s.version = "0.0.4"
+  s.version = "0.0.5"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Jakub Kuźma"]
@@ -22,12 +22,12 @@ Gem::Specification.new do |s|
      "README.rdoc",
      "Rakefile",
      "VERSION",
-     "lib/active_record/state_machine.rb",
-     "lib/state_machine.rb",
-     "lib/state_machine/event.rb",
-     "lib/state_machine/machine.rb",
-     "lib/state_machine/state.rb",
-     "lib/state_machine/state_transition.rb",
+     "lib/active_record/transitions.rb",
+     "lib/transitions.rb",
+     "lib/transitions/event.rb",
+     "lib/transitions/machine.rb",
+     "lib/transitions/state.rb",
+     "lib/transitions/state_transition.rb",
      "test/helper.rb",
      "test/test_active_record.rb",
      "test/test_event.rb",
