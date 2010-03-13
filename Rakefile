@@ -6,11 +6,11 @@ require "rake"
 begin
   require "jeweler"
   Jeweler::Tasks.new do |gem|
-    gem.name = "state_machine"
+    gem.name = "transitions"
     gem.summary = %Q{State machine extracted from ActiveModel}
     # gem.description = %Q{TODO: longer description of your gem}
-    gem.email = "qoobaa+github@gmail.com"
-    gem.homepage = "http://github.com/qoobaa/state_machine"
+    gem.email = "qoobaa@gmail.com"
+    gem.homepage = "http://github.com/qoobaa/transitions"
     gem.authors = ["Jakub Kuźma"]
     gem.add_development_dependency "test-unit", ">= 2"
     gem.add_development_dependency "mocha"
