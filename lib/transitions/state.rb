@@ -20,41 +20,48 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-module StateMachine
-  class StateTransition
-    attr_reader :from, :to, :options
+module Transitions
+  class State
+    attr_reader :name, :options
 
-    def initialize(opts)
-      @from, @to, @guard, @on_transition = opts[:from], opts[:to], opts[:guard], opts[:on_transition]
-      @options = opts
+    def initialize(name, options = {})
+      @name = name
+      if machine = options.delete(:machine)
+        machine.klass.define_state_query_method(name)
+      end
+      update(options)
     end
 
-    def perform(obj)
-      case @guard
-      when Symbol, String
-        obj.send(@guard)
-      when Proc
-        @guard.call(obj)
+    def ==(state)
+      if state.is_a? Symbol
+        name == state
       else
-        true
+        name == state.name
       end
     end
 
-    def execute(obj, *args)
-      case @on_transition
+    def call_action(action, record)
+      action = @options[action]
+      case action
       when Symbol, String
-        obj.send(@on_transition, *args)
+        record.send(action)
       when Proc
-        @on_transition.call(obj, *args)
+        action.call(record)
       end
     end
 
-    def ==(obj)
-      @from == obj.from && @to == obj.to
+    def display_name
+      @display_name ||= name.to_s.gsub(/_/, ' ').capitalize
     end
 
-    def from?(value)
-      @from == value
+    def for_select
+      [display_name, name.to_s]
+    end
+
+    def update(options = {})
+      @display_name = options.delete(:display) if options.key?(:display)
+      @options = options
+      self
     end
   end
 end

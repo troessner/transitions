@@ -20,7 +20,7 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-module StateMachine
+module Transitions
   class Machine
     attr_writer :initial_state
     attr_accessor :states, :events, :state_index

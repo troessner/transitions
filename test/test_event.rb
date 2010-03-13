@@ -7,7 +7,7 @@ class TestEvent < Test::Unit::TestCase
   end
 
   def new_event
-    @event = StateMachine::Event.new(nil, @state_name, {:success => @success}) do
+    @event = Transitions::Event.new(nil, @state_name, {:success => @success}) do
       transitions :to => :closed, :from => [:open, :received]
     end
   end
@@ -21,8 +21,8 @@ class TestEvent < Test::Unit::TestCase
   end
 
   test "should create StateTransitions" do
-    StateMachine::StateTransition.expects(:new).with(:to => :closed, :from => :open)
-    StateMachine::StateTransition.expects(:new).with(:to => :closed, :from => :received)
+    Transitions::StateTransition.expects(:new).with(:to => :closed, :from => :open)
+    Transitions::StateTransition.expects(:new).with(:to => :closed, :from => :received)
     new_event
   end
 end

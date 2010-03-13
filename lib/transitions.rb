@@ -20,12 +20,12 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-require "state_machine/event"
-require "state_machine/machine"
-require "state_machine/state"
-require "state_machine/state_transition"
+require "transitions/event"
+require "transitions/machine"
+require "transitions/state"
+require "transitions/state_transition"
 
-module StateMachine
+module Transitions
   class InvalidTransition < Exception
 
   end

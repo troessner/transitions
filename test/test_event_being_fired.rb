@@ -1,16 +1,16 @@
 require "helper"
 
 class TestEventBeingFired < Test::Unit::TestCase
-  test "should raise an StateMachine::InvalidTransition error if the transitions are empty" do
-    event = StateMachine::Event.new(nil, :event)
+  test "should raise an Transitions::InvalidTransition error if the transitions are empty" do
+    event = Transitions::Event.new(nil, :event)
 
-    assert_raise StateMachine::InvalidTransition do
+    assert_raise Transitions::InvalidTransition do
       event.fire(nil)
     end
   end
 
   test "should return the state of the first matching transition it finds" do
-    event = StateMachine::Event.new(nil, :event) do
+    event = Transitions::Event.new(nil, :event) do
       transitions :to => :closed, :from => [:open, :received]
     end
 

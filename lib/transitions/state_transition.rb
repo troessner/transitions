@@ -20,28 +20,41 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-module ActiveRecord
-  module StateMachine
-    extend ActiveSupport::Concern
+module Transitions
+  class StateTransition
+    attr_reader :from, :to, :options
 
-    included do
-      include ::StateMachine
-      before_validation :set_initial_state
-      validates_presence_of :state
+    def initialize(opts)
+      @from, @to, @guard, @on_transition = opts[:from], opts[:to], opts[:guard], opts[:on_transition]
+      @options = opts
     end
 
-    protected
-
-    def write_state(state_machine, state)
-      update_attributes! :state => state.to_s
+    def perform(obj)
+      case @guard
+      when Symbol, String
+        obj.send(@guard)
+      when Proc
+        @guard.call(obj)
+      else
+        true
+      end
     end
 
-    def read_state(state_machine)
-      self.state.to_sym
+    def execute(obj, *args)
+      case @on_transition
+      when Symbol, String
+        obj.send(@on_transition, *args)
+      when Proc
+        @on_transition.call(obj, *args)
+      end
     end
 
-    def set_initial_state
-      self.state ||= self.class.state_machine.initial_state.to_s
+    def ==(obj)
+      @from == obj.from && @to == obj.to
+    end
+
+    def from?(value)
+      @from == value
     end
   end
 end

@@ -1,7 +1,7 @@
 require "helper"
 
 class ArgumentsTestSubject
-  include StateMachine
+  include Transitions
   attr_accessor :date
 
   state_machine do

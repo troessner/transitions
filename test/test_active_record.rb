@@ -7,7 +7,7 @@ class CreateTrafficLights < ActiveRecord::Migration
 end
 
 class TrafficLight < ActiveRecord::Base
-  include ActiveRecord::StateMachine
+  include ActiveRecord::Transitions
 
   state_machine do
     state :off
@@ -73,7 +73,7 @@ class TestActiveRecord < Test::Unit::TestCase
   end
 
   test "transition to an invalid state" do
-    assert_raise(StateMachine::InvalidTransition) { @light.yellow_on }
+    assert_raise(Transitions::InvalidTransition) { @light.yellow_on }
     assert_equal :off, @light.current_state
   end
 end

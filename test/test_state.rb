@@ -1,7 +1,7 @@
 require "helper"
 
 class StateTestSubject
-  include StateMachine
+  include Transitions
 
   state_machine do
   end
@@ -15,7 +15,7 @@ class TestState < Test::Unit::TestCase
   end
 
   def new_state(options={})
-    StateMachine::State.new(@state_name, @options.merge(options))
+    Transitions::State.new(@state_name, @options.merge(options))
   end
 
   test "sets the name" do

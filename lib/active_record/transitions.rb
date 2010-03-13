@@ -20,48 +20,28 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-module StateMachine
-  class State
-    attr_reader :name, :options
+module ActiveRecord
+  module Transitions
+    extend ActiveSupport::Concern
 
-    def initialize(name, options = {})
-      @name = name
-      if machine = options.delete(:machine)
-        machine.klass.define_state_query_method(name)
-      end
-      update(options)
+    included do
+      include ::Transitions
+      before_validation :set_initial_state
+      validates_presence_of :state
     end
 
-    def ==(state)
-      if state.is_a? Symbol
-        name == state
-      else
-        name == state.name
-      end
+    protected
+
+    def write_state(state_machine, state)
+      update_attributes! :state => state.to_s
     end
 
-    def call_action(action, record)
-      action = @options[action]
-      case action
-      when Symbol, String
-        record.send(action)
-      when Proc
-        action.call(record)
-      end
+    def read_state(state_machine)
+      self.state.to_sym
     end
 
-    def display_name
-      @display_name ||= name.to_s.gsub(/_/, ' ').capitalize
-    end
-
-    def for_select
-      [display_name, name.to_s]
-    end
-
-    def update(options = {})
-      @display_name = options.delete(:display) if options.key?(:display)
-      @options = options
-      self
+    def set_initial_state
+      self.state ||= self.class.state_machine.initial_state.to_s
     end
   end
 end

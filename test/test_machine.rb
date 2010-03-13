@@ -1,7 +1,7 @@
 require "helper"
 
 class MachineTestSubject
-  include StateMachine
+  include Transitions
 
   state_machine do
     state :open
@@ -22,7 +22,7 @@ class MachineTestSubject
   end
 end
 
-class StateMachineMachineTest < Test::Unit::TestCase
+class TransitionsMachineTest < Test::Unit::TestCase
   test "allows reuse of existing machines" do
     assert_equal 2, MachineTestSubject.state_machines.size
   end
@@ -32,7 +32,7 @@ class StateMachineMachineTest < Test::Unit::TestCase
   end
 
   test "accesses non-default state machine" do
-    assert_kind_of StateMachine::Machine, MachineTestSubject.state_machine(:extra)
+    assert_kind_of Transitions::Machine, MachineTestSubject.state_machine(:extra)
   end
 
   test "finds events for given state" do

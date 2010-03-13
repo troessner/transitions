@@ -6,8 +6,8 @@ require "mocha"
 
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), "..", "lib"))
 $LOAD_PATH.unshift(File.dirname(__FILE__))
-require "state_machine"
-require "active_record/state_machine"
+require "transitions"
+require "active_record/transitions"
 
 class Test::Unit::TestCase
 
