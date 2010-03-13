@@ -36,7 +36,8 @@ Gem::Specification.new do |s|
      "test/test_machine.rb",
      "test/test_state.rb",
      "test/test_state_transition.rb",
-     "test/test_state_transition_guard_check.rb"
+     "test/test_state_transition_guard_check.rb",
+     "transitions.gemspec"
   ]
   s.homepage = %q{http://github.com/qoobaa/transitions}
   s.rdoc_options = ["--charset=UTF-8"]
