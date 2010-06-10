@@ -6,9 +6,30 @@ commit}[http://github.com/rails/rails/commit/db49c706b62e7ea2ab93f05399dbfddf508
 
 == Installation
 
-Just paste the following line into the Gemfile:
+If you're using Rails + ActiveRecord + Bundler
 
-  gem "transitions"
+  # in your Gemfile
+  gem "transitions", :require => ["transitions", "active_record/transitions"]
+  
+  # in your AR models that will use the state machine
+  include ::Transitions
+  include ActiveRecord::Transitions
+  
+  state_machine do
+    state :available # first one is initial state
+    state :out_of_stock
+    state :discontinue
+    
+    event :discontinue do
+      transitions :to => :discontinue, :from => [:available, :out_of_stock], :on_transition => :do_discontinue
+    end
+    event :out_of_stock do
+      transitions :to => :out_of_stock, :from => [:available, :discontinue]
+    end
+    event :available do
+      transitions :to => :available, :from => [:out_of_stock], :on_transition => :send_alerts
+    end
+  end
 
 == Copyright
 
