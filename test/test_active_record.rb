@@ -1,4 +1,5 @@
 require "helper"
+require 'active_support/core_ext/module/aliasing'
 
 class CreateTrafficLights < ActiveRecord::Migration
   def self.up
