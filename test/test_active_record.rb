@@ -35,6 +35,10 @@ class TrafficLight < ActiveRecord::Base
   end
 end
 
+class ProtectedTrafficLight < TrafficLight
+  attr_protected :state
+end
+
 class TestActiveRecord < Test::Unit::TestCase
   def setup
     ActiveRecord::Base.establish_connection(:adapter  => "sqlite3", :database => ":memory:")
@@ -76,5 +80,13 @@ class TestActiveRecord < Test::Unit::TestCase
   test "transition to an invalid state" do
     assert_raise(Transitions::InvalidTransition) { @light.yellow_on }
     assert_equal :off, @light.current_state
+  end
+
+  test "transition does persists state when state is protected" do
+    protected_light = ProtectedTrafficLight.create!
+    protected_light.reset!
+    assert_equal :red, protected_light.current_state
+    protected_light.reload
+    assert_equal "red", protected_light.state
   end
 end
