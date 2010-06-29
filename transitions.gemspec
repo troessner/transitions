@@ -1,6 +1,9 @@
 # -*- encoding: utf-8 -*-
 
-require 'transitions'
+lib = File.expand_path("../lib/", __FILE__)
+$:.unshift lib unless $:.include?(lib)
+
+require "transitions/version"
 
 Gem::Specification.new do |s|
   s.name = "transitions"
