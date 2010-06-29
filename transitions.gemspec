@@ -1,5 +1,7 @@
 # -*- encoding: utf-8 -*-
 
+require 'transitions'
+
 Gem::Specification.new do |s|
   s.name = "transitions"
   s.version = Transitions::VERSION
