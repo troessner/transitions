@@ -33,7 +33,7 @@ module ActiveRecord
     protected
 
     def write_state(state_machine, state)
-      update_attributes! :state => state.to_s
+      update_attribute(:state, state.to_s)
     end
 
     def read_state(state_machine)
