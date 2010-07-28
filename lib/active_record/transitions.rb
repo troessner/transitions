@@ -28,6 +28,7 @@ module ActiveRecord
       include ::Transitions
       before_validation :set_initial_state
       validates_presence_of :state
+      validate :state_inclusion
     end
 
     protected
@@ -43,5 +44,12 @@ module ActiveRecord
     def set_initial_state
       self.state ||= self.class.state_machine.initial_state.to_s
     end
+
+    def state_inclusion
+      unless self.class.state_machine.states.map{|s| s.name.to_s }.include?(self.state.to_s)
+        self.errors.add(:state, :inclusion, :value => self.state)
+      end
+    end
   end
 end
+
