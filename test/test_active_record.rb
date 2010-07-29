@@ -89,4 +89,14 @@ class TestActiveRecord < Test::Unit::TestCase
     protected_light.reload
     assert_equal "red", protected_light.state
   end
+
+  test "transition with wrong state will not validate" do
+    for s in @light.class.state_machine.states
+      @light.state = s.name
+      assert @light.valid?
+    end
+    @light.state = "invalid_one"
+    assert_false @light.valid?
+  end
 end
+
