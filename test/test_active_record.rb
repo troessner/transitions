@@ -39,6 +39,10 @@ class ProtectedTrafficLight < TrafficLight
   attr_protected :state
 end
 
+class ValidatingTrafficLight < TrafficLight
+  validate {|t| errors.add(:base, 'This TrafficLight will never validate after creation') unless t.new_record? }
+end
+
 class TestActiveRecord < Test::Unit::TestCase
   def setup
     ActiveRecord::Base.establish_connection(:adapter  => "sqlite3", :database => ":memory:")
@@ -98,5 +102,11 @@ class TestActiveRecord < Test::Unit::TestCase
     @light.state = "invalid_one"
     assert_false @light.valid?
   end
-end
 
+  test "transition raises exception when model validation fails" do
+    validating_light = ValidatingTrafficLight.create!
+    assert_raise(ActiveRecord::RecordInvalid) do
+      validating_light.reset!
+    end
+  end
+end

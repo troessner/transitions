@@ -34,7 +34,8 @@ module ActiveRecord
     protected
 
     def write_state(state_machine, state)
-      update_attribute(:state, state.to_s)
+      self.state = state.to_s
+      save!
     end
 
     def read_state(state_machine)
