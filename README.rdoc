@@ -33,7 +33,7 @@ If you're using Rails + ActiveRecord + Bundler
 
 == Usage
 
-Krzysiek Heród (aka Netizer) wrote a nice {blog
+Krzysiek Heród (aka {Netizer}[http://github.com/netizer]) wrote a nice {blog
 post}[http://dev.netizer.pl/transitions-state-machine-for-rails-3.html]
 about using Transitions in ActiveRecord.
 
