@@ -1,6 +1,6 @@
-require "rubygems"
-gem "test-unit" # enforce gem usage on 1.8.x
+Bundler.require
 require "test/unit"
+require "active_support/all"
 require "active_record"
 require "mocha"
 

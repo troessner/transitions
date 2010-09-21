@@ -18,7 +18,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency "test-unit", "~> 2"
   s.add_development_dependency "mocha"
   s.add_development_dependency "sqlite3-ruby"
-  s.add_development_dependency "activerecord"
+  s.add_development_dependency "activerecord", "~> 3"
 
   s.files        = `git ls-files`.split("\n")
   s.executables  = `git ls-files`.split("\n").map{|f| f =~ /^bin\/(.*)/ ? $1 : nil}.compact

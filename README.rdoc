@@ -10,16 +10,16 @@ If you're using Rails + ActiveRecord + Bundler
 
   # in your Gemfile
   gem "transitions", :require => ["transitions", "active_record/transitions"]
-  
+
   # in your AR models that will use the state machine
   include ::Transitions
   include ActiveRecord::Transitions
-  
+
   state_machine do
     state :available # first one is initial state
     state :out_of_stock
     state :discontinue
-    
+
     event :discontinue do
       transitions :to => :discontinue, :from => [:available, :out_of_stock], :on_transition => :do_discontinue
     end
@@ -30,6 +30,12 @@ If you're using Rails + ActiveRecord + Bundler
       transitions :to => :available, :from => [:out_of_stock], :on_transition => :send_alerts
     end
   end
+
+== Usage
+
+Krzysiek Heród (aka Netizer) wrote a nice {blog
+post}[http://dev.netizer.pl/transitions-state-machine-for-rails-3.html]
+about using Transitions in ActiveRecord.
 
 == Copyright
 
