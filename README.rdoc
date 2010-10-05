@@ -8,65 +8,65 @@ transitions is currently being maintained by {Jakub Kuźma}[http://github.com/qo
 
 == Quick Example
 
-  require 'transitions'
-
-  class Product
-    include Transitions
-  
-    state_machine do
-      state :available # first one is initial state
-      state :out_of_stock, :exit => :exit_out_of_stock
-      state :discontinued, :enter => lambda { |product| product.cancel_orders }
-    
-      event :discontinued do
-        transitions :to => :discontinued, :from => [:available, :out_of_stock], :on_transition => :do_discontinue
-      end
-      event :out_of_stock do
-        transitions :to => :out_of_stock, :from => [:available, :discontinued]
-      end
-      event :available do
-        transitions :to => :available, :from => [:out_of_stock], :guard => lambda { |product| product.in_stock > 0 }
-      end
-    end
-  end
+ require 'transitions'
+ 
+ class Product
+   include Transitions
+ 
+   state_machine do
+     state :available # first one is initial state
+     state :out_of_stock, :exit => :exit_out_of_stock
+     state :discontinued, :enter => lambda { |product| product.cancel_orders }
+   
+     event :discontinued do
+       transitions :to => :discontinued, :from => [:available, :out_of_stock], :on_transition => :do_discontinue
+     end
+     event :out_of_stock do
+       transitions :to => :out_of_stock, :from => [:available, :discontinued]
+     end
+     event :available do
+       transitions :to => :available, :from => [:out_of_stock], :guard => lambda { |product| product.in_stock > 0 }
+     end
+   end
+ end
 
 == Using with Rails
 
 This goes into your Gemfile:
 
-  gem "transitions", :require => ["transitions", "active_record/transitions"]
+ gem "transitions", :require => ["transitions", "active_record/transitions"]
 
 … and this into your AR model:
 
-  include ActiveRecord::Transitions
+ include ActiveRecord::Transitions
 
 === A note about persistence
-The property used to persist the models’ state is named +state+ (really!),
+The property used to persist the models’ state is named <tt>state</tt> (really!),
 which should be a string column wide enough to fit your longest state name.
-It should also be mentioned that +#save!+ is called after every successful event.
+It should also be mentioned that <tt>#save!</tt> is called after every successful event.
 
 == Event execution flow
 
-On an event, with our quick example product going from +:available+ to
-+:discontinued+ it looks like this:
+On an event, with our quick example product going from <tt>:available</tt> to
+<tt>:discontinued</tt> it looks like this:
 
-1. +baby_ninja.discontinue!(:reason => :pirates)+
-2. call +:exit+ handler of +:available+ state
-3. call +:guard+ of +:available to :discontinue+ transition within +#discontinue+ event
-4. call +#event_failed(:event)+ and abort unless +3.+ returned +true+
-5. call +:on_transition(:reason => :pirates)+ of +:available to :discontinue+ transition within +#discontinue+ event
-6. call +:enter+ handler of +:discontinue+
-7. call +#event_fired(:available, :discontinue)+
-8. call +#write_state(machine, :discontinue)+
-9. call +#write_state_without_persistence(machine, :discontinue)+
-10. call +baby_ninja#:success+ handler method of +#discontinue+ event
+1. <tt>baby_ninja.discontinue!(:reason => :pirates)</tt>
+2. call <tt>:exit</tt> handler of <tt>:available</tt> state
+3. call <tt>:guard</tt> of <tt>:available to :discontinue</tt> transition within <tt>#discontinue</tt> event
+4. call <tt>#event_failed(:event)</tt> and abort unless <tt>3.</tt> returned <tt>true</tt>
+5. call <tt>:on_transition(:reason => :pirates)</tt> of <tt>:available to :discontinue</tt> transition within <tt>#discontinue</tt> event
+6. call <tt>:enter</tt> handler of <tt>:discontinue</tt>
+7. call <tt>#event_fired(:available, :discontinue)</tt>
+8. call <tt>#write_state(machine, :discontinue)</tt>
+9. call <tt>#write_state_without_persistence(machine, :discontinue)</tt>
+10. call <tt>baby_ninja#:success</tt> handler method of <tt>#discontinue</tt> event
 
 === A note about events
 
-When you declare an event +discontinue+, two methods are declared for
-you: +discontinue+ and +discontinue!+. Both events will call
-+write_state_without_persistence+ on successful transition, but only the
-bang(!)-version will call +write_state+.
+When you declare an event <tt>discontinue</tt>, two methods are declared for
+you: <tt>discontinue</tt> and <tt>discontinue!</tt>. Both events will call
+<tt>write_state_without_persistence</tt> on successful transition, but only the
+bang(!)-version will call <tt>write_state</tt>.
 
 == Documentation, Guides & Examples
 
