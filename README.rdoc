@@ -1,8 +1,10 @@
-= transitions
+= What is transitions?
 
-The gem is based on Rick Olson's code of ActiveModel::StateMachine,
-axed from ActiveModel in {this
-commit}[http://github.com/rails/rails/commit/db49c706b62e7ea2ab93f05399dbfddf5087ee0c].
+transitions is a ruby state machine implementation based on Rick Olson’s
+ActiveModel::StateMachine. It was extracted from ActiveModel and turned
+into a gem when it got the axe in commit {db49c706b}[http://github.com/rails/rails/commit/db49c706b62e7ea2ab93f05399dbfddf5087ee0c].
+
+transitions is currently being maintained by {Jakub Kuźma}[http://github.com/qoobaa].
 
 == Installation
 
