@@ -40,6 +40,11 @@ This goes into your Gemfile:
 
   include ActiveRecord::Transitions
 
+=== A note about persistence
+The property used to persist the models’ state is named +state+ (really!),
+which should be a string column wide enough to fit your longest state name.
+It should also be mentioned that +#save!+ is called after every successful event.
+
 == Documentation, Guides & Examples
 
 - {Online API Documentation}[http://rdoc.info/github/qoobaa/transitions/master/Transitions]
