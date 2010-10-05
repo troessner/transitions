@@ -6,32 +6,39 @@ into a gem when it got the axe in commit {db49c706b}[http://github.com/rails/rai
 
 transitions is currently being maintained by {Jakub Kuźma}[http://github.com/qoobaa].
 
-== Installation
+== Quick Example
 
-If you're using Rails + ActiveRecord + Bundler
+  require 'transitions'
 
-  # in your Gemfile
-  gem "transitions", :require => ["transitions", "active_record/transitions"]
-
-  # in your AR models that will use the state machine
-  include ::Transitions
-  include ActiveRecord::Transitions
-
-  state_machine do
-    state :available # first one is initial state
-    state :out_of_stock
-    state :discontinue
-
-    event :discontinue do
-      transitions :to => :discontinue, :from => [:available, :out_of_stock], :on_transition => :do_discontinue
-    end
-    event :out_of_stock do
-      transitions :to => :out_of_stock, :from => [:available, :discontinue]
-    end
-    event :available do
-      transitions :to => :available, :from => [:out_of_stock], :on_transition => :send_alerts
+  class Product
+    include Transitions
+  
+    state_machine do
+      state :available # first one is initial state
+      state :out_of_stock, :exit => :exit_out_of_stock
+      state :discontinued, :enter => lambda { |product| product.cancel_orders }
+    
+      event :discontinued do
+        transitions :to => :discontinued, :from => [:available, :out_of_stock], :on_transition => :do_discontinue
+      end
+      event :out_of_stock do
+        transitions :to => :out_of_stock, :from => [:available, :discontinued]
+      end
+      event :available do
+        transitions :to => :available, :from => [:out_of_stock], :guard => lambda { |product| product.in_stock > 0 }
+      end
     end
   end
+
+== Using with Rails
+
+This goes into your Gemfile:
+
+  gem "transitions", :require => ["transitions", "active_record/transitions"]
+
+… and this into your AR model:
+
+  include ActiveRecord::Transitions
 
 == Documentation, Guides & Examples
 
