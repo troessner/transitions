@@ -45,6 +45,29 @@ The property used to persist the models’ state is named +state+ (really!),
 which should be a string column wide enough to fit your longest state name.
 It should also be mentioned that +#save!+ is called after every successful event.
 
+== Event execution flow
+
+On an event, with our quick example product going from +:available+ to
++:discontinued+ it looks like this:
+
+1. +baby_ninja.discontinue!(:reason => :pirates)+
+2. call +:exit+ handler of +:available+ state
+3. call +:guard+ of +:available to :discontinue+ transition within +#discontinue+ event
+4. call +#event_failed(:event)+ and abort unless +3.+ returned +true+
+5. call +:on_transition(:reason => :pirates)+ of +:available to :discontinue+ transition within +#discontinue+ event
+6. call +:enter+ handler of +:discontinue+
+7. call +#event_fired(:available, :discontinue)+
+8. call +#write_state(machine, :discontinue)+
+9. call +#write_state_without_persistence(machine, :discontinue)+
+10. call +baby_ninja#:success+ handler method of +#discontinue+ event
+
+=== A note about events
+
+When you declare an event +discontinue+, two methods are declared for
+you: +discontinue+ and +discontinue!+. Both events will call
++write_state_without_persistence+ on successful transition, but only the
+bang(!)-version will call +write_state+.
+
 == Documentation, Guides & Examples
 
 - {Online API Documentation}[http://rdoc.info/github/qoobaa/transitions/master/Transitions]
