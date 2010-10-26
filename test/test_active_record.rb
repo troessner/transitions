@@ -109,4 +109,11 @@ class TestActiveRecord < Test::Unit::TestCase
       validating_light.reset!
     end
   end
+
+  test "reloading model resets current state" do
+    @light.reset
+    assert @light.red?
+    @light.update_attribute(:state, 'green')
+    assert @light.reload.green?, "reloaded state should come from database, not instance variable"
+  end
 end
