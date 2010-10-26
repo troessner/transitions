@@ -31,6 +31,14 @@ module ActiveRecord
       validate :state_inclusion
     end
 
+    def reload
+      super.tap do
+        self.class.state_machines.values.each do |sm|
+          remove_instance_variable(sm.current_state_variable) if instance_variable_defined?(sm.current_state_variable)
+        end
+      end
+    end
+
     protected
 
     def write_state(state_machine, state)
