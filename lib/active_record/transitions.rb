@@ -42,8 +42,15 @@ module ActiveRecord
     protected
 
     def write_state(state_machine, state)
+      ivar = state_machine.current_state_variable
+      prev_state = current_state(state_machine.name)
+      instance_variable_set(ivar, state)
       self.state = state.to_s
       save!
+    rescue ActiveRecord::RecordInvalid
+      self.state = prev_state.to_s
+      instance_variable_set(ivar, prev_state)
+      raise
     end
 
     def read_state(state_machine)

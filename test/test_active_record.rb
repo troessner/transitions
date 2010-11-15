@@ -3,7 +3,10 @@ require 'active_support/core_ext/module/aliasing'
 
 class CreateTrafficLights < ActiveRecord::Migration
   def self.up
-    create_table(:traffic_lights) { |t| t.string :state }
+    create_table(:traffic_lights) do |t| 
+      t.string :state
+      t.string :name
+    end
   end
 end
 
@@ -41,6 +44,10 @@ end
 
 class ValidatingTrafficLight < TrafficLight
   validate {|t| errors.add(:base, 'This TrafficLight will never validate after creation') unless t.new_record? }
+end
+
+class ConditionalValidatingTrafficLight < TrafficLight
+  validates(:name, :presence => true, :if => :red?)
 end
 
 class TestActiveRecord < Test::Unit::TestCase
@@ -104,10 +111,18 @@ class TestActiveRecord < Test::Unit::TestCase
   end
 
   test "transition raises exception when model validation fails" do
-    validating_light = ValidatingTrafficLight.create!
+    validating_light = ValidatingTrafficLight.create!(:name => 'Foobar')
     assert_raise(ActiveRecord::RecordInvalid) do
       validating_light.reset!
     end
+  end
+
+  test "state query method used in a validation condition" do
+    validating_light = ConditionalValidatingTrafficLight.create!
+    assert_raise(ActiveRecord::RecordInvalid) do
+      validating_light.reset!
+    end
+    assert(validating_light.off?)
   end
 
   test "reloading model resets current state" do
