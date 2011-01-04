@@ -40,6 +40,12 @@ This goes into your Gemfile:
 
  include ActiveRecord::Transitions
 
+Transitions will add scopes to your models for each state. If the class above were an AR model, it would have these scopes available:
+  
+  Product.available
+  Product.out_of_stock
+  Product.discontinued
+
 === A note about persistence
 The property used to persist the models’ state is named <tt>state</tt> (really!),
 which should be a string column wide enough to fit your longest state name.
