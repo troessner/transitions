@@ -92,6 +92,12 @@ module Transitions
     def event_failed_callback
       @event_failed_callback ||= (@name == :default ? '' : "#{@name}_") + 'event_failed'
     end
+    
+    def include_scopes
+      @states.each do |state|
+        @klass.scope state.name.to_sym, @klass.where(:state => state.name)
+      end
+    end
   end
 end
 
