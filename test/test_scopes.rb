@@ -37,8 +37,6 @@ class TrafficLight < ActiveRecord::Base
     event :reset do
       transitions :to => :red, :from => [:off]
     end
-    
-    include_scopes
   end
 end
 

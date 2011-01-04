@@ -10,6 +10,8 @@ class CreateTrafficLights < ActiveRecord::Migration
   end
 end
 
+ActiveRecord::Base.establish_connection(:adapter  => "sqlite3", :database => ":memory:")
+
 class TrafficLight < ActiveRecord::Base
   include ActiveRecord::Transitions
 
