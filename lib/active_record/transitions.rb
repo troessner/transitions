@@ -54,7 +54,7 @@ module ActiveRecord
     end
 
     def read_state(state_machine)
-      self.state.to_sym
+      self.state && self.state.to_sym
     end
 
     def set_initial_state
