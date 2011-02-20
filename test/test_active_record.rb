@@ -131,4 +131,17 @@ class TestActiveRecord < Test::Unit::TestCase
     @light.update_attribute(:state, 'green')
     assert @light.reload.green?, "reloaded state should come from database, not instance variable"
   end
+
+end
+
+class TestNewActiveRecord < TestActiveRecord
+
+  def setup
+    @light = TrafficLight.new
+  end
+
+  test "new active records defaults current state to the initial state" do
+    assert_equal :off, @light.current_state
+  end
+
 end
