@@ -3,7 +3,7 @@ require 'active_support/core_ext/module/aliasing'
 
 class CreateTrafficLights < ActiveRecord::Migration
   def self.up
-    create_table(:traffic_lights) do |t| 
+    create_table(:traffic_lights) do |t|
       t.string :state
       t.string :name
     end
@@ -57,6 +57,11 @@ class TestActiveRecord < Test::Unit::TestCase
     CreateTrafficLights.migrate(:up)
 
     @light = TrafficLight.create!
+  end
+
+  test "new record has the initial state set" do
+    @light = TrafficLight.new
+    assert_equal "off", @light.state
   end
 
   test "states initial state" do
