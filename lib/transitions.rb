@@ -27,7 +27,7 @@ require "transitions/state_transition"
 require "transitions/version"
 
 module Transitions
-  class InvalidTransition < Exception
+  class InvalidTransition < StandardError
 
   end
 
