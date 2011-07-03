@@ -30,6 +30,15 @@ I really encourage you to try {state_machine}[https://github.com/pluginaweek/sta
    end
  end
 
+== Using on_transition
+
+Each event definition takes an optional "on_transition" argument, which allows you to execute methods on transition.
+You can pass in a Symbol, a String, a Proc or an Array containing method names as Symbol or String like this:
+
+  event :discontinue do
+    transitions :to => :discontinued, :from => [:available, :out_of_stock], :on_transition => [:do_discontinue, :notify_clerk]
+  end
+
 == Using with Rails
 
 This goes into your Gemfile:

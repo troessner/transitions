@@ -46,6 +46,15 @@ module Transitions
         obj.send(@on_transition, *args)
       when Proc
         @on_transition.call(obj, *args)
+      when Array
+        @on_transition.each do |callback|
+          # Yes, we're passing always the same parameters for each callback in here.
+          # We should probably drop args altogether in case we get an array.
+          obj.send(callback, *args)
+        end
+      else
+        # TODO We probably should check for this in the constructor and not that late.
+        raise ArgumentError, "You can only pass a Symbol, a String, a Proc or an Array to 'on_transition' - got #{@on_transition.class}." unless @on_transition.nil?
       end
     end
 
