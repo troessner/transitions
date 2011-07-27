@@ -58,7 +58,7 @@ module ActiveRecord
     end
 
     def set_initial_state
-      self.state ||= self.class.state_machine.initial_state.to_s
+      self.state ||= self.class.state_machine.initial_state.to_s if self.has_attribute?(:state)
     end
 
     def state_inclusion
