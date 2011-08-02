@@ -47,7 +47,7 @@ module Transitions
         state_index[new_state].call_action(:enter, record)
 
         if record.respond_to?(event_fired_callback)
-          record.send(event_fired_callback, record.current_state, new_state)
+          record.send(event_fired_callback, record.current_state, new_state, event)
         end
 
         record.current_state(@name, new_state, persist)
