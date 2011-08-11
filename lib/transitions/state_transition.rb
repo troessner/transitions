@@ -42,6 +42,12 @@ module Transitions
 
     def execute(obj, *args)
       case @on_transition
+      when Array
+        transitions = @on_transition
+        transitions.each do |method|
+          @on_transition = method
+          execute(obj, *args)
+        end
       when Symbol, String
         obj.send(@on_transition, *args)
       when Proc

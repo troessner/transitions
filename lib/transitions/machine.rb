@@ -38,6 +38,7 @@ module Transitions
     def update(options = {}, &block)
       @initial_state = options[:initial] if options.key?(:initial)
       instance_eval(&block) if block
+      include_scopes if defined?(ActiveRecord::Base) && @klass < ActiveRecord::Base
       self
     end
 
@@ -91,6 +92,12 @@ module Transitions
 
     def event_failed_callback
       @event_failed_callback ||= (@name == :default ? '' : "#{@name}_") + 'event_failed'
+    end
+    
+    def include_scopes
+      @states.each do |state|
+        @klass.scope state.name.to_sym, @klass.where(:state => state.name)
+      end
     end
   end
 end
