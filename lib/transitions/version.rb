@@ -1,3 +1,3 @@
 module Transitions
-  VERSION = "0.0.10"
+  VERSION = "0.0.9"
 end
