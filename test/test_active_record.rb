@@ -1,6 +1,8 @@
 require "helper"
 require 'active_support/core_ext/module/aliasing'
 
+ActiveRecord::Base.establish_connection(:adapter  => "sqlite3", :database => ":memory:")
+
 class CreateTrafficLights < ActiveRecord::Migration
   def self.up
     create_table(:traffic_lights) do |t|

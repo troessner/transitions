@@ -30,6 +30,29 @@ I really encourage you to try {state_machine}[https://github.com/pluginaweek/sta
    end
  end
 
+== Automatic scope generation
+
+`transitions` will automatically generate scopes for you if you are using AR:
+
+Given a model like this:
+
+  class Order < ActiveRecord::Base
+    include ActiveRecord::Transitions
+    state_machine do
+      state :pick_line_items
+      state :picking_line_items
+    end
+  end
+
+you can use this feature a la:
+
+  >> Order.pick_line_items
+  => []
+  >> Order.create!
+  => #<Order id: 3, state: "pick_line_items", description: nil, created_at: "2011-08-23 15:48:46", updated_at: "2011-08-23 15:48:46">
+  >> Order.pick_line_items
+  => [#<Order id: 3, state: "pick_line_items", description: nil, created_at: "2011-08-23 15:48:46", updated_at: "2011-08-23 15:48:46">]
+
 == Using on_transition
 
 Each event definition takes an optional "on_transition" argument, which allows you to execute methods on transition.
