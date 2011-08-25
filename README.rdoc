@@ -109,4 +109,4 @@ bang(!)-version will call <tt>write_state</tt>.
 
 == Copyright
 
-Copyright (c) 2010 Jakub Kuźma. See LICENSE for details.
+Copyright (c) 2010 Jakub Kuźma, Timo Rößner. See LICENSE for details.
