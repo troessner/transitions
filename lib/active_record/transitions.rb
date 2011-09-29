@@ -30,8 +30,11 @@ module ActiveRecord
       validates_presence_of :state
       validate :state_inclusion
     end
-
-    def reload
+    
+    # The optional options argument is passed to find when reloading so you may
+    # do e.g. record.reload(:lock => true) to reload the same record with an
+    # exclusive row lock. 
+    def reload(options = nil)
       super.tap do
         self.class.state_machines.values.each do |sm|
           remove_instance_variable(sm.current_state_variable) if instance_variable_defined?(sm.current_state_variable)
