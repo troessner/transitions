@@ -96,7 +96,7 @@ module Transitions
 
     def include_scopes
       @states.each do |state|
-        @klass.scope state.name.to_sym, @klass.where(:state => state.name)
+        @klass.scope state.name.to_sym, @klass.where(:state => state.name.to_s)
       end
     end
   end
