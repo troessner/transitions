@@ -38,7 +38,7 @@ module Transitions
     def update(options = {}, &block)
       @initial_state = options[:initial] if options.key?(:initial)
       instance_eval(&block) if block
-      include_scopes if defined?(ActiveRecord::Base) && @klass < ActiveRecord::Base
+      include_scopes if active_record_base_class
       self
     end
 
@@ -67,6 +67,9 @@ module Transitions
       states.map { |st| [st.display_name, st.name.to_s] }
     end
 
+    # Returns the possible events that can be called while in this particular state
+    # 
+    # @return [String] State name
     def events_for(state)
       events = @events.values.select { |event| event.transitions_from_state?(state) }
       events.map! { |event| event.name }
@@ -75,6 +78,7 @@ module Transitions
     def current_state_variable
       "@#{@name}_current_state"
     end
+    
 
     private
 
@@ -98,6 +102,10 @@ module Transitions
       @states.each do |state|
         @klass.scope state.name.to_sym, @klass.where(:state => state.name.to_s)
       end
+    end
+    
+    def active_record_base_class
+      defined?(ActiveRecord::Base) && @klass < ActiveRecord::Base
     end
   end
 end

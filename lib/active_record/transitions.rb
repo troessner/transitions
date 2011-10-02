@@ -59,7 +59,7 @@ module ActiveRecord
       instance_variable_set(ivar, prev_state)
       raise
     end
-
+    
     def read_state(state_machine)
       self.state && self.state.to_sym
     end

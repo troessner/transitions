@@ -22,10 +22,11 @@
 
 module Transitions
   class StateTransition
-    attr_reader :from, :to, :options
+    attr_reader :from, :to, :options, :timestamp
 
     def initialize(opts)
-      @from, @to, @guard, @on_transition = opts[:from], opts[:to], opts[:guard], opts[:on_transition]
+      @from, @to, @guard, @on_transition, @timestamp = 
+        opts[:from], opts[:to], opts[:guard], opts[:on_transition], opts[:timestamp]
       @options = opts
     end
 

@@ -68,9 +68,37 @@ class TestActiveRecordTimestamps < Test::Unit::TestCase
   end
   
   test "moving to paid should set paid_at" do
-    @order = create_order(:placed)
+    @order = create_order(:placed)    
     @order.pay!
+    @order.reload
     assert_not_nil @order.paid_at
+  end
+  
+  test "moving to prepared should set prepared_on" do
+    @order = create_order(:paid)    
+    @order.prepare!
+    @order.reload
+    assert_not_nil @order.prepared_on
+  end
+  
+  test "moving to delivered should set dispatched_at" do
+    @order = create_order(:prepared)    
+    @order.deliver!
+    @order.reload
+    assert_not_nil @order.dispatched_at
+  end
+  
+  test "moving to cancelled should set cancellation_date" do
+    @order = create_order(:placed)    
+    @order.cancel!
+    @order.reload
+    assert_not_nil @order.cancellation_date
+  end
+  
+  test "moving to reopened should raise an exception as there is no attribute" do
+    @order = create_order(:cancelled)    
+    assert_raise(NoMethodError) { @order.re_open! } 
+    @order.reload
   end
 
 end
