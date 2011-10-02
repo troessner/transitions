@@ -1,0 +1,7 @@
+lib/transitions.rb 9f068e22ec74226a7c4cad1a0d7105cf9376cac0
+lib/transitions/event.rb 41002e18b84904b8754638612b4070896f54a06b
+lib/transitions/state.rb 3e9c37390a3af6ad38efe8eacb6a5fbd59530f81
+lib/transitions/machine.rb f7c78fb7d20fcb23178affb495c05d7e3f8a2aaa
+lib/transitions/version.rb 8247413f84a230703fd9dba00bde5164324d4e8c
+lib/active_record/transitions.rb 660396b5c951a4fb0768c387d2409cec17336327
+lib/transitions/state_transition.rb dc0ccbd99fa36a5b5ccdb1ed980c119afe0be75d

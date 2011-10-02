@@ -22,6 +22,7 @@
 
 module Transitions
   class Event
+    
     attr_reader :name, :success
 
     def initialize(machine, name, options = {}, &block)
@@ -38,6 +39,7 @@ module Transitions
       update(options, &block)
     end
 
+    
     def fire(obj, to_state = nil, *args)
       transitions = @transitions.select { |t| t.from == obj.current_state(@machine ? @machine.name : nil) }
       raise InvalidTransition if transitions.size == 0
@@ -68,6 +70,7 @@ module Transitions
 
     def update(options = {}, &block)
       @success = options[:success] if options.key?(:success)
+      
       instance_eval(&block) if block
       self
     end
