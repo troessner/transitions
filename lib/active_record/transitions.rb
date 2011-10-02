@@ -21,6 +21,9 @@
 # SOFTWARE.
 
 module ActiveRecord
+  
+  # Extend ActiveRecord with a Transitions module which should be included in each
+  # class that behaves as a state machine
   module Transitions
     extend ActiveSupport::Concern
 
@@ -44,6 +47,7 @@ module ActiveRecord
 
     protected
 
+    # Write the new state of this record and save!
     def write_state(state_machine, state)
       ivar = state_machine.current_state_variable
       prev_state = current_state(state_machine.name)
@@ -55,15 +59,18 @@ module ActiveRecord
       instance_variable_set(ivar, prev_state)
       raise
     end
-
+    
     def read_state(state_machine)
       self.state && self.state.to_sym
     end
 
+    # Set the initial state of this record to state_machine's initial state unless it's 
+    # already been defined
     def set_initial_state
       self.state ||= self.class.state_machine.initial_state.to_s if self.has_attribute?(:state)
     end
 
+    # If the current state is not defined within the state_machine, mark as invalid
     def state_inclusion
       unless self.class.state_machine.states.map{|s| s.name.to_s }.include?(self.state.to_s)
         self.errors.add(:state, :inclusion, :value => self.state)

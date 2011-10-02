@@ -27,9 +27,9 @@ require "transitions/state_transition"
 require "transitions/version"
 
 module Transitions
-  class InvalidTransition < StandardError
-
-  end
+  
+  #  Exception raised when attempting to perform a transition which has not been defined
+  class InvalidTransition < StandardError;end
 
   module ClassMethods
     def inherited(klass)
@@ -55,6 +55,8 @@ module Transitions
       block ? state_machines[name].update(options, &block) : state_machines[name]
     end
 
+    # defines a query method for each defined state
+    # eg. @order.paid? # => true/false
     def define_state_query_method(state_name)
       name = "#{state_name}?"
       undef_method(name) if method_defined?(name)
@@ -66,6 +68,8 @@ module Transitions
     base.extend(ClassMethods)
   end
 
+  # Returns the current state of an instance or sets a new state
+  # TODO: This method is Yuck. Should be broken down into simpler parts IMO (@bodacious)
   def current_state(name = nil, new_state = nil, persist = false)
     sm   = self.class.state_machine(name)
     ivar = sm.current_state_variable
@@ -74,6 +78,8 @@ module Transitions
         write_state(sm, new_state)
       end
 
+      # DELETE: I can't see this method defined in this lib...
+      # should this code still be here?
       if respond_to?(:write_state_without_persistence)
         write_state_without_persistence(sm, new_state)
       end

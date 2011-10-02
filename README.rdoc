@@ -62,6 +62,24 @@ You can pass in a Symbol, a String, a Proc or an Array containing method names a
     transitions :to => :discontinued, :from => [:available, :out_of_stock], :on_transition => [:do_discontinue, :notify_clerk]
   end
 
+== Timestamps
+
+If you'd like to note the time of a state change, Transitions comes with timestamps free!
+To activate them, simply pass the :timestamp option to the event definition with a value of either true or
+the name of the timestamp column.
+
+  # This will look for an attribute called exploded_at or exploded_on (in that order)
+  # If present, it will be updated
+  event :explode, :timestamp => true do
+    transitions :from => :complete, :to => :exploded
+  end
+  
+  # This will look for an attribute named repaired_on to update upon save
+  event :rebuild, :timestamp => :repaired_on do
+    transiions :from => :exploded, :to => :rebuilt
+  end
+  
+  
 == Using with Rails
 
 This goes into your Gemfile:
