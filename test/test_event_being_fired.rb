@@ -13,7 +13,6 @@ class TestEventBeingFired < Test::Unit::TestCase
     event = Transitions::Event.new(nil, :event) do
       transitions :to => :closed, :from => [:open, :received]
     end
-
     obj = stub
     obj.stubs(:current_state).returns(:open)
 

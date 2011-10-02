@@ -28,8 +28,7 @@ require "transitions/version"
 
 module Transitions
   
-  
-  # # Exception raised when attempting to perform a transition which has not been defined
+  #  Exception raised when attempting to perform a transition which has not been defined
   class InvalidTransition < StandardError;end
 
   module ClassMethods
