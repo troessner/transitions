@@ -30,7 +30,7 @@ class Order < ActiveRecord::Base
     end
 
     # should set dispatched_at
-    event :deliver, :timestamp => :dispatched_at do
+    event :deliver, :timestamp => "dispatched_at" do
       transitions :from => :prepared, :to => :delivered
     end
     
