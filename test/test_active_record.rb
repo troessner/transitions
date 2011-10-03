@@ -3,15 +3,6 @@ require 'active_support/core_ext/module/aliasing'
 
 ActiveRecord::Base.establish_connection(:adapter  => "sqlite3", :database => ":memory:")
 
-class CreateTrafficLights < ActiveRecord::Migration
-  def self.up
-    create_table(:traffic_lights) do |t|
-      t.string :state
-      t.string :name
-    end
-  end
-end
-
 class TrafficLight < ActiveRecord::Base
   include ActiveRecord::Transitions
 
@@ -54,10 +45,7 @@ end
 
 class TestActiveRecord < Test::Unit::TestCase
   def setup
-    ActiveRecord::Base.establish_connection(:adapter  => "sqlite3", :database => ":memory:")
-    ActiveRecord::Migration.verbose = false
-    CreateTrafficLights.migrate(:up)
-
+    create_database
     @light = TrafficLight.create!
   end
 
@@ -144,6 +132,7 @@ end
 class TestNewActiveRecord < TestActiveRecord
 
   def setup
+    create_database
     @light = TrafficLight.new
   end
 
