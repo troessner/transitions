@@ -58,7 +58,7 @@ module Transitions
     def define_state_query_method(state_name)
       name = "#{state_name}?"
       undef_method(name) if method_defined?(name)
-      class_eval "def #{name}; current_state.to_s == %(#{state_name}) end"
+      define_method(name) { current_state.to_s == %(#{state_name}) }
     end
   end
 
