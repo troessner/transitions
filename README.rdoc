@@ -1,3 +1,5 @@
+{<img src="http://travis-ci.org/[troessner]/[transitions].png" />}[http://travis-ci.org/[troessner]/[transitions]]
+
 = What is transitions?
 
 transitions is a ruby state machine implementation based on Rick Olson’s
