@@ -1,4 +1,4 @@
-{<img src="http://travis-ci.org/troessner/transitions.png" />}[http://travis-ci.org/troessner/transitions]
+== Travis Build Status {<img src="https://secure.travis-ci.org/troessner/transitions.png"/>}[http://travis-ci.org/troessner/transitions]
 
 = What is transitions?
 
