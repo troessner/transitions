@@ -20,12 +20,16 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-%w!event machine state state_transition version!.each do |file|
-  require "transitions/#{file}"
-end
+require "transitions/event"
+require "transitions/machine"
+require "transitions/state"
+require "transitions/state_transition"
+require "transitions/version"
 
 module Transitions
-  class InvalidTransition < StandardError; end
+  class InvalidTransition < StandardError
+
+  end
 
   module ClassMethods
     def inherited(klass)
@@ -54,7 +58,7 @@ module Transitions
     def define_state_query_method(state_name)
       name = "#{state_name}?"
       undef_method(name) if method_defined?(name)
-      define_method(name) { current_state.to_s == state_name }
+      define_method(name) { current_state.to_s == %(#{state_name}) }
     end
   end
 
