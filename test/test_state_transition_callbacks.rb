@@ -17,6 +17,9 @@ class Car
     end
   end
 
+  def event_fired(current_state, new_state, event)
+  end
+
   %w!start_engine loosen_handbrake push_gas_pedal!.each do |m|
     define_method(m){}
   end
@@ -38,6 +41,11 @@ class TestStateTransitionCallbacks < Test::Unit::TestCase
     @car.expects(:start_engine).in_sequence(on_transition_sequence)
     @car.expects(:loosen_handbrake).in_sequence(on_transition_sequence)
     @car.expects(:push_gas_pedal).in_sequence(on_transition_sequence)
+    @car.start_driving!
+  end
+
+  test "should pass event when calling event_fired_callback" do
+    @car.expects(:event_fired).with(:parked, :driving, :start_driving)
     @car.start_driving!
   end
 end
