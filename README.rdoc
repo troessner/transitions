@@ -1,10 +1,10 @@
+== Travis Build Status {<img src="https://secure.travis-ci.org/troessner/transitions.png"/>}[http://travis-ci.org/troessner/transitions]
+
 = What is transitions?
 
 transitions is a ruby state machine implementation based on Rick Olson’s
 ActiveModel::StateMachine. It was extracted from ActiveModel and turned
 into a gem when it got the axe in commit {db49c706b}[http://github.com/rails/rails/commit/db49c706b62e7ea2ab93f05399dbfddf5087ee0c].
-
-I really encourage you to try {state_machine}[https://github.com/pluginaweek/state_machine] before using this gem. Currently I have no time to maintain the gem, if you want to add some new features - contact with me.
 
 == Quick Example
 
@@ -30,7 +30,30 @@ I really encourage you to try {state_machine}[https://github.com/pluginaweek/sta
    end
  end
 
-== Using on_transition
+== Automatic scope generation
+
+`transitions` will automatically generate scopes for you if you are using AR:
+
+Given a model like this:
+
+  class Order < ActiveRecord::Base
+    include ActiveRecord::Transitions
+    state_machine do
+      state :pick_line_items
+      state :picking_line_items
+    end
+  end
+
+you can use this feature a la:
+
+  >> Order.pick_line_items
+  => []
+  >> Order.create!
+  => #<Order id: 3, state: "pick_line_items", description: nil, created_at: "2011-08-23 15:48:46", updated_at: "2011-08-23 15:48:46">
+  >> Order.pick_line_items
+  => [#<Order id: 3, state: "pick_line_items", description: nil, created_at: "2011-08-23 15:48:46", updated_at: "2011-08-23 15:48:46">]
+
+== Using `on_transition`
 
 Each event definition takes an optional "on_transition" argument, which allows you to execute methods on transition.
 You can pass in a Symbol, a String, a Proc or an Array containing method names as Symbol or String like this:
@@ -38,6 +61,34 @@ You can pass in a Symbol, a String, a Proc or an Array containing method names a
   event :discontinue do
     transitions :to => :discontinued, :from => [:available, :out_of_stock], :on_transition => [:do_discontinue, :notify_clerk]
   end
+
+== Using `success`
+
+In case you need to trigger a method call after a successful transition you can use `success`:
+
+  event :discontinue, :success => :notfiy_admin do
+    transitions :to => :discontinued, :from => [:available, :out_of_stock]
+  end
+
+
+== Timestamps
+
+If you'd like to note the time of a state change, Transitions comes with timestamps free!
+To activate them, simply pass the :timestamp option to the event definition with a value of either true or
+the name of the timestamp column.
+*NOTE - This should be either true, a String or a Symbol*
+
+  # This will look for an attribute called exploded_at or exploded_on (in that order)
+  # If present, it will be updated
+  event :explode, :timestamp => true do
+    transitions :from => :complete, :to => :exploded
+  end
+
+  # This will look for an attribute named repaired_on to update upon save
+  event :rebuild, :timestamp => :repaired_on do
+    transiions :from => :exploded, :to => :rebuilt
+  end
+
 
 == Using with Rails
 
@@ -79,11 +130,11 @@ bang(!)-version will call <tt>write_state</tt>.
 
 == Documentation, Guides & Examples
 
-- {Online API Documentation}[http://rdoc.info/github/qoobaa/transitions/master/Transitions]
+- {Online API Documentation}[http://rdoc.info/github/troessner/transitions/master/Transitions]
 - Krzysiek Heród (aka {Netizer}[http://github.com/netizer]) wrote a nice
   {blog post}[http://dev.netizer.pl/transitions-state-machine-for-rails-3.html]
   about using Transitions in ActiveRecord.
 
 == Copyright
 
-Copyright (c) 2010 Jakub Kuźma. See LICENSE for details.
+Copyright (c) 2010 Jakub Kuźma, Timo Rößner. See LICENSE for details.
