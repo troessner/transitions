@@ -12,6 +12,8 @@ class CreateTrafficLights < ActiveRecord::Migration
   end
 end
 
+CreateTrafficLights.migrate(:up)
+
 class TrafficLight < ActiveRecord::Base
   include ActiveRecord::Transitions
 
@@ -42,10 +44,6 @@ end
 
 class TestScopes < Test::Unit::TestCase
   def setup
-    ActiveRecord::Base.establish_connection(:adapter  => "sqlite3", :database => ":memory:")
-    ActiveRecord::Migration.verbose = false
-    CreateTrafficLights.migrate(:up)
-
     @light = TrafficLight.create!
   end
 
