@@ -32,13 +32,13 @@ into a gem when it got the axe in commit {db49c706b}[http://github.com/rails/rai
 
 == Automatic scope generation
 
-`transitions` will automatically generate scopes for you if you are using AR:
+`transitions` will automatically generate scopes for you if you are using ActiveRecord and tell it to do so via the `auto_scopes` option:
 
 Given a model like this:
 
   class Order < ActiveRecord::Base
     include ActiveRecord::Transitions
-    state_machine do
+    state_machine :auto_scopes => true do
       state :pick_line_items
       state :picking_line_items
     end

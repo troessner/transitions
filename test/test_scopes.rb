@@ -12,12 +12,30 @@ class CreateTrafficLights < ActiveRecord::Migration
   end
 end
 
+class CreateLightBulbs < ActiveRecord::Migration
+  def self.up
+    create_table(:light_bulbs) do |t|
+      t.string :state
+    end
+  end
+end
+
+class CreateLights < ActiveRecord::Migration
+  def self.up
+    create_table(:lights) do |t|
+      t.string :state
+    end
+  end
+end
+
 CreateTrafficLights.migrate(:up)
+CreateLightBulbs.migrate(:up)
+CreateLights.migrate(:up)
 
 class TrafficLight < ActiveRecord::Base
   include ActiveRecord::Transitions
 
-  state_machine do
+  state_machine :auto_scopes => true do
     state :off
 
     state :red
@@ -42,12 +60,18 @@ class TrafficLight < ActiveRecord::Base
   end
 end
 
-class TestScopes < Test::Unit::TestCase
-  def setup
-    @light = TrafficLight.create!
-  end
+class LightBulb < ActiveRecord::Base
+  include ActiveRecord::Transitions
 
+  state_machine do
+    state :off
+    state :on
+  end
+end
+
+class TestScopes < Test::Unit::TestCase
   test "scope returns correct object" do
+    @light = TrafficLight.create!
     assert TrafficLight.respond_to? :off
     assert_equal TrafficLight.off.first, @light
     assert TrafficLight.red.empty?
@@ -58,5 +82,23 @@ class TestScopes < Test::Unit::TestCase
     assert TrafficLight.respond_to? :red
     assert TrafficLight.respond_to? :green
     assert TrafficLight.respond_to? :yellow
+  end
+
+  test 'scopes are only generated if we explicitly say so' do
+    assert !LightBulb.respond_to?(:off)
+    assert !LightBulb.respond_to?(:on)
+  end
+
+  test 'scope generation raises an exception if we try to overwrite an existing method' do
+    assert_raise(Transitions::InvalidMethodOverride) {
+      class Light < ActiveRecord::Base
+        include ActiveRecord::Transitions
+
+        state_machine :auto_scopes => true do
+          state :new
+          state :broken
+        end
+      end
+    }
   end
 end
