@@ -1,12 +1,28 @@
-== Travis Build Status {<img src="https://secure.travis-ci.org/troessner/transitions.png"/>}[http://travis-ci.org/troessner/transitions]
+= Travis Build Status 
 
-= What is transitions?
+{<img src="https://secure.travis-ci.org/troessner/transitions.png"/>}[http://travis-ci.org/troessner/transitions]
 
-transitions is a ruby state machine implementation based on Rick Olson’s
-ActiveModel::StateMachine. It was extracted from ActiveModel and turned
-into a gem when it got the axe in commit {db49c706b}[http://github.com/rails/rails/commit/db49c706b62e7ea2ab93f05399dbfddf5087ee0c].
+= Synopsis
 
-== Quick Example
+`transitions` is a ruby state machine implementation.
+
+= Installation
+
+== Rails
+
+This goes into your Gemfile:
+
+ gem "transitions", :require => ["transitions", "active_record/transitions"]
+
+… and this into your AR model:
+
+ include ActiveRecord::Transitions
+
+== Standalone
+
+ gem install transitions
+
+= Using transitions
 
  require 'transitions'
  
@@ -29,6 +45,15 @@ into a gem when it got the axe in commit {db49c706b}[http://github.com/rails/rai
      end
    end
  end
+
+= Features
+
+== Events
+
+When you declare an event, say <tt>discontinue</tt>, two methods are declared for
+you: <tt>discontinue</tt> and <tt>discontinue!</tt>. Both events will call
+<tt>write_state_without_persistence</tt> on successful transition, but only the
+bang(!)-version will call <tt>write_state</tt>.
 
 == Automatic scope generation
 
@@ -70,7 +95,6 @@ In case you need to trigger a method call after a successful transition you can 
     transitions :to => :discontinued, :from => [:available, :out_of_stock]
   end
 
-
 == Timestamps
 
 If you'd like to note the time of a state change, Transitions comes with timestamps free!
@@ -89,52 +113,13 @@ the name of the timestamp column.
     transiions :from => :exploded, :to => :rebuilt
   end
 
-
-== Using with Rails
-
-This goes into your Gemfile:
-
- gem "transitions", :require => ["transitions", "active_record/transitions"]
-
-… and this into your AR model:
-
- include ActiveRecord::Transitions
-
-=== A note about persistence
-The property used to persist the models’ state is named <tt>state</tt> (really!),
-which should be a string column wide enough to fit your longest state name.
-It should also be mentioned that <tt>#save!</tt> is called after every successful event.
-
-== Event execution flow
-
-On an event, with our quick example product going from <tt>:available</tt> to
-<tt>:discontinued</tt> it looks like this:
-
-1. <tt>baby_ninja.discontinue!(:reason => :pirates)</tt>
-2. call <tt>:exit</tt> handler of <tt>:available</tt> state
-3. call <tt>:guard</tt> of <tt>:available to :discontinue</tt> transition within <tt>#discontinue</tt> event
-4. call <tt>#event_failed(:event)</tt> and abort unless <tt>3.</tt> returned <tt>true</tt>
-5. call <tt>:on_transition(:reason => :pirates)</tt> of <tt>:available to :discontinue</tt> transition within <tt>#discontinue</tt> event
-6. call <tt>:enter</tt> handler of <tt>:discontinue</tt>
-7. call <tt>#event_fired(:available, :discontinue)</tt>
-8. call <tt>#write_state(machine, :discontinue)</tt>
-9. call <tt>#write_state_without_persistence(machine, :discontinue)</tt>
-10. call <tt>baby_ninja#:success</tt> handler method of <tt>#discontinue</tt> event
-
-=== A note about events
-
-When you declare an event <tt>discontinue</tt>, two methods are declared for
-you: <tt>discontinue</tt> and <tt>discontinue!</tt>. Both events will call
-<tt>write_state_without_persistence</tt> on successful transition, but only the
-bang(!)-version will call <tt>write_state</tt>.
-
-== Documentation, Guides & Examples
+= Documentation, Guides & Examples
 
 - {Online API Documentation}[http://rdoc.info/github/troessner/transitions/master/Transitions]
 - Krzysiek Heród (aka {Netizer}[http://github.com/netizer]) wrote a nice
   {blog post}[http://dev.netizer.pl/transitions-state-machine-for-rails-3.html]
   about using Transitions in ActiveRecord.
 
-== Copyright
+= Copyright
 
 Copyright (c) 2010 Jakub Kuźma, Timo Rößner. See LICENSE for details.
