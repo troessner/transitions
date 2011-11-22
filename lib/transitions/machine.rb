@@ -24,7 +24,7 @@ module Transitions
   class Machine
     attr_writer :initial_state
     attr_accessor :states, :events, :state_index
-    attr_reader :klass, :name
+    attr_reader :klass, :name, :auto_scopes
 
     def initialize(klass, name, options = {}, &block)
       @klass, @name, @states, @state_index, @events = klass, name, [], {}, {}
@@ -37,8 +37,9 @@ module Transitions
 
     def update(options = {}, &block)
       @initial_state = options[:initial] if options.key?(:initial)
+      @auto_scopes = options[:auto_scopes]
       instance_eval(&block) if block
-      include_scopes if defined?(ActiveRecord::Base) && @klass < ActiveRecord::Base
+      include_scopes if @auto_scopes && defined?(ActiveRecord::Base) && @klass < ActiveRecord::Base
       self
     end
 
@@ -96,7 +97,9 @@ module Transitions
 
     def include_scopes
       @states.each do |state|
-        @klass.scope state.name.to_sym, @klass.where(:state => state.name.to_s)
+        state_name = state.name.to_s
+        raise InvalidMethodOverride if @klass.respond_to?(state_name)
+        @klass.scope state_name, @klass.where(:state => state_name)
       end
     end
   end

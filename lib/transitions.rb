@@ -27,9 +27,8 @@ require "transitions/state_transition"
 require "transitions/version"
 
 module Transitions
-  class InvalidTransition < StandardError
-
-  end
+  class InvalidTransition     < StandardError; end
+  class InvalidMethodOverride < StandardError; end
 
   module ClassMethods
     def inherited(klass)
