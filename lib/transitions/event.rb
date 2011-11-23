@@ -74,7 +74,7 @@ module Transitions
     end
 
     def update(options = {}, &block)
-      @success       = options[:success] if options.key?(:success)
+      @success       = build_sucess_callback(options[:success]) if options.key?(:success)
       self.timestamp = options[:timestamp] if options[:timestamp]
       instance_eval(&block) if block
       self
@@ -118,11 +118,19 @@ module Transitions
           Please define #{at_name} or #{on_name} in #{obj.class}"
       end
     end
-    
 
     def transitions(trans_opts)
       Array(trans_opts[:from]).each do |s|
         @transitions << StateTransition.new(trans_opts.merge({:from => s.to_sym}))
+      end
+    end
+
+    def build_sucess_callback(callback_symbol_or_proc)
+      case callback_symbol_or_proc
+      when Proc
+        callback_symbol_or_proc
+      when Symbol
+        lambda { |record| record.send(callback_symbol_or_proc) }
       end
     end
   end
