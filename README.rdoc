@@ -18,6 +18,17 @@ This goes into your Gemfile:
 
  include ActiveRecord::Transitions
 
+To make the bang! methods work correctly (state transition with persistence) you need to implement
+the following too methods in your AR model:
+
+  def write_state_without_persistence(state_machine, new_state)
+    self.state = new_state
+  end
+
+  def read_state(state_machine)
+    self.state ? self.state.to_sym : nil
+  end
+
 == Standalone
 
  gem install transitions
