@@ -52,8 +52,8 @@ module Transitions
           record.send(event_fired_callback, record.current_state, new_state, event)
         end
 
-        record.current_state(@name, new_state, persist)
-        record.send(@events[event].success) if @events[event].success
+        record.current_state(@name, new_state, persist);
+        @events[event].success.call(record) if @events[event].success
         true
       else
         if record.respond_to?(event_failed_callback)
