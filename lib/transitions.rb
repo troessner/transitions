@@ -54,6 +54,10 @@ module Transitions
       block ? state_machines[name].update(options, &block) : state_machines[name]
     end
 
+    def available_states name = :default
+      state_machines[name].states.map(&:name).sort
+    end
+
     def define_state_query_method(state_name)
       name = "#{state_name}?"
       undef_method(name) if method_defined?(name)

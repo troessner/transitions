@@ -120,6 +120,17 @@ the name of the timestamp column.
     transiions :from => :exploded, :to => :rebuilt
   end
 
+== Listing all the available states
+
+You can easily get a listing of all available states:
+
+  Order.available_states # Uses the `default` state machine
+  # => [:pick_line_items, :picking_line_items]
+
+In case you have multiple state machines you can also pass the state machine name:
+
+  Order.available_states(:your_machine)
+
 = Documentation, Guides & Examples
 
 - {Online API Documentation}[http://rdoc.info/github/troessner/transitions/master/Transitions]
