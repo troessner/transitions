@@ -45,22 +45,28 @@ module Transitions
 
     def fire_event(event, record, persist, *args)
       state_index[record.current_state(@name)].call_action(:exit, record)
-      if new_state = @events[event].fire(record, nil, *args)
-        state_index[new_state].call_action(:enter, record)
+      begin
+        if new_state = @events[event].fire(record, nil, *args)
+          state_index[new_state].call_action(:enter, record)
 
-        if record.respond_to?(event_fired_callback)
-          record.send(event_fired_callback, record.current_state, new_state, event)
+          if record.respond_to?(event_fired_callback)
+            record.send(event_fired_callback, record.current_state, new_state, event)
+          end
+
+          record.current_state(@name, new_state, persist)
+          @events[event].success.call(record) if @events[event].success
+          return true
+        else
+          record.send(event_fired_callback, event) if record.respond_to?(event_failed_callback)
+          return false
         end
-
-        record.current_state(@name, new_state, persist)
-        record.send(@events[event].success) if @events[event].success
-        true
-      else
+      rescue => e
         if record.respond_to?(event_failed_callback)
           record.send(event_failed_callback, event)
+          return false
+        else
+          raise e
         end
-
-        false
       end
     end
 
