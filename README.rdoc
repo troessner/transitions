@@ -117,7 +117,7 @@ the name of the timestamp column.
 
   # This will look for an attribute named repaired_on to update upon save
   event :rebuild, :timestamp => :repaired_on do
-    transiions :from => :exploded, :to => :rebuilt
+    transitions :from => :exploded, :to => :rebuilt
   end
 
 == Listing all the available states
