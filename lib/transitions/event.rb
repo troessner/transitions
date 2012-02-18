@@ -95,7 +95,12 @@ module Transitions
         raise ArgumentError, "timestamp must be either: true, a String or a Symbol"
       end
     end
-    
+
+    def to_dot(options = {})
+      @transitions.collect do |transition|
+        "  #{transition.to_dot(options)}[label=\"#{@name}\"];"
+      end.join("\n")
+    end
 
     private
     

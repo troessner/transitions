@@ -65,5 +65,9 @@ module Transitions
     def from?(value)
       @from == value
     end
+
+    def to_dot(options = {})
+      "#{@from.to_s} -> #{@to.to_s}"
+    end
   end
 end

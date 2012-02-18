@@ -83,6 +83,32 @@ module Transitions
       "@#{@name}_current_state"
     end
 
+    def to_dot(options = {})
+      s = @states.collect do |state|
+        if @states.first == state ## beta initial state!
+          options[:shape] = 'doublecircle'
+        else
+          options[:shape] = 'circle'
+        end
+        " #{state.to_dot(options)};"
+      end
+      e = @events.collect do |event|
+        " #{event.last.to_dot}"
+      end
+      "digraph \"#{@klass.name}\" {\nrankdir=LR;\nsize=\"18,15\";\n#{s.join("\n")}\n\n#{e.join("\n")}\n}"
+    end
+
+    def draw_graph(options = {})
+      format = options[:format] || :png
+      extension = options[:extension] || format
+      file_name = options[:outfile] || "#{@klass.name.downcase}.#{extension}"
+      cmd = "dot -T#{format} -o#{file_name}"
+      IO.popen cmd, 'w' do |io|
+        io.write to_dot
+      end
+      raise 'dot failed' unless $?.success?
+    end
+
     private
 
     def state(name, options = {})

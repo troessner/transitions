@@ -63,5 +63,12 @@ module Transitions
       @options = options
       self
     end
+
+    def to_dot(options = {})
+      attrs = options.to_a.collect do |key,opt|
+        "#{key}=#{opt}"
+      end
+      "#{@name}[#{attrs.join(',')}]"
+    end
   end
 end

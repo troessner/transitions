@@ -54,6 +54,10 @@ module Transitions
       block ? state_machines[name].update(options, &block) : state_machines[name]
     end
 
+    def available_events name = :default
+      state_machines[name].events.keys.sort
+    end
+
     def available_states name = :default
       state_machines[name].states.map(&:name).sort
     end
