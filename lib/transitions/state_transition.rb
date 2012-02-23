@@ -35,6 +35,10 @@ module Transitions
         obj.send(@guard)
       when Proc
         @guard.call(obj)
+      when Array
+        @guard.all? do |callback|
+          obj.send callback
+        end
       else
         true
       end
