@@ -12,11 +12,11 @@
 
 This goes into your Gemfile:
 
- gem "transitions", :require => ["transitions", "active_record/transitions"]
+ gem "transitions", :require => ["transitions", "active_model/transitions"]
 
-… and this into your AR model:
+… and this into your ORM model:
 
- include ActiveRecord::Transitions
+ include ActiveModel::Transitions
 
 == Standalone
 
@@ -62,7 +62,7 @@ bang(!)-version will call <tt>write_state</tt>.
 Given a model like this:
 
   class Order < ActiveRecord::Base
-    include ActiveRecord::Transitions
+    include ActiveModel::Transitions
     state_machine :auto_scopes => true do
       state :pick_line_items
       state :picking_line_items

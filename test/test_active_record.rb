@@ -33,7 +33,7 @@ CreateLightBulbs.migrate(:up)
 CreateLights.migrate(:up)
 
 class TrafficLight < ActiveRecord::Base
-  include ActiveRecord::Transitions
+  include ActiveModel::Transitions
 
   state_machine :auto_scopes => true do
     state :off
@@ -73,7 +73,7 @@ class ConditionalValidatingTrafficLight < TrafficLight
 end
 
 class LightBulb < ActiveRecord::Base
-  include ActiveRecord::Transitions
+  include ActiveModel::Transitions
 
   state_machine do
     state :off
@@ -203,7 +203,7 @@ class TestScopes < Test::Unit::TestCase
   test 'scope generation raises an exception if we try to overwrite an existing method' do
     assert_raise(Transitions::InvalidMethodOverride) {
       class Light < ActiveRecord::Base
-        include ActiveRecord::Transitions
+        include ActiveModel::Transitions
 
         state_machine :auto_scopes => true do
           state :new
