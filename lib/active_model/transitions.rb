@@ -20,7 +20,7 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-module ActiveRecord
+module ActiveModel
   module Transitions
     extend ActiveSupport::Concern
 

@@ -9,7 +9,7 @@ require "ruby-debug"
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), "..", "lib"))
 $LOAD_PATH.unshift(File.dirname(__FILE__))
 require "transitions"
-require "active_record/transitions"
+require "active_model/transitions"
 
 class Test::Unit::TestCase
 

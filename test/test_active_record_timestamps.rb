@@ -4,7 +4,7 @@ require 'active_support/core_ext/module/aliasing'
 create_database
 
 class Order < ActiveRecord::Base
-  include ActiveRecord::Transitions
+  include ActiveModel::Transitions
 
   state_machine do
     state :opened
@@ -104,7 +104,7 @@ class TestActiveRecordTimestamps < Test::Unit::TestCase
   test "passing an invalid value to timestamp options should raise an exception" do
     assert_raise(ArgumentError) do
       class Order < ActiveRecord::Base
-        include ActiveRecord::Transitions
+        include ActiveModel::Transitions
         state_machine do
           event :replace, timestamp: 1 do
             transitions :from => :prepared, :to => :placed
