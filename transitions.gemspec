@@ -14,12 +14,12 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = ">= 1.3.6"
   s.rubyforge_project         = "transitions"
 
+  s.add_dependency "backports"
   s.add_development_dependency "bundler", "~> 1"
   s.add_development_dependency "test-unit", "~> 2.2"
   s.add_development_dependency "mocha"
   s.add_development_dependency "sqlite3-ruby"
   s.add_development_dependency "activerecord", "~> 3"
-  s.add_development_dependency "ruby-debug19"
 
   s.files        = `git ls-files`.split("\n")
   s.executables  = `git ls-files`.split("\n").map{|f| f =~ /^bin\/(.*)/ ? $1 : nil}.compact

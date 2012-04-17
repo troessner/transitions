@@ -57,7 +57,7 @@ class TestActiveRecordTimestamps < Test::Unit::TestCase
   end
   
   def create_order(state = nil)
-    Order.create! order_number: SecureRandom.hex(4), state: state
+    Order.create! :order_number => SecureRandom.hex(4), :state => state
   end
 
   # control case, no timestamp has been set so we should expect default behaviour
@@ -106,7 +106,7 @@ class TestActiveRecordTimestamps < Test::Unit::TestCase
       class Order < ActiveRecord::Base
         include ActiveModel::Transitions
         state_machine do
-          event :replace, timestamp: 1 do
+          event :replace, :timestamp => 1 do
             transitions :from => :prepared, :to => :placed
           end
         end

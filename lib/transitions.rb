@@ -20,6 +20,7 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+require 'backports'
 require "transitions/event"
 require "transitions/machine"
 require "transitions/state"
