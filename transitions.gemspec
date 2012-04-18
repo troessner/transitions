@@ -14,7 +14,6 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = ">= 1.3.6"
   s.rubyforge_project         = "transitions"
 
-  s.add_dependency "backports"
   s.add_development_dependency "bundler", "~> 1"
   s.add_development_dependency "test-unit", "~> 2.2"
   s.add_development_dependency "mocha"
