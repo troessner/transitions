@@ -5,14 +5,8 @@ require "active_record"
 require "mocha"
 require "db/create_db"
 
-$LOAD_PATH.unshift(File.join(File.dirname(__FILE__), "..", "lib"))
-$LOAD_PATH.unshift(File.dirname(__FILE__))
 require "transitions"
 require "active_model/transitions"
-
-class Test::Unit::TestCase
-
-end
 
 def create_database
   ActiveRecord::Base.establish_connection(:adapter  => "sqlite3", :database => ":memory:")
