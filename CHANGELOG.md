@@ -1,3 +1,7 @@
+# 0.0.16 (2012-04-18):
+
+* (mperham) Remove backports, fix Ruby 1.8 support.
+
 # 0.0.15 (2012-04-17):
 
 * (troessner) Ensure ruby 1.8.7 compatibility.
