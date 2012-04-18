@@ -135,7 +135,7 @@ module Transitions
     end
 
     def error_message_for_invalid_transitions(obj, to_state)
-      "Canno transition to #{to_state || 'default'} from #{obj.current_state} for `#{obj.class.name}` #{obj.class < ActiveRecord::Base && obj.persisted? ? "with ID #{obj.id} " : nil}"
+      "Cannot transition to #{to_state || 'default'} from #{obj.current_state} for `#{obj.class.name}` #{obj.class < ActiveRecord::Base && obj.persisted? ? "with ID #{obj.id} " : nil}"
     end
   end
 end
