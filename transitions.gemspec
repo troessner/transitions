@@ -5,7 +5,7 @@ Gem::Specification.new do |s|
   s.name        = "transitions"
   s.version     = Transitions::VERSION
   s.platform    = Gem::Platform::RUBY
-  s.authors     = ["Jakub Kuźma", "Timo Rößner"]
+  s.authors     = ["Jakub Kuzma", "Timo Roessner"]
   s.email       = "timo.roessner@googlemail.com"
   s.homepage    = "http://github.com/troessner/transitions"
   s.summary     = "State machine extracted from ActiveModel"
@@ -14,11 +14,11 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = ">= 1.3.6"
   s.rubyforge_project         = "transitions"
 
-  s.add_dependency "backports"
   s.add_development_dependency "bundler", "~> 1"
   s.add_development_dependency "test-unit", "~> 2.2"
   s.add_development_dependency "mocha"
-  s.add_development_dependency "sqlite3-ruby"
+  s.add_development_dependency "rake"
+  s.add_development_dependency "sqlite3"
   s.add_development_dependency "activerecord", "~> 3"
 
   s.files        = `git ls-files`.split("\n")
