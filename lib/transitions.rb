@@ -54,8 +54,8 @@ module Transitions
       block ? state_machines[name].update(options, &block) : state_machines[name]
     end
 
-    def available_states name = :default
-      state_machines[name].states.map(&:name).sort
+    def available_states(name = :default)
+      state_machines[name].states.map(&:name).sort_by {|x| x.to_s}
     end
 
     def define_state_query_method(state_name)
