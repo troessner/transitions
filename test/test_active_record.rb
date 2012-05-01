@@ -164,6 +164,13 @@ class TestActiveRecord < Test::Unit::TestCase
     @light.update_attribute(:state, 'green')
     assert @light.reload.green?, "reloaded state should come from database, not instance variable"
   end
+  
+  test "calling non-bang event updates state attribute" do
+    @light.reset
+    assert @light.red?
+    @light.green_on
+    assert_equal "green", @light.state
+  end
 
 end
 
