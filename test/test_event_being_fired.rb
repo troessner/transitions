@@ -10,7 +10,7 @@ class TestEventBeingFired < Test::Unit::TestCase
     exception = assert_raise Transitions::InvalidTransition do
       event.fire(obj)
     end
-    assert_match /No transitions present for `TestEventBeingFired::AnotherDummy` with current state `running`/, exception.message
+    assert_match /Cannot transition to default from running for `TestEventBeingFired::AnotherDummy/, exception.message
   end
 
   test "should return the state of the first matching transition it finds" do
