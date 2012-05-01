@@ -51,17 +51,8 @@ This goes into your Gemfile:
 == Events
 
 When you declare an event, say <tt>discontinue</tt>, two methods are declared for
-you: <tt>discontinue</tt> and <tt>discontinue!</tt>. Both events will call
-<tt>write_state_without_persistence</tt> on successful transition, but only the
-bang(!)-version will call <tt>write_state</tt>.
-
-Note that <tt>write_state_without_persistence</tt> is not defined for you in Rails or in the transitions gem, so if you want the state attribute to be updated, you must define <tt>write_state_without_persistence</tt> yourself.
-
-The following is an example implementation:
-
-  def write_state_without_persistence(sm, new_state)
-    self.state = new_state.to_s
-  end
+you: <tt>discontinue</tt> and <tt>discontinue!</tt>. Both events will modify the <tt>state</tt> attribute on successful transition,
+but only the bang(!)-version will call <tt>save!</tt>.
 
 == Automatic scope generation
 
