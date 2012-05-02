@@ -1,3 +1,7 @@
+# 0.0.17 (2012-05-02):
+
+* (zmillman) Add write_state_without_persistence.
+
 # 0.0.16 (2012-04-18):
 
 * (mperham) Remove backports, fix Ruby 1.8 support.
