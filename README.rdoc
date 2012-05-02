@@ -4,7 +4,7 @@
 
 = Synopsis
 
-`transitions` is a ruby state machine implementation.
+<tt>transitions</tt> is a ruby state machine implementation.
 
 = Installation
 
@@ -51,21 +51,12 @@ This goes into your Gemfile:
 == Events
 
 When you declare an event, say <tt>discontinue</tt>, two methods are declared for
-you: <tt>discontinue</tt> and <tt>discontinue!</tt>. Both events will call
-<tt>write_state_without_persistence</tt> on successful transition, but only the
-bang(!)-version will call <tt>write_state</tt>.
-
-Note that <tt>write_state_without_persistence</tt> is not defined for you in Rails or in the transitions gem, so if you want the state attribute to be updated, you must define <tt>write_state_without_persistence</tt> yourself.
-
-The following is an example implementation:
-
-  def write_state_without_persistence(sm, new_state)
-    self.state = new_state.to_s
-  end
+you: <tt>discontinue</tt> and <tt>discontinue!</tt>. Both events will modify the <tt>state</tt> attribute on successful transition,
+but only the bang(!)-version will call <tt>save!</tt>.
 
 == Automatic scope generation
 
-`transitions` will automatically generate scopes for you if you are using ActiveRecord and tell it to do so via the `auto_scopes` option:
+<tt>transitions</tt> will automatically generate scopes for you if you are using ActiveRecord and tell it to do so via the <tt>auto_scopes</tt> option:
 
 Given a model like this:
 
@@ -86,7 +77,7 @@ you can use this feature a la:
   >> Order.pick_line_items
   => [#<Order id: 3, state: "pick_line_items", description: nil, created_at: "2011-08-23 15:48:46", updated_at: "2011-08-23 15:48:46">]
 
-== Using `on_transition`
+== Using <tt>on_transition</tt>
 
 Each event definition takes an optional "on_transition" argument, which allows you to execute methods on transition.
 You can pass in a Symbol, a String, a Proc or an Array containing method names as Symbol or String like this:
@@ -95,9 +86,9 @@ You can pass in a Symbol, a String, a Proc or an Array containing method names a
     transitions :to => :discontinued, :from => [:available, :out_of_stock], :on_transition => [:do_discontinue, :notify_clerk]
   end
 
-== Using `success`
+== Using <tt>success</tt>
 
-In case you need to trigger a method call after a successful transition you can use `success`:
+In case you need to trigger a method call after a successful transition you can use <tt>success</tt>:
 
   event :discontinue, :success => :notfiy_admin do
     transitions :to => :discontinued, :from => [:available, :out_of_stock]
@@ -132,7 +123,7 @@ the name of the timestamp column.
 
 You can easily get a listing of all available states:
 
-  Order.available_states # Uses the `default` state machine
+  Order.available_states # Uses the <tt>default</tt> state machine
   # => [:pick_line_items, :picking_line_items]
 
 In case you have multiple state machines you can also pass the state machine name:
