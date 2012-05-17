@@ -27,12 +27,13 @@ require "transitions/state_transition"
 require "transitions/version"
 
 module Transitions
+  # TODO Use ActiveSupport::Concern to clean this up.
   class InvalidTransition     < StandardError; end
   class InvalidMethodOverride < StandardError; end
 
   module ClassMethods
     def inherited(klass)
-      super
+      super # Make sure we call other callbacks possibly defined upstream the ancestor chain.
       klass.state_machines = state_machines
     end
 
@@ -40,6 +41,7 @@ module Transitions
       @state_machines ||= {}
     end
 
+    # The only reason we need this method is for the inherited callback.
     def state_machines=(value)
       @state_machines = value ? value.dup : nil
     end
@@ -58,8 +60,11 @@ module Transitions
       state_machines[name].states.map(&:name).sort_by {|x| x.to_s}
     end
 
+    # TODO This method does not belong here but in `State`.
     def define_state_query_method(state_name)
       name = "#{state_name}?"
+      # TODO We should not just undefine existing methods, that's highly destructive and surprising. Rather do
+      # raise ArgumentError, "Transitions: Can not define method #{name} because it is already defined, please rename either the existing method or the state."
       undef_method(name) if method_defined?(name)
       define_method(name) { current_state.to_s == %(#{state_name}) }
     end
@@ -69,6 +74,7 @@ module Transitions
     base.extend(ClassMethods)
   end
 
+  # TODO Do we need this method really? Also, it's not a beauty, refactor at least.
   def current_state(name = nil, new_state = nil, persist = false)
     sm   = self.class.state_machine(name)
     ivar = sm.current_state_variable
