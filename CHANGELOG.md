@@ -1,4 +1,4 @@
-# Unpublished
+# 0.0.18 (2012-05-18)
 
 * (troessner) Remove `define_state_query_method` from public API
 * (troessner) Do not override existing methods when defining state query methods but warn the user.
