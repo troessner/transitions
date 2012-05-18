@@ -1,6 +1,8 @@
 require "helper"
 require 'active_support/core_ext/module/aliasing'
 
+# TODO Tests here are quite messy, clean up.
+
 ActiveRecord::Base.establish_connection(:adapter  => "sqlite3", :database => ":memory:")
 
 class CreateTrafficLights < ActiveRecord::Migration
@@ -188,34 +190,49 @@ class TestNewActiveRecord < TestActiveRecord
 
 end
 
+class CreateBunnies < ActiveRecord::Migration
+  def self.up
+    create_table(:bunnies) do |t|
+      t.string :state
+    end
+  end
+end
+
+CreateBunnies.migrate(:up)
+
+class Bunny < ActiveRecord::Base
+  include ActiveModel::Transitions
+
+  state_machine :auto_scopes => true do
+    state :hobbling
+  end
+end
+
 class TestScopes < Test::Unit::TestCase
-  test "scope returns correct object" do
-    @light = TrafficLight.create!
-    assert_respond_to TrafficLight, :off
-    assert_equal TrafficLight.off.first, @light
-    assert TrafficLight.red.empty?
+  def setup
+    create_database
+    @bunny = Bunny.create!
   end
 
   test "scopes exist" do
-    assert_respond_to TrafficLight, :off
-    assert_respond_to TrafficLight, :red
-    assert_respond_to TrafficLight, :green
-    assert_respond_to TrafficLight, :yellow
+    assert_respond_to Bunny, :hobbling
+  end
+
+  test "scope returns correct object" do
+    assert_equal Bunny.hobbling.first, @bunny
   end
 
   test 'scopes are only generated if we explicitly say so' do
     assert_not_respond_to LightBulb, :off
-    assert_not_respond_to LightBulb, :on
   end
 
   test 'scope generation raises an exception if we try to overwrite an existing method' do
     assert_raise(Transitions::InvalidMethodOverride) {
-      class Light < ActiveRecord::Base
+      class TrafficLight < ActiveRecord::Base
         include ActiveModel::Transitions
 
         state_machine :auto_scopes => true do
           state :new
-          state :broken
         end
       end
     }

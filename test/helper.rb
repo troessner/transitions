@@ -7,6 +7,7 @@ require "db/create_db"
 
 require "transitions"
 require "active_model/transitions"
+require 'random_data'
 
 def create_database
   ActiveRecord::Base.establish_connection(:adapter  => "sqlite3", :database => ":memory:")

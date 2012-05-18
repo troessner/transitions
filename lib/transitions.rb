@@ -27,7 +27,6 @@ require "transitions/state_transition"
 require "transitions/version"
 
 module Transitions
-  # TODO Use ActiveSupport::Concern to clean this up.
   class InvalidTransition     < StandardError; end
   class InvalidMethodOverride < StandardError; end
 
@@ -58,15 +57,6 @@ module Transitions
 
     def available_states(name = :default)
       state_machines[name].states.map(&:name).sort_by {|x| x.to_s}
-    end
-
-    # TODO This method does not belong here but in `State`.
-    def define_state_query_method(state_name)
-      name = "#{state_name}?"
-      # TODO We should not just undefine existing methods, that's highly destructive and surprising. Rather do
-      # raise ArgumentError, "Transitions: Can not define method #{name} because it is already defined, please rename either the existing method or the state."
-      undef_method(name) if method_defined?(name)
-      define_method(name) { current_state.to_s == %(#{state_name}) }
     end
   end
 

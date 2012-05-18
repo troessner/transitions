@@ -5,6 +5,9 @@ class CreateDb < ActiveRecord::Migration
       t.string :state
       t.string :name
     end
+    create_table(:bunnies, :force => true) do |t|
+      t.string :state
+    end
     
     create_table(:orders, :force => true) do |t|
       t.string :state

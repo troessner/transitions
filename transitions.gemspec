@@ -18,6 +18,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency "test-unit", "~> 2.2"
   s.add_development_dependency "mocha"
   s.add_development_dependency "rake"
+  s.add_development_dependency "random_data"
   s.add_development_dependency "sqlite3"
   s.add_development_dependency "activerecord", "~> 3"
 
