@@ -1,6 +1,6 @@
 = Travis Build Status 
 
-{<img src="https://secure.travis-ci.org/troessner/transitions.png"/>}[http://travis-ci.org/troessner/transitions]
+{<img src="https://secure.travis-ci.org/troessner/transitions.png?branch=master"/>}[http://travis-ci.org/troessner/transitions]
 
 = Synopsis
 
