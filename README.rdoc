@@ -24,10 +24,8 @@ This goes into your Gemfile:
 
 = Using transitions
 
- require 'transitions'
- 
  class Product
-   include Transitions
+   include ActiveModel::Transitions
  
    state_machine do
      state :available # first one is initial state
@@ -45,6 +43,13 @@ This goes into your Gemfile:
      end
    end
  end
+
+In this example we assume that you are in a rails project using Bundler, which would automitcally require `transitions`.
+If this is not the case for you you have to add
+
+ require 'transitions'
+
+whereever you load your dependencies in your application.
 
 = Features
 
