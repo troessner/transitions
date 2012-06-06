@@ -36,39 +36,38 @@ module ActiveModel
     # exclusive row lock. 
     def reload(options = nil)
       super.tap do
-        self.class.state_machines.values.each do |sm|
-          remove_instance_variable(sm.current_state_variable) if instance_variable_defined?(sm.current_state_variable)
-        end
+        sm = self.class.get_state_machine
+        remove_instance_variable(sm.current_state_variable) if instance_variable_defined?(sm.current_state_variable)
       end
     end
 
     protected
 
-    def write_state(state_machine, state)
-      prev_state = current_state(state_machine.name)
-      write_state_without_persistence(state_machine, state)
+    def write_state(state)
+      prev_state = current_state
+      write_state_without_persistence(state)
       save!
     rescue ActiveRecord::RecordInvalid
-      write_state_without_persistence(state_machine, prev_state)
+      write_state_without_persistence(prev_state)
       raise
     end
     
-    def write_state_without_persistence(state_machine, state)
-      ivar = state_machine.current_state_variable
+    def write_state_without_persistence(state)
+      ivar = self.class.get_state_machine.current_state_variable
       instance_variable_set(ivar, state)
       self.state = state.to_s
     end
 
-    def read_state(state_machine)
+    def read_state
       self.state && self.state.to_sym
     end
 
     def set_initial_state
-      self.state ||= self.class.state_machine.initial_state.to_s if self.has_attribute?(:state)
+      self.state ||= self.class.get_state_machine.initial_state.to_s if self.has_attribute?(:state)
     end
 
     def state_inclusion
-      unless self.class.state_machine.states.map{|s| s.name.to_s }.include?(self.state.to_s)
+      unless self.class.get_state_machine.states.map{|s| s.name.to_s }.include?(self.state.to_s)
         self.errors.add(:state, :inclusion, :value => self.state)
       end
     end

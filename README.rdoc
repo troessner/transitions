@@ -124,6 +124,19 @@ the name of the timestamp column.
     transitions :from => :exploded, :to => :rebuilt
   end
 
+== `event_fired` and `event_failed`
+
+In case you define `event_fired` and / or `event_failed`, `transitions` will use those callbacks correspondingly.
+You can use those callbacks like this:
+
+  def event_fired(current_state, new_state, event)
+    MyLogger.info "Event fired #{event.inspect}"
+  end
+
+  def event_failed(event)
+    MyLogger.warn "Event failed #{event.inspect}"
+  end
+
 == Listing all the available states
 
 You can easily get a listing of all available states:
@@ -138,9 +151,6 @@ In case you have multiple state machines you can also pass the state machine nam
 = Documentation, Guides & Examples
 
 - {Online API Documentation}[http://rdoc.info/github/troessner/transitions/master/Transitions]
-- Krzysiek Heród (aka {Netizer}[http://github.com/netizer]) wrote a nice
-  {blog post}[http://dev.netizer.pl/transitions-state-machine-for-rails-3.html]
-  about using Transitions in ActiveRecord.
 
 = Copyright
 
