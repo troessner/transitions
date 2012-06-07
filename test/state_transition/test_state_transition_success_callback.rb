@@ -46,15 +46,4 @@ class TestStateTransitionSuccessCallback < Test::Unit::TestCase
     @car.expects(:loosen_handbrake).raises("Drive with handbrake fail!")
     @car.start_driving!
   end
-
-  test "should execute the event_failed_callback and don't raise error if callback is defined" do
-    @car.start_driving
-    @car.expects(:event_failed).with(:switch_off_engine)
-    @car.switch_off_engine
-  end
-
-  test "should just re-raise any error on transition if the event_failed_callback isn't defined" do
-    @car.start_driving
-    assert_raise(Transitions::InvalidTransition) { @car.switch_off_engine }
-  end
 end

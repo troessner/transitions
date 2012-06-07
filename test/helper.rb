@@ -1,16 +1,18 @@
-Bundler.require
-require "test/unit"
-require "active_support/all"
-require "active_record"
-require "mocha"
-require "db/create_db"
+require 'test/unit'
+require 'active_record'
 
-require "transitions"
-require "active_model/transitions"
+require 'transitions'
+require 'active_model/transitions'
+
+require 'mocha'
 require 'random_data'
 
-def create_database
-  ActiveRecord::Base.establish_connection(:adapter  => "sqlite3", :database => ":memory:")
+def db_defaults!
+  ActiveRecord::Base.establish_connection(:adapter  => 'sqlite3', :database => ':memory:')
   ActiveRecord::Migration.verbose = false
-  CreateDb.migrate(:up)
+end
+
+def set_up_db(*migrations)
+  db_defaults!
+  migrations.each { |klass| klass.send :migrate, :up }
 end

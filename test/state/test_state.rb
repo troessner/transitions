@@ -2,15 +2,14 @@ require "helper"
 
 class TestState < Test::Unit::TestCase
   def setup
-    @state_test_subject = Class.new do
+    machine = Class.new do
       include Transitions
       state_machine do
       end
-    end
-    @state_name = :astate
-    @machine = @state_test_subject.state_machine
-    @options = { :machine => @machine, :custom_key => :my_key }
-    @state   = Transitions::State.new(@state_name, @options)
+    end.get_state_machine
+    state_name = :astate
+    @options = { :machine => machine, :custom_key => :my_key }
+    @state   = Transitions::State.new(state_name, @options)
   end
 
   def new_state_name
@@ -68,34 +67,5 @@ class TestState < Test::Unit::TestCase
     record.expects(:foobar)
 
     state.call_action(:entering, record)
-  end
-end
-
-class StateOverrideMethodTestSubject
-  include Transitions
-
-  state_machine do
-  end
-
-  def a_state_name?; :foo; end
-end
-
-
-class TestStateQueryOverrideMethod < Test::Unit::TestCase
-  def setup
-    @state_name = 'a_state_name'
-    @machine = StateOverrideMethodTestSubject.state_machine
-    @options = { :machine => @machine }
-  end
-
-  test "warn on creation when we try to overwrite an existing method" do
-    # TODO
-  end
-
-  test "should not override an already existing method" do
-    Transitions::State.new :dummy, @options
-    expected_result = :foo
-    actual_result   = StateOverrideMethodTestSubject.new.a_state_name?
-    assert_equal expected_result, actual_result
   end
 end

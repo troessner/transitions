@@ -124,7 +124,7 @@ the name of the timestamp column.
     transitions :from => :exploded, :to => :rebuilt
   end
 
-== `event_fired` and `event_failed`
+==  Using <tt>event_fired</tt> and <tt>event_failed</tt>
 
 In case you define `event_fired` and / or `event_failed`, `transitions` will use those callbacks correspondingly.
 You can use those callbacks like this:
@@ -144,9 +144,12 @@ You can easily get a listing of all available states:
   Order.available_states # Uses the <tt>default</tt> state machine
   # => [:pick_line_items, :picking_line_items]
 
-In case you have multiple state machines you can also pass the state machine name:
+== Explicitly setting the  all the initial state with the <tt>initial</tt> option
 
-  Order.available_states(:your_machine)
+  state_machine :initial => :closed do
+    state :open
+    state :closed
+  end
 
 = Documentation, Guides & Examples
 

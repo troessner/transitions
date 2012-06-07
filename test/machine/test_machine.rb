@@ -31,4 +31,8 @@ class TransitionsMachineTest < Test::Unit::TestCase
     assert events.include?(:shutdown)
     assert events.include?(:timeout)
   end
+
+  test "test fire_event" do
+    pend "Implement me"
+  end
 end

@@ -43,6 +43,7 @@ module Transitions
       self
     end
 
+    # TODO Refactor me please?
     def fire_event(event, record, persist, *args)
       state_index[record.current_state].call_action(:exit, record)
       begin
@@ -70,17 +71,14 @@ module Transitions
       end
     end
 
-    def states_for_select
-      states.map { |st| [st.display_name, st.name.to_s] }
-    end
-
     def events_for(state)
       events = @events.values.select { |event| event.transitions_from_state?(state) }
       events.map! { |event| event.name }
     end
 
     def current_state_variable
-      "@current_state"
+      # TODO Refactor me away.
+      :@current_state
     end
 
     private
