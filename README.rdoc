@@ -144,7 +144,7 @@ You can easily get a listing of all available states:
   Order.available_states # Uses the <tt>default</tt> state machine
   # => [:pick_line_items, :picking_line_items]
 
-== Explicitly setting the  all the initial state with the <tt>initial</tt> option
+== Explicitly setting the initial state with the <tt>initial</tt> option
 
   state_machine :initial => :closed do
     state :open
