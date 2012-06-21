@@ -39,10 +39,6 @@ module Transitions
         else
           obj.instance_eval(&@guard)
         end
-      when Array
-        @guard.all? do |callback|
-          obj.send(callback)
-        end
       else
         true
       end
