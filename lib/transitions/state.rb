@@ -46,7 +46,7 @@ module Transitions
       when Symbol, String
         record.send(action)
       when Proc
-        if @guard.lambda?
+        if action.lambda?
           action.call(record)
         else
           record.instance_eval(&action)

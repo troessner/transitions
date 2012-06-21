@@ -56,7 +56,7 @@ module Transitions
         if @on_transition.lambda?
           @on_transition.call(obj, *args)
         else
-          obj.instance_eval(&@on_transition, *args)
+          obj.instance_exec(*args, &@on_transition)
         end
       when Array
         @on_transition.each do |callback|
