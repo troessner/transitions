@@ -1,22 +1,18 @@
-Bundler.require
-require "test/unit"
-require "active_support/all"
-require "active_record"
-require "mocha"
-require "db/create_db"
-require "ruby-debug"
+require 'test/unit'
+require 'active_record'
 
-$LOAD_PATH.unshift(File.join(File.dirname(__FILE__), "..", "lib"))
-$LOAD_PATH.unshift(File.dirname(__FILE__))
-require "transitions"
-require "active_record/transitions"
+require 'transitions'
+require 'active_model/transitions'
 
-class Test::Unit::TestCase
+require 'mocha'
+require 'random_data'
 
+def db_defaults!
+  ActiveRecord::Base.establish_connection(:adapter  => 'sqlite3', :database => ':memory:')
+  ActiveRecord::Migration.verbose = false
 end
 
-def create_database
-  ActiveRecord::Base.establish_connection(:adapter  => "sqlite3", :database => ":memory:")
-  ActiveRecord::Migration.verbose = false
-  CreateDb.migrate(:up)
+def set_up_db(*migrations)
+  db_defaults!
+  migrations.each { |klass| klass.send :migrate, :up }
 end

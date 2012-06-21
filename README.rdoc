@@ -1,10 +1,10 @@
 = Travis Build Status 
 
-{<img src="https://secure.travis-ci.org/troessner/transitions.png"/>}[http://travis-ci.org/troessner/transitions]
+{<img src="https://secure.travis-ci.org/troessner/transitions.png?branch=master"/>}[http://travis-ci.org/troessner/transitions]
 
 = Synopsis
 
-`transitions` is a ruby state machine implementation.
+<tt>transitions</tt> is a ruby state machine implementation.
 
 = Installation
 
@@ -12,11 +12,11 @@
 
 This goes into your Gemfile:
 
- gem "transitions", :require => ["transitions", "active_record/transitions"]
+ gem "transitions", :require => ["transitions", "active_model/transitions"]
 
-… and this into your AR model:
+… and this into your ORM model:
 
- include ActiveRecord::Transitions
+ include ActiveModel::Transitions
 
 == Standalone
 
@@ -24,10 +24,8 @@ This goes into your Gemfile:
 
 = Using transitions
 
- require 'transitions'
- 
  class Product
-   include Transitions
+   include ActiveModel::Transitions
  
    state_machine do
      state :available # first one is initial state
@@ -46,23 +44,29 @@ This goes into your Gemfile:
    end
  end
 
+In this example we assume that you are in a rails project using Bundler, which would automitcally require `transitions`.
+If this is not the case for you you have to add
+
+ require 'transitions'
+
+whereever you load your dependencies in your application.
+
 = Features
 
 == Events
 
 When you declare an event, say <tt>discontinue</tt>, two methods are declared for
-you: <tt>discontinue</tt> and <tt>discontinue!</tt>. Both events will call
-<tt>write_state_without_persistence</tt> on successful transition, but only the
-bang(!)-version will call <tt>write_state</tt>.
+you: <tt>discontinue</tt> and <tt>discontinue!</tt>. Both events will modify the <tt>state</tt> attribute on successful transition,
+but only the bang(!)-version will call <tt>save!</tt>.
 
 == Automatic scope generation
 
-`transitions` will automatically generate scopes for you if you are using ActiveRecord and tell it to do so via the `auto_scopes` option:
+<tt>transitions</tt> will automatically generate scopes for you if you are using ActiveRecord and tell it to do so via the <tt>auto_scopes</tt> option:
 
 Given a model like this:
 
   class Order < ActiveRecord::Base
-    include ActiveRecord::Transitions
+    include ActiveModel::Transitions
     state_machine :auto_scopes => true do
       state :pick_line_items
       state :picking_line_items
@@ -78,7 +82,7 @@ you can use this feature a la:
   >> Order.pick_line_items
   => [#<Order id: 3, state: "pick_line_items", description: nil, created_at: "2011-08-23 15:48:46", updated_at: "2011-08-23 15:48:46">]
 
-== Using `on_transition`
+== Using <tt>on_transition</tt>
 
 Each event definition takes an optional "on_transition" argument, which allows you to execute methods on transition.
 You can pass in a Symbol, a String, a Proc or an Array containing method names as Symbol or String like this:
@@ -87,9 +91,9 @@ You can pass in a Symbol, a String, a Proc or an Array containing method names a
     transitions :to => :discontinued, :from => [:available, :out_of_stock], :on_transition => [:do_discontinue, :notify_clerk]
   end
 
-== Using `success`
+== Using <tt>success</tt>
 
-In case you need to trigger a method call after a successful transition you can use `success`:
+In case you need to trigger a method call after a successful transition you can use <tt>success</tt>:
 
   event :discontinue, :success => :notfiy_admin do
     transitions :to => :discontinued, :from => [:available, :out_of_stock]
@@ -120,23 +124,36 @@ the name of the timestamp column.
     transitions :from => :exploded, :to => :rebuilt
   end
 
+==  Using <tt>event_fired</tt> and <tt>event_failed</tt>
+
+In case you define `event_fired` and / or `event_failed`, `transitions` will use those callbacks correspondingly.
+You can use those callbacks like this:
+
+  def event_fired(current_state, new_state, event)
+    MyLogger.info "Event fired #{event.inspect}"
+  end
+
+  def event_failed(event)
+    MyLogger.warn "Event failed #{event.inspect}"
+  end
+
 == Listing all the available states
 
 You can easily get a listing of all available states:
 
-  Order.available_states # Uses the `default` state machine
+  Order.available_states # Uses the <tt>default</tt> state machine
   # => [:pick_line_items, :picking_line_items]
 
-In case you have multiple state machines you can also pass the state machine name:
+== Explicitly setting the initial state with the <tt>initial</tt> option
 
-  Order.available_states(:your_machine)
+  state_machine :initial => :closed do
+    state :open
+    state :closed
+  end
 
 = Documentation, Guides & Examples
 
 - {Online API Documentation}[http://rdoc.info/github/troessner/transitions/master/Transitions]
-- Krzysiek Heród (aka {Netizer}[http://github.com/netizer]) wrote a nice
-  {blog post}[http://dev.netizer.pl/transitions-state-machine-for-rails-3.html]
-  about using Transitions in ActiveRecord.
 
 = Copyright
 

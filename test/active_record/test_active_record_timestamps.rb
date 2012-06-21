@@ -1,10 +1,22 @@
 require "helper"
-require 'active_support/core_ext/module/aliasing'
 
-create_database
+class CreateOrders < ActiveRecord::Migration
+  def self.up
+    create_table(:orders, :force => true) do |t|
+      t.string :state
+      t.string :order_number
+      t.datetime :paid_at
+      t.datetime :prepared_on
+      t.datetime :dispatched_at
+      t.date :cancellation_date
+    end
+  end
+end
+
+set_up_db CreateOrders
 
 class Order < ActiveRecord::Base
-  include ActiveRecord::Transitions
+  include ActiveModel::Transitions
 
   state_machine do
     state :opened
@@ -43,21 +55,18 @@ class Order < ActiveRecord::Base
     event :reopen, :timestamp => true do
       transitions :from => :cancelled, :to => :opened
     end
-    
   end
 end
 
-
 class TestActiveRecordTimestamps < Test::Unit::TestCase
-  
   require "securerandom"
-  
+
   def setup
-    create_database
+    set_up_db CreateOrders
   end
-  
+
   def create_order(state = nil)
-    Order.create! order_number: SecureRandom.hex(4), state: state
+    Order.create! :order_number => SecureRandom.hex(4), :state => state
   end
 
   # control case, no timestamp has been set so we should expect default behaviour
@@ -104,9 +113,9 @@ class TestActiveRecordTimestamps < Test::Unit::TestCase
   test "passing an invalid value to timestamp options should raise an exception" do
     assert_raise(ArgumentError) do
       class Order < ActiveRecord::Base
-        include ActiveRecord::Transitions
+        include ActiveModel::Transitions
         state_machine do
-          event :replace, timestamp: 1 do
+          event :replace, :timestamp => 1 do
             transitions :from => :prepared, :to => :placed
           end
         end
@@ -114,5 +123,4 @@ class TestActiveRecordTimestamps < Test::Unit::TestCase
       end      
     end
   end
-
 end

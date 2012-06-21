@@ -24,10 +24,10 @@ module Transitions
   class Machine
     attr_writer :initial_state
     attr_accessor :states, :events, :state_index
-    attr_reader :klass, :name, :auto_scopes
+    attr_reader :klass, :auto_scopes
 
-    def initialize(klass, name, options = {}, &block)
-      @klass, @name, @states, @state_index, @events = klass, name, [], {}, {}
+    def initialize(klass, options = {}, &block)
+      @klass, @states, @state_index, @events = klass, [], {}, {}
       update(options, &block)
     end
 
@@ -43,35 +43,32 @@ module Transitions
       self
     end
 
+    # TODO Refactor me please?
     def fire_event(event, record, persist, *args)
-      state_index[record.current_state(@name)].call_action(:exit, record)
+      state_index[record.current_state].call_action(:exit, record)
       begin
         if new_state = @events[event].fire(record, nil, *args)
           state_index[new_state].call_action(:enter, record)
 
-          if record.respond_to?(event_fired_callback)
-            record.send(event_fired_callback, record.current_state, new_state, event)
+          if record.respond_to?(:event_fired)
+            record.send(:event_fired, record.current_state, new_state, event)
           end
 
-          record.current_state(@name, new_state, persist)
+          record.current_state(new_state, persist)
           @events[event].success.call(record) if @events[event].success
           return true
         else
-          record.send(event_fired_callback, event) if record.respond_to?(event_failed_callback)
+          record.send(:event_failed, event) if record.respond_to?(:event_failed)
           return false
         end
       rescue => e
-        if record.respond_to?(event_failed_callback)
-          record.send(event_failed_callback, event)
+        if record.respond_to?(:event_failed)
+          record.send(:event_failed, event)
           return false
         else
           raise e
         end
       end
-    end
-
-    def states_for_select
-      states.map { |st| [st.display_name, st.name.to_s] }
     end
 
     def events_for(state)
@@ -80,7 +77,8 @@ module Transitions
     end
 
     def current_state_variable
-      "@#{@name}_current_state"
+      # TODO Refactor me away.
+      :@current_state
     end
 
     def to_dot(options = {})
@@ -112,19 +110,16 @@ module Transitions
     private
 
     def state(name, options = {})
-      @states << (state_index[name] ||= State.new(name, :machine => self)).update(options)
+      unless @state_index.key? name # Just ignore duplicates
+        state = State.new(name, :machine => self)
+        state.update options
+        @state_index[name] = state
+        @states << state
+      end
     end
 
     def event(name, options = {}, &block)
       (@events[name] ||= Event.new(self, name)).update(options, &block)
-    end
-
-    def event_fired_callback
-      @event_fired_callback ||= (@name == :default ? '' : "#{@name}_") + 'event_fired'
-    end
-
-    def event_failed_callback
-      @event_failed_callback ||= (@name == :default ? '' : "#{@name}_") + 'event_failed'
     end
 
     def include_scopes

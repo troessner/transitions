@@ -39,8 +39,8 @@ module Transitions
     end
 
     def fire(obj, to_state = nil, *args)
-      transitions = @transitions.select { |t| t.from == obj.current_state(@machine ? @machine.name : nil) }
-      raise InvalidTransition if transitions.size == 0
+      transitions = @transitions.select { |t| t.from == obj.current_state }
+      raise InvalidTransition, error_message_for_invalid_transitions(obj, to_state) if transitions.size == 0
 
       next_state = nil
       transitions.each do |transition|
@@ -137,6 +137,10 @@ module Transitions
       when Symbol
         lambda { |record| record.send(callback_symbol_or_proc) }
       end
+    end
+
+    def error_message_for_invalid_transitions(obj, to_state)
+      "Cannot transition to #{to_state || 'default'} from #{obj.current_state} for `#{obj.class.name}` #{obj.class < ActiveRecord::Base && obj.persisted? ? "with ID #{obj.id} " : nil}"
     end
   end
 end

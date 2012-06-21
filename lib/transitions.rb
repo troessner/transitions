@@ -32,40 +32,28 @@ module Transitions
 
   module ClassMethods
     def inherited(klass)
-      super
-      klass.state_machines = state_machines
+      super # Make sure we call other callbacks possibly defined upstream the ancestor chain.
+      klass.state_machine = state_machine
     end
 
-    def state_machines
-      @state_machines ||= {}
+    # The only reason we need this method is for the inherited callback.
+    def state_machine=(value)
+      @state_machine = value.dup
     end
 
-    def state_machines=(value)
-      @state_machines = value ? value.dup : nil
+    def state_machine(options = {}, &block)
+      @state_machine ||= Machine.new self
+      block ? @state_machine.update(options, &block) : @state_machine
     end
 
-    def state_machine(name = nil, options = {}, &block)
-      if name.is_a?(Hash)
-        options = name
-        name    = nil
-      end
-      name ||= :default
-      state_machines[name] ||= Machine.new(self, name)
-      block ? state_machines[name].update(options, &block) : state_machines[name]
+    def get_state_machine; @state_machine; end
+
+    def available_states
+      @state_machine.states.map(&:name).sort_by {|x| x.to_s}
     end
 
-    def available_events name = :default
-      state_machines[name].events.keys.sort
-    end
-
-    def available_states name = :default
-      state_machines[name].states.map(&:name).sort
-    end
-
-    def define_state_query_method(state_name)
-      name = "#{state_name}?"
-      undef_method(name) if method_defined?(name)
-      define_method(name) { current_state.to_s == %(#{state_name}) }
+    def available_events
+      @state_machine.events.keys.sort
     end
   end
 
@@ -73,16 +61,17 @@ module Transitions
     base.extend(ClassMethods)
   end
 
-  def current_state(name = nil, new_state = nil, persist = false)
-    sm   = self.class.state_machine(name)
+  # TODO Do we need this method really? Also, it's not a beauty, refactor at least.
+  def current_state(new_state = nil, persist = false)
+    sm   = self.class.get_state_machine
     ivar = sm.current_state_variable
-    if name && new_state
+    if new_state
       if persist && respond_to?(:write_state)
-        write_state(sm, new_state)
+        write_state(new_state)
       end
 
       if respond_to?(:write_state_without_persistence)
-        write_state_without_persistence(sm, new_state)
+        write_state_without_persistence(new_state)
       end
 
       instance_variable_set(ivar, new_state)
@@ -92,7 +81,7 @@ module Transitions
       return value if value
 
       if respond_to?(:read_state)
-        value = instance_variable_set(ivar, read_state(sm))
+        value = instance_variable_set(ivar, read_state)
       end
 
       value || sm.initial_state

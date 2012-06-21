@@ -1,1 +1,1 @@
-rvm ruby-1.9.2-p290@transitions
+rvm 1.9.2-p290@transitions --create

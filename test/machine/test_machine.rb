@@ -3,12 +3,10 @@ require "helper"
 class MachineTestSubject
   include Transitions
 
-  state_machine do
+  state_machine :initial => :closed do
     state :open
     state :closed
-  end
 
-  state_machine :initial => :foo do
     event :shutdown do
       transitions :from => :open, :to => :closed
     end
@@ -17,27 +15,24 @@ class MachineTestSubject
       transitions :from => :open, :to => :closed
     end
   end
-
-  state_machine :extra, :initial => :bar do
-  end
 end
 
 class TransitionsMachineTest < Test::Unit::TestCase
-  test "allows reuse of existing machines" do
-    assert_equal 2, MachineTestSubject.state_machines.size
-  end
-
   test "sets #initial_state from :initial option" do
-    assert_equal :bar, MachineTestSubject.state_machine(:extra).initial_state
+    assert_equal :closed, MachineTestSubject.get_state_machine.initial_state
   end
 
-  test "accesses non-default state machine" do
-    assert_kind_of Transitions::Machine, MachineTestSubject.state_machine(:extra)
+  test "`get_state_machine` returns Transitions::Machine" do
+    assert_kind_of Transitions::Machine, MachineTestSubject.get_state_machine
   end
 
   test "finds events for given state" do
-    events = MachineTestSubject.state_machine.events_for(:open)
+    events = MachineTestSubject.get_state_machine.events_for(:open)
     assert events.include?(:shutdown)
     assert events.include?(:timeout)
+  end
+
+  test "test fire_event" do
+    pend "Implement me"
   end
 end
