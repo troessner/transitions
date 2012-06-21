@@ -25,7 +25,7 @@ module Transitions
     attr_reader :from, :to, :options
 
     def initialize(opts)
-      @from, @to, @guard, @on_transition = opts[:from], opts[:to], opts[:guard], opts[:on_transition]
+      @from, @to, @guard, @on_transition = opts[:from], opts[:to], (opts[:guard] || opts[:if]), (opts[:on_transition] || opts[:do])
       @options = opts
     end
 
@@ -34,10 +34,14 @@ module Transitions
       when Symbol, String
         obj.send(@guard)
       when Proc
-        @guard.call(obj)
+        if @guard.lambda?
+          @guard.call(obj)
+        else
+          obj.instance_eval(&@guard)
+        end
       when Array
         @guard.all? do |callback|
-          obj.send callback
+          obj.send(callback)
         end
       else
         true
@@ -49,7 +53,11 @@ module Transitions
       when Symbol, String
         obj.send(@on_transition, *args)
       when Proc
-        @on_transition.call(obj, *args)
+        if @on_transition.lambda?
+          @on_transition.call(obj, *args)
+        else
+          obj.instance_eval(&@on_transition, *args)
+        end
       when Array
         @on_transition.each do |callback|
           # Yes, we're passing always the same parameters for each callback in here.
