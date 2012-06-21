@@ -64,12 +64,6 @@ module Transitions
       self
     end
 
-    def to_dot(options = {})
-      attrs = options.to_a.collect do |key,opt|
-        "#{key}=#{opt}"
-      end
-      "#{@name}[#{attrs.join(',')}]"
-
     private
     def define_state_query_method(machine)
       method_name, state_name = "#{@name}?", @name # Instance vars are out of scope when calling define_method below, so we use local variables.
