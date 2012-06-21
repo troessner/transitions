@@ -46,7 +46,11 @@ module Transitions
       when Symbol, String
         record.send(action)
       when Proc
-        action.call(record)
+        if action.lambda?
+          action.call(record)
+        else
+          record.instance_eval(&action)
+        end
       end
     end
 

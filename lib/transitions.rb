@@ -51,6 +51,10 @@ module Transitions
     def available_states
       @state_machine.states.map(&:name).sort_by {|x| x.to_s}
     end
+
+    def available_events
+      @state_machine.events.keys.sort
+    end
   end
 
   def self.included(base)

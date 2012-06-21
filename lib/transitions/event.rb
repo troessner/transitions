@@ -95,7 +95,7 @@ module Transitions
         raise ArgumentError, "timestamp must be either: true, a String or a Symbol"
       end
     end
-    
+
 
     private
     
