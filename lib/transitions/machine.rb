@@ -81,17 +81,6 @@ module Transitions
       :@current_state
     end
 
-    def draw_graph(options = {})
-      format = options[:format] || :png
-      extension = options[:extension] || format
-      file_name = options[:outfile] || "#{@klass.name.downcase}.#{extension}"
-      cmd = "dot -T#{format} -o#{file_name}"
-      IO.popen cmd, 'w' do |io|
-        io.write to_dot
-      end
-      raise 'dot failed' unless $?.success?
-    end
-
     private
 
     def state(name, options = {})

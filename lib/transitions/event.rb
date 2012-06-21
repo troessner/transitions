@@ -96,11 +96,6 @@ module Transitions
       end
     end
 
-    def to_dot(options = {})
-      @transitions.collect do |transition|
-        "  #{transition.to_dot(options)}[label=\"#{@name}\"];"
-      end.join("\n")
-    end
 
     private
     
