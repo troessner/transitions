@@ -38,7 +38,7 @@ module Transitions
     def update(options = {}, &block)
       @initial_state = options[:initial] if options.key?(:initial)
       @auto_scopes = options[:auto_scopes]
-      @state_column = options[:state_column] || :transition_state
+      @state_column = options[:state_column] || :state
       instance_eval(&block) if block
       include_scopes if @auto_scopes && defined?(ActiveRecord::Base) && @klass < ActiveRecord::Base
       self
