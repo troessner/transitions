@@ -24,7 +24,7 @@ module Transitions
   class Machine
     attr_writer :initial_state
     attr_accessor :states, :events, :state_index
-    attr_reader :klass, :auto_scopes
+    attr_reader :klass, :auto_scopes, :state_column
 
     def initialize(klass, options = {}, &block)
       @klass, @states, @state_index, @events = klass, [], {}, {}
@@ -38,6 +38,7 @@ module Transitions
     def update(options = {}, &block)
       @initial_state = options[:initial] if options.key?(:initial)
       @auto_scopes = options[:auto_scopes]
+      @state_column = options[:state_column] || :transition_state
       instance_eval(&block) if block
       include_scopes if @auto_scopes && defined?(ActiveRecord::Base) && @klass < ActiveRecord::Base
       self

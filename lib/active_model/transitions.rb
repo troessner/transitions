@@ -27,7 +27,7 @@ module ActiveModel
     included do
       include ::Transitions
       after_initialize :set_initial_state
-      validates_presence_of :state
+      #validates_presence_of :state
       validate :state_inclusion
     end
     
@@ -53,22 +53,30 @@ module ActiveModel
     end
     
     def write_state_without_persistence(state)
-      ivar = self.class.get_state_machine.current_state_variable
+      sm = self.class.get_state_machine
+      state_column = sm.state_column.to_s
+      ivar = sm.current_state_variable
       instance_variable_set(ivar, state)
-      self.state = state.to_s
+      self.send("#{state_column}=", state.to_s)
     end
 
     def read_state
-      self.state && self.state.to_sym
+      state_column = self.class.get_state_machine.state_column.to_s
+      mystate = self.send("#{state_column}")
+      mystate && mystate.to_sym
     end
 
     def set_initial_state
-      self.state ||= self.class.get_state_machine.initial_state.to_s if self.has_attribute?(:state)
+      state_column = self.class.get_state_machine.state_column.to_s
+      value = self.send("#{state_column}")
+      self.send("#{state_column}=", self.class.get_state_machine.initial_state.to_s) if self.has_attribute?(state_column.to_sym) && value.nil?
     end
 
     def state_inclusion
-      unless self.class.get_state_machine.states.map{|s| s.name.to_s }.include?(self.state.to_s)
-        self.errors.add(:state, :inclusion, :value => self.state)
+      state_column = self.class.get_state_machine.state_column.to_s
+      mystate = self.send("#{state_column}")
+      unless self.class.get_state_machine.states.map{|s| s.name.to_s }.include?(mystate.to_s)
+        self.errors.add(state_column.to_sym, :inclusion, :value => mystate)
       end
     end
   end
