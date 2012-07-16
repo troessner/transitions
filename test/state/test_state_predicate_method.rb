@@ -1,7 +1,8 @@
 require "helper"
 
 class Bus
-  include Transitions
+  #include Transitions
+  include Transitions::ActiveRecordExtension
   EXISTING_PREDICATE_METHOD_NAME = :driving?
   EXISTING_PREDICATE_METHOD_RETURN_VALUE = 'Am I driving?'
 

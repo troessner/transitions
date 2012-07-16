@@ -1,7 +1,8 @@
 require "helper"
 
 class ArgumentsTestSubject
-  include Transitions
+  #include Transitions
+  include Transitions::ActiveRecordExtension
   attr_accessor :date
 
   state_machine do

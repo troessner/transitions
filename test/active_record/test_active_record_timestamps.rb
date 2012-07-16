@@ -16,7 +16,7 @@ end
 set_up_db CreateOrders
 
 class Order < ActiveRecord::Base
-  include ActiveModel::Transitions
+  #include ActiveModel::Transitions
 
   state_machine do
     state :opened

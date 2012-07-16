@@ -2,7 +2,8 @@ require 'test/unit'
 require 'active_record'
 
 require 'transitions'
-require 'active_model/transitions'
+#require 'active_model/transitions'
+require 'transitions/active_model/transitions'
 
 require 'mocha'
 require 'random_data'

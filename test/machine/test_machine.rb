@@ -1,7 +1,8 @@
 require "helper"
 
 class MachineTestSubject
-  include Transitions
+  #include Transitions
+  include Transitions::ActiveRecordExtension
 
   state_machine :initial => :closed do
     state :open

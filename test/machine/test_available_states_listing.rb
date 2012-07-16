@@ -1,7 +1,8 @@
 require "helper"
 
 class Bender
-  include Transitions
+  #include Transitions
+  include Transitions::ActiveRecordExtension
 
   state_machine do
     state :drinking
