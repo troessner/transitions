@@ -21,8 +21,10 @@ module Transitions
       # exclusive row lock. 
       def reload(options = nil)
         super.tap do
-          sm = self.class.get_state_machine
-          remove_instance_variable(sm.current_state_variable) if instance_variable_defined?(sm.current_state_variable)
+          if self.class.respond_to?('get_state_machine')
+            sm = self.class.get_state_machine
+            remove_instance_variable(sm.current_state_variable) if instance_variable_defined?(sm.current_state_variable)
+          end
         end
       end
 
