@@ -5,6 +5,7 @@ class ArgumentsTestSubject
   include Transitions::ActiveRecordExtension
   attr_accessor :date
 
+  include_state_machine
   state_machine do
     state :initial
     state :opened

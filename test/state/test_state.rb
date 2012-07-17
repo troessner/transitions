@@ -5,6 +5,7 @@ class TestState < Test::Unit::TestCase
     machine = Class.new do
       #include Transitions
       include Transitions::ActiveRecordExtension
+      include_state_machine
       state_machine do
       end
     end.get_state_machine

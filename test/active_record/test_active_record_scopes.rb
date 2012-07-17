@@ -27,16 +27,18 @@ end
 set_up_db CreateBunnies, CreatePuppies
 
 class Bunny < ActiveRecord::Base
-  include ActiveModel::Transitions
+  #include ActiveModel::Transitions
 
+  include_state_machine
   state_machine :auto_scopes => true do
     state :hobbling
   end
 end
 
 class Puppy < ActiveRecord::Base
-  include ActiveModel::Transitions
+  #include ActiveModel::Transitions
 
+  include_state_machine
   state_machine do
     state :barking
   end
@@ -63,8 +65,9 @@ class TestScopes < Test::Unit::TestCase
   test 'scope generation raises an exception if we try to overwrite an existing method' do
     assert_raise(Transitions::InvalidMethodOverride) {
       class Bear < ActiveRecord::Base
-        include ActiveModel::Transitions
+        #include ActiveModel::Transitions
 
+        include_state_machine
         state_machine :auto_scopes => true do
           state :new
         end

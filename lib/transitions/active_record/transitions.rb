@@ -8,12 +8,12 @@ module Transitions
   module ActiveRecordExtension
     extend ActiveSupport::Concern
 
-#    included do
+    included do
 #      #include ::Transitions
-#      after_initialize :set_initial_state
+      after_initialize :set_initial_state if self.respond_to?('after_initialize')
 #      #validates_presence_of :state
-#      #validate :state_inclusion
-#    end
+      validate :state_inclusion if self.respond_to?('validate')
+    end
 
     module InstanceMethods
       # The optional options argument is passed to find when reloading so you may
@@ -52,10 +52,11 @@ module Transitions
       end
 
       def set_initial_state
-        state_column = self.class.get_state_machine.state_column.to_s
-        value = self.send("#{state_column}")
-        #self.send("#{state_column}=", self.class.get_state_machine.initial_state.to_s) if self.has_attribute?(state_column.to_sym) && value.nil?
-        self.send("#{state_column}=", self.class.get_state_machine.initial_state.to_s) #if self.has_attribute?(state_column.to_sym) && value.nil?
+        if self.respond_to?('new_record?') && self.new_record?
+          state_column = self.class.get_state_machine.state_column.to_s
+          value = self.send("#{state_column}")
+          self.send("#{state_column}=", self.class.get_state_machine.initial_state.to_s) if self.has_attribute?(state_column.to_sym) && value.nil?
+        end
       end
 
       def state_inclusion

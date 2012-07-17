@@ -12,8 +12,9 @@ end
 set_up_db CreateTrafficLights
 
 class TrafficLight < ActiveRecord::Base
-  include ActiveModel::Transitions
+  #include ActiveModel::Transitions
 
+  include_state_machine
   state_machine :auto_scopes => true, :state_column => :transitions_state do
     state :off
 
@@ -59,7 +60,6 @@ class TestActiveRecord < Test::Unit::TestCase
 
   test "new record has the initial state set" do
     @light = TrafficLight.new
-puts "INITIAL STATE ----> #{@light.transitions_state}"
     assert_equal "off", @light.transitions_state
   end
 
@@ -143,11 +143,7 @@ puts "INITIAL STATE ----> #{@light.transitions_state}"
   test "calling non-bang event updates state attribute" do
     @light.reset!
     assert @light.red?
-puts "----------------------> #{@light.transitions_state}"
     @light.green_on
-puts "----------------------> #{@light}"
-puts "----------------------> #{@light.transitions_state}"
-#puts "----------------------> #{@light.reload.transitions_state}"
     assert_equal "green", @light.transitions_state
     assert_equal "red", @light.reload.transitions_state
   end

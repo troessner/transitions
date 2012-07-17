@@ -9,6 +9,7 @@ class DrivingSchoolCar
   #include Transitions
   include Transitions::ActiveRecordExtension
 
+  include_state_machine
   state_machine do
     state :parked
     state :running
