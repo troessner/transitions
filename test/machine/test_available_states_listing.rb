@@ -1,8 +1,9 @@
 require "helper"
 
 class Bender
-  include Transitions
+  include Transitions::Extension
 
+  include_state_machine
   state_machine do
     state :drinking
     state :smoking

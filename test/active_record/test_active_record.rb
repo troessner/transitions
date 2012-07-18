@@ -12,8 +12,8 @@ end
 set_up_db CreateTrafficLights
 
 class TrafficLight < ActiveRecord::Base
-  include ActiveModel::Transitions
 
+  include_state_machine
   state_machine :auto_scopes => true, :state_column => :transitions_state do
     state :off
 

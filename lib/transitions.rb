@@ -21,66 +21,30 @@
 # SOFTWARE.
 
 require "transitions/event"
+require "transitions/exceptions"
 require "transitions/machine"
 require "transitions/state"
 require "transitions/state_transition"
 require "transitions/version"
+# for backward compatibility
+require "active_model/transitions"
+
 
 module Transitions
-  class InvalidTransition     < StandardError; end
-  class InvalidMethodOverride < StandardError; end
-
-  module ClassMethods
-    def inherited(klass)
-      super # Make sure we call other callbacks possibly defined upstream the ancestor chain.
-      klass.state_machine = state_machine
-    end
-
-    # The only reason we need this method is for the inherited callback.
-    def state_machine=(value)
-      @state_machine = value.dup
-    end
-
-    def state_machine(options = {}, &block)
-      @state_machine ||= Machine.new self
-      block ? @state_machine.update(options, &block) : @state_machine
-    end
-
-    def get_state_machine; @state_machine; end
-
-    def available_states
-      @state_machine.states.map(&:name).sort_by {|x| x.to_s}
-    end
-  end
-
-  def self.included(base)
-    base.extend(ClassMethods)
-  end
-
-  # TODO Do we need this method really? Also, it's not a beauty, refactor at least.
-  def current_state(new_state = nil, persist = false)
-    sm   = self.class.get_state_machine
-    ivar = sm.current_state_variable
-    if new_state
-      if persist && respond_to?(:write_state)
-        write_state(new_state)
-      end
-
-      if respond_to?(:write_state_without_persistence)
-        write_state_without_persistence(new_state)
-      end
-
-      instance_variable_set(ivar, new_state)
+  def self.hook!
+    require 'transitions/hooks'
+    if defined?(::Rails)
+      require 'transitions/railtie'
+      #require 'transitions/engine'
     else
-      instance_variable_set(ivar, nil) unless instance_variable_defined?(ivar)
-      value = instance_variable_get(ivar)
-      return value if value
-
-      if respond_to?(:read_state)
-        value = instance_variable_set(ivar, read_state)
-      end
-
-      value || sm.initial_state
+      Transitions::Hooks.init!
     end
+  end
+
+  def self.load!
+     hook!
   end
 end
+
+Transitions.load!
+
