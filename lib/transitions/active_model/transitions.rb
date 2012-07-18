@@ -20,31 +20,8 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-require "transitions/event"
-require "transitions/exceptions"
-require "transitions/machine"
-require "transitions/state"
-require "transitions/state_transition"
-require "transitions/version"
-# for backward compatibility
-require "active_model/transitions"
-
-
 module Transitions
-  def self.hook!
-    require 'transitions/hooks'
-    if defined?(::Rails)
-      require 'transitions/railtie'
-      #require 'transitions/engine'
-    else
-      Transitions::Hooks.init!
-    end
-  end
-
-  def self.load!
-     hook!
+  module ActiveModelExtension
   end
 end
-
-Transitions.load!
 

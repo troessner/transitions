@@ -3,7 +3,9 @@ require "helper"
 class TestState < Test::Unit::TestCase
   def setup
     machine = Class.new do
-      include Transitions
+      #include Transitions
+      include Transitions::ActiveRecordExtension
+      include_state_machine
       state_machine do
       end
     end.get_state_machine

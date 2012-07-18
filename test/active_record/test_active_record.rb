@@ -3,7 +3,7 @@ require "helper"
 class CreateTrafficLights < ActiveRecord::Migration
   def self.up
     create_table(:traffic_lights, :force => true) do |t|
-      t.string :state
+      t.string :transitions_state
       t.string :name
     end
   end
@@ -12,9 +12,10 @@ end
 set_up_db CreateTrafficLights
 
 class TrafficLight < ActiveRecord::Base
-  include ActiveModel::Transitions
+  #include ActiveModel::Transitions
 
-  state_machine :auto_scopes => true do
+  include_state_machine
+  state_machine :auto_scopes => true, :state_column => :transitions_state do
     state :off
 
     state :red
@@ -40,7 +41,7 @@ class TrafficLight < ActiveRecord::Base
 end
 
 class ProtectedTrafficLight < TrafficLight
-  attr_protected :state
+  attr_protected :transitions_state
 end
 
 class ValidatingTrafficLight < TrafficLight
@@ -59,7 +60,7 @@ class TestActiveRecord < Test::Unit::TestCase
 
   test "new record has the initial state set" do
     @light = TrafficLight.new
-    assert_equal "off", @light.state
+    assert_equal "off", @light.transitions_state
   end
 
   test "new active records defaults current state to the initial state" do
@@ -85,14 +86,14 @@ class TestActiveRecord < Test::Unit::TestCase
     @light.reset
     assert_equal :red, @light.current_state
     @light.reload
-    assert_equal "off", @light.state
+    assert_equal "off", @light.transitions_state
   end
 
   test "transition does persists state" do
     @light.reset!
     assert_equal :red, @light.current_state
     @light.reload
-    assert_equal "red", @light.state
+    assert_equal "red", @light.transitions_state
   end
 
   test "transition to an invalid state" do
@@ -105,15 +106,15 @@ class TestActiveRecord < Test::Unit::TestCase
     protected_light.reset!
     assert_equal :red, protected_light.current_state
     protected_light.reload
-    assert_equal "red", protected_light.state
+    assert_equal "red", protected_light.transitions_state
   end
 
   test "transition with wrong state will not validate" do
     for s in @light.class.get_state_machine.states
-      @light.state = s.name
+      @light.transitions_state = s.name
       assert @light.valid?
     end
-    @light.state = "invalid_one"
+    @light.transitions_state = "invalid_one"
     assert_false @light.valid?
   end
 
@@ -135,7 +136,7 @@ class TestActiveRecord < Test::Unit::TestCase
   test "reloading model resets current state" do
     @light.reset
     assert @light.red?
-    @light.update_attribute(:state, 'green')
+    @light.update_attribute(:transitions_state, 'green')
     assert @light.reload.green?, "reloaded state should come from database, not instance variable"
   end
   
@@ -143,7 +144,7 @@ class TestActiveRecord < Test::Unit::TestCase
     @light.reset!
     assert @light.red?
     @light.green_on
-    assert_equal "green", @light.state
-    assert_equal "red", @light.reload.state
+    assert_equal "green", @light.transitions_state
+    assert_equal "red", @light.reload.transitions_state
   end
 end
