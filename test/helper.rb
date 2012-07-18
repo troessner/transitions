@@ -8,6 +8,7 @@ require 'transitions/active_model/transitions'
 require 'mocha'
 require 'random_data'
 
+
 def db_defaults!
   ActiveRecord::Base.establish_connection(:adapter  => 'sqlite3', :database => ':memory:')
   ActiveRecord::Migration.verbose = false

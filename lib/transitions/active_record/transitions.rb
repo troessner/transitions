@@ -1,17 +1,11 @@
 require 'transitions/active_model/transitions'
 
-#module ActiveRecord
-#  Transitions = ActiveModel::Transitions
-#end
-
 module Transitions
   module ActiveRecordExtension
     extend ActiveSupport::Concern
 
     included do
-#      #include ::Transitions
       after_initialize :set_initial_state if self.respond_to?('after_initialize')
-#      #validates_presence_of :state
       validate :state_inclusion if self.respond_to?('validate')
     end
 
@@ -54,7 +48,7 @@ module Transitions
       end
 
       def set_initial_state
-        if self.respond_to?('new_record?') && self.new_record?
+        if self.respond_to?('state_machine_included?') && self.respond_to?('new_record?') && self.new_record?
           state_column = self.class.get_state_machine.state_column.to_s
           value = self.send("#{state_column}")
           self.send("#{state_column}=", self.class.get_state_machine.initial_state.to_s) if self.has_attribute?(state_column.to_sym) && value.nil?
@@ -62,24 +56,20 @@ module Transitions
       end
 
       def state_inclusion
-        state_column = self.class.get_state_machine.state_column.to_s
-        mystate = self.send("#{state_column}")
-        unless self.class.get_state_machine.states.map{|s| s.name.to_s }.include?(mystate.to_s)
-          self.errors.add(state_column.to_sym, :inclusion, :value => mystate)
+        if self.respond_to?('state_machine_included?')
+          state_column = self.class.get_state_machine.state_column.to_s
+          mystate = self.send("#{state_column}")
+          unless self.class.get_state_machine.states.map{|s| s.name.to_s }.include?(mystate.to_s)
+            self.errors.add(state_column.to_sym, :inclusion, :value => mystate)
+          end
         end
       end
     end
 
     module ClassMethods
-      #def inherited(klass)
-      #  puts "CLASS METHODS INHERITED"
-      #end
-
       # not really clean way, but this ensure backward compatibility
       def state_machine(options = {}, &block)
-        # unless should be useless
         include_state_machine unless self.respond_to?('state_machine_included?')
-        #puts "running include_state_machine dynamicly"
         # dangerous call ...
         state_machine(options, &block)
       end
@@ -116,13 +106,6 @@ module Transitions
         @state_machine.states.map(&:name).sort_by {|x| x.to_s}
       end
     end
-
-#    def self.included(base)
-#puts "INCLUDED2"
-#puts "transitions / active_record included..."
-#puts "base #{base} extend ClassMethods"
-#      base.extend(ClassMethods)
-#    end
 
     # TODO Do we need this method really? Also, it's not a beauty, refactor at least.
     def current_state(new_state = nil, persist = false)
