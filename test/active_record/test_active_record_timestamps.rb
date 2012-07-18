@@ -16,8 +16,8 @@ end
 set_up_db CreateOrders
 
 class Order < ActiveRecord::Base
-  include ActiveModel::Transitions
 
+  include_state_machine
   state_machine do
     state :opened
     state :placed
@@ -113,7 +113,8 @@ class TestActiveRecordTimestamps < Test::Unit::TestCase
   test "passing an invalid value to timestamp options should raise an exception" do
     assert_raise(ArgumentError) do
       class Order < ActiveRecord::Base
-        include ActiveModel::Transitions
+        include Transitions::Extension
+        include_state_machine
         state_machine do
           event :replace, :timestamp => 1 do
             transitions :from => :prepared, :to => :placed

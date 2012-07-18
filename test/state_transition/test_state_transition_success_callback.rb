@@ -6,8 +6,9 @@ class DrivingInstructor
 end
 
 class DrivingSchoolCar
-  include Transitions
+  include Transitions::Extension
 
+  include_state_machine
   state_machine do
     state :parked
     state :running

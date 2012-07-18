@@ -1,9 +1,10 @@
 require "helper"
 
 class ArgumentsTestSubject
-  include Transitions
+  include Transitions::Extension
   attr_accessor :date
 
+  include_state_machine
   state_machine do
     state :initial
     state :opened

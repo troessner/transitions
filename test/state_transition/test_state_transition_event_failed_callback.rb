@@ -1,8 +1,9 @@
 require 'helper'
 
 class Car
-  include Transitions
+  include Transitions::Extension
 
+  include_state_machine
   state_machine do
     state :parked
     state :driving
