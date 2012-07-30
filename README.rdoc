@@ -51,6 +51,8 @@ If this is not the case for you you have to add
 
 whereever you load your dependencies in your application.
 
+<b>A word of warning:</b> Use symbols, not strings for declaring the state machine. Using strings is *not* supported as is using whitespace in names (because `transitions` possibly generates methods out of this).
+
 === Features
 
 ==== Events
