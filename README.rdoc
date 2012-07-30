@@ -1,14 +1,14 @@
-= Travis Build Status 
+=== Travis Build Status 
 
 {<img src="https://secure.travis-ci.org/troessner/transitions.png?branch=master"/>}[http://travis-ci.org/troessner/transitions]
 
-= Synopsis
+=== Synopsis
 
 <tt>transitions</tt> is a ruby state machine implementation.
 
-= Installation
+=== Installation
 
-== Rails
+==== Rails
 
 This goes into your Gemfile:
 
@@ -18,11 +18,11 @@ This goes into your Gemfile:
 
  include ActiveModel::Transitions
 
-== Standalone
+==== Standalone
 
  gem install transitions
 
-= Using transitions
+=== Using transitions
 
  class Product
    include ActiveModel::Transitions
@@ -51,15 +51,15 @@ If this is not the case for you you have to add
 
 whereever you load your dependencies in your application.
 
-= Features
+=== Features
 
-== Events
+==== Events
 
 When you declare an event, say <tt>discontinue</tt>, two methods are declared for
 you: <tt>discontinue</tt> and <tt>discontinue!</tt>. Both events will modify the <tt>state</tt> attribute on successful transition,
 but only the bang(!)-version will call <tt>save!</tt>.
 
-== Automatic scope generation
+==== Automatic scope generation
 
 <tt>transitions</tt> will automatically generate scopes for you if you are using ActiveRecord and tell it to do so via the <tt>auto_scopes</tt> option:
 
@@ -82,7 +82,7 @@ you can use this feature a la:
   >> Order.pick_line_items
   => [#<Order id: 3, state: "pick_line_items", description: nil, created_at: "2011-08-23 15:48:46", updated_at: "2011-08-23 15:48:46">]
 
-== Using <tt>on_transition</tt>
+==== Using <tt>on_transition</tt>
 
 Each event definition takes an optional "on_transition" argument, which allows you to execute methods on transition.
 You can pass in a Symbol, a String, a Proc or an Array containing method names as Symbol or String like this:
@@ -91,7 +91,7 @@ You can pass in a Symbol, a String, a Proc or an Array containing method names a
     transitions :to => :discontinued, :from => [:available, :out_of_stock], :on_transition => [:do_discontinue, :notify_clerk]
   end
 
-== Using <tt>success</tt>
+==== Using <tt>success</tt>
 
 In case you need to trigger a method call after a successful transition you can use <tt>success</tt>:
 
@@ -106,7 +106,7 @@ perfom some more complex success callbacks:
     transitions :to => :discontinued, :from => [:available, :out_of_stock]
   end
 
-== Timestamps
+==== Timestamps
 
 If you'd like to note the time of a state change, Transitions comes with timestamps free!
 To activate them, simply pass the :timestamp option to the event definition with a value of either true or
@@ -124,7 +124,7 @@ the name of the timestamp column.
     transitions :from => :exploded, :to => :rebuilt
   end
 
-==  Using <tt>event_fired</tt> and <tt>event_failed</tt>
+====  Using <tt>event_fired</tt> and <tt>event_failed</tt>
 
 In case you define `event_fired` and / or `event_failed`, `transitions` will use those callbacks correspondingly.
 You can use those callbacks like this:
@@ -137,24 +137,24 @@ You can use those callbacks like this:
     MyLogger.warn "Event failed #{event.inspect}"
   end
 
-== Listing all the available states
+==== Listing all the available states
 
 You can easily get a listing of all available states:
 
   Order.available_states # Uses the <tt>default</tt> state machine
   # => [:pick_line_items, :picking_line_items]
 
-== Explicitly setting the initial state with the <tt>initial</tt> option
+==== Explicitly setting the initial state with the <tt>initial</tt> option
 
   state_machine :initial => :closed do
     state :open
     state :closed
   end
 
-= Documentation, Guides & Examples
+=== Documentation, Guides & Examples
 
 - {Online API Documentation}[http://rdoc.info/github/troessner/transitions/master/Transitions]
 
-= Copyright
+=== Copyright
 
 Copyright (c) 2010 Jakub Kuźma, Timo Rößner. See LICENSE for details.
