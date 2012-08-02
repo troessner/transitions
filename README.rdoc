@@ -57,9 +57,10 @@ whereever you load your dependencies in your application.
 
 ==== Events
 
-When you declare an event, say <tt>discontinue</tt>, two methods are declared for
-you: <tt>discontinue</tt> and <tt>discontinue!</tt>. Both events will modify the <tt>state</tt> attribute on successful transition,
-but only the bang(!)-version will call <tt>save!</tt>.
+When you declare an event, say <tt>discontinue</tt>, three methods are declared for
+you: <tt>discontinue</tt>, <tt>discontinue!</tt> and <tt>can_discontinue?</tt>. The first two events will modify the <tt>state</tt> attribute on successful transition,
+but only the bang(!)-version will call <tt>save!</tt>.  The <tt>can_discontinue?</tt> method will
+not modify state but instead returns a boolean letting you know if a given transition is possible.
 
 ==== Automatic scope generation
 
