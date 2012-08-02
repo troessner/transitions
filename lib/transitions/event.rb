@@ -34,6 +34,10 @@ module Transitions
         machine.klass.send(:define_method, name.to_s) do |*args|
           machine.fire_event(name, self, false, *args)
         end
+
+        machine.klass.send(:define_method, "can_#{name.to_s}?") do |*args|
+          machine.events_for(current_state).include?(name.to_sym)
+        end
       end
       update(options, &block)
     end

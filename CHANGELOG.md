@@ -1,3 +1,7 @@
+# 1.0.1
+
+* (bnmrrs) Add helper methods to check if a given transition is possible.
+
 # 1.0.0
 
 (troessner) Remove suppport for multipe state machines
