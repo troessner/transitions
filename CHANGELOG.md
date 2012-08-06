@@ -1,5 +1,9 @@
 # 1.0.1
 
+* (troessner) Remove feature:
+                `Do not override existing methods when defining state query methods but warn the user.`
+              since this turned out to cause some problems when loading models, see
+              https://github.com/troessner/transitions/issues/62 for details.
 * (bnmrrs) Add helper methods to check if a given transition is possible.
 
 # 1.0.0

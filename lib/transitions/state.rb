@@ -67,25 +67,8 @@ module Transitions
     private
     def define_state_query_method(machine)
       method_name, state_name = "#{@name}?", @name # Instance vars are out of scope when calling define_method below, so we use local variables.
-      if method_already_defined_on_recipient?(machine, method_name)
-        override_warning method_name
-      else
-        machine.klass.send :define_method, method_name do
-          current_state.to_s == state_name.to_s
-        end
-      end
-    end
-
-    def method_already_defined_on_recipient?(machine, method_name)
-      machine.klass.new.respond_to?(method_name)
-    end
-
-    def override_warning(method_name)
-      warning = "Transitions: Can not define method #{method_name} because it is already defined, please rename either the existing method or the state."
-      if Rails && Rails.logger
-        Rails.logger.warn warning
-      else
-        puts warning
+      machine.klass.send :define_method, method_name do
+        current_state.to_s == state_name.to_s
       end
     end
   end
