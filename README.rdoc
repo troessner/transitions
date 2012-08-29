@@ -109,7 +109,7 @@ In case you need to trigger a method call after a successful transition you can 
 In addition to just specify the method name on the record as a symbol you can pass a lambda to
 perfom some more complex success callbacks:
 
-  event :discontinue, :success => lambda { |order) AdminNotifier.notify_about_discontinued_order(order) } do
+  event :discontinue, :success => lambda { |order| AdminNotifier.notify_about_discontinued_order(order) } do
     transitions :to => :discontinued, :from => [:available, :out_of_stock]
   end
 
