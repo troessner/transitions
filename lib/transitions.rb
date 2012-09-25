@@ -57,30 +57,32 @@ module Transitions
     base.extend(ClassMethods)
   end
 
-  # TODO Do we need this method really? Also, it's not a beauty, refactor at least.
-  def current_state(new_state = nil, persist = false)
+  def update_current_state(new_state, persist = false)
     sm   = self.class.get_state_machine
     ivar = sm.current_state_variable
-    if new_state
-      if persist && respond_to?(:write_state)
-        write_state(new_state)
-      end
-
-      if respond_to?(:write_state_without_persistence)
-        write_state_without_persistence(new_state)
-      end
-
-      instance_variable_set(ivar, new_state)
-    else
-      instance_variable_set(ivar, nil) unless instance_variable_defined?(ivar)
-      value = instance_variable_get(ivar)
-      return value if value
-
-      if respond_to?(:read_state)
-        value = instance_variable_set(ivar, read_state)
-      end
-
-      value || sm.initial_state
+    if ::Transitions.active_record_descendant?(self.class)
+      write_state(new_state) if persist
+      write_state_without_persistence(new_state) # TODO This seems like a duplicate, `write_new` already calls `write_state_without_persistence`.
     end
+
+    instance_variable_set(ivar, new_state)
+  end
+
+  def current_state
+    sm   = self.class.get_state_machine
+    ivar = sm.current_state_variable
+
+    value = instance_variable_get(ivar)
+    return value if value
+
+    if ::Transitions.active_record_descendant?(self.class)
+      value = instance_variable_set(ivar, read_state)
+    end
+
+    value || sm.initial_state
+  end
+
+  def self.active_record_descendant?(klazz)
+    defined?(ActiveRecord::Base) && klazz < ActiveRecord::Base
   end
 end

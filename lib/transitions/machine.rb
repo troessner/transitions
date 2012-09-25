@@ -39,7 +39,7 @@ module Transitions
       @initial_state = options[:initial] if options.key?(:initial)
       @auto_scopes = options[:auto_scopes]
       instance_eval(&block) if block
-      include_scopes if @auto_scopes && defined?(ActiveRecord::Base) && @klass < ActiveRecord::Base
+      include_scopes if @auto_scopes && ::Transitions.active_record_descendant?(klass)
       self
     end
 
@@ -54,7 +54,7 @@ module Transitions
             record.send(:event_fired, record.current_state, new_state, event)
           end
 
-          record.current_state(new_state, persist)
+          record.update_current_state(new_state, persist)
           @events[event].success.call(record) if @events[event].success
           return true
         else
