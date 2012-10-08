@@ -1,3 +1,7 @@
+# 1.0.2
+
+(troessner) Slightly improved handling of current states.
+
 # 1.0.1
 
 * (troessner) Remove feature:
