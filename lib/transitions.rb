@@ -79,7 +79,7 @@ module Transitions
       value = instance_variable_set(ivar, read_state)
     end
 
-    !(value.nil? || value.empty?) ? value : sm.initial_state
+    !(value.nil? || value.to_s.empty?) ? value : sm.initial_state
   end
 
   def self.active_record_descendant?(klazz)
