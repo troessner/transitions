@@ -1,3 +1,7 @@
+# 1.0.3
+
+(troessner) Make sure `empty?` works on symbols.
+
 # 1.0.2
 
 (troessner) Slightly improved handling of current states.
