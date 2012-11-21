@@ -1,3 +1,10 @@
+# 1.0.4
+
+(troessner)
+
+* Raise exception if we try to overwrite existing instance methods when defining state predicate methods
+* Improve exception message if we try to overwrite existing class methods when ActiveRecord scopes
+
 # 1.0.3
 
 (troessner) Make sure `empty?` works on symbols.
