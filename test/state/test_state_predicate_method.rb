@@ -17,4 +17,16 @@ class TestStatePredicateMethod < Test::Unit::TestCase
     assert_true @bus.respond_to?(:parking?)
     assert_true @bus.send(:parking?)
   end
+
+  test 'should raise `InvalidMethodOverride` if we try to overwrite existing methods' do
+    assert_raise(Transitions::InvalidMethodOverride) do
+      Class.new do
+        include Transitions
+
+        state_machine do
+          state :frozen
+        end
+      end
+    end
+  end
 end

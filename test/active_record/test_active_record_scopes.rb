@@ -61,14 +61,14 @@ class TestScopes < Test::Unit::TestCase
   end
 
   test 'scope generation raises an exception if we try to overwrite an existing method' do
-    assert_raise(Transitions::InvalidMethodOverride) {
-      class Bear < ActiveRecord::Base
+    assert_raise(Transitions::InvalidMethodOverride) do
+      Class.new(ActiveRecord::Base) do
         include ActiveModel::Transitions
 
         state_machine :auto_scopes => true do
           state :new
         end
       end
-    }
+    end
   end
 end
