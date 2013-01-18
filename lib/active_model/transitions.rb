@@ -63,7 +63,7 @@ module ActiveModel
     end
 
     def set_initial_state
-      self.state ||= self.class.get_state_machine.initial_state.to_s if self.has_attribute?(:state)
+      self.state ||= self.class.get_state_machine.initial_state.to_s if self.respond_to?(:state=)
     end
 
     def state_inclusion
