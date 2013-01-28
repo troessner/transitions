@@ -1,3 +1,8 @@
+# 1.0.5
+
+* (troessner) Fix unhelpful error message when event can not be fired.
+* (simonc) Fixing set_initial_state with Mongoid
+
 # 1.0.4
 
 (troessner)
