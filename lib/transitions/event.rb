@@ -44,7 +44,7 @@ module Transitions
 
     def fire(obj, to_state = nil, *args)
       transitions = @transitions.select { |t| t.from == obj.current_state }
-      raise InvalidTransition, error_message_for_invalid_transitions(obj, to_state) if transitions.size == 0
+      raise InvalidTransition, error_message_for_invalid_transitions(obj) if transitions.size == 0
 
       next_state = nil
       transitions.each do |transition|
@@ -138,8 +138,8 @@ module Transitions
       end
     end
 
-    def error_message_for_invalid_transitions(obj, to_state)
-      "Cannot transition to #{to_state || 'default'} from #{obj.current_state} for `#{obj.class.name}` #{obj.class < ActiveRecord::Base && obj.persisted? ? "with ID #{obj.id} " : nil}"
+    def error_message_for_invalid_transitions(obj)
+      "Can't fire event `#{name}` in current state `#{obj.current_state}` for `#{obj.class.name}` #{obj.class < ActiveRecord::Base && obj.persisted? ? "with ID #{obj.id} " : nil}"
     end
   end
 end
