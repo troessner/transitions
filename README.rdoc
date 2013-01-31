@@ -44,7 +44,7 @@ This goes into your Gemfile:
    end
  end
 
-In this example we assume that you are in a rails project using Bundler, which would automitcally require `transitions`.
+In this example we assume that you are in a rails project using Bundler, which would automatically require `transitions`.
 If this is not the case for you you have to add
 
  require 'transitions'
