@@ -26,7 +26,7 @@ module ActiveModel
 
     included do
       class ::Transitions::Machine
-        unless instance_methods.include?(:new_initialize)
+        unless instance_methods.include?(:new_initialize) || instance_methods.include?(:new_update)
           attr_reader :attribute_name
           alias :old_initialize :initialize
           alias :old_update :update
@@ -43,6 +43,8 @@ module ActiveModel
 
           alias :initialize :new_initialize
           alias :update :new_update
+        else
+          puts "WARNING: Transitions::Machine#new_update or Transitions::Machine#new_initialize already defined. This can possibly break ActiveModel::Transitions."
         end
       end
       include ::Transitions
