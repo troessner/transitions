@@ -11,14 +11,6 @@ end
 
 set_up_db CreateTrafficLights
 
-class CreateLights < ActiveRecord::Migration
-  def self.up
-    create_table(:lights) do |t|
-      t.string :state
-    end
-  end
-end
-
 class CreateDifferentTrafficLights < ActiveRecord::Migration
   def self.up
     create_table(:different_traffic_lights) do |t|
@@ -28,10 +20,7 @@ class CreateDifferentTrafficLights < ActiveRecord::Migration
   end
 end
 
-CreateTrafficLights.migrate(:up)
-CreateLightBulbs.migrate(:up)
-CreateLights.migrate(:up)
-CreateDifferentTrafficLights.migrate(:up)
+set_up_db CreateDifferentTrafficLights
 
 class TrafficLight < ActiveRecord::Base
   include ActiveModel::Transitions
@@ -173,7 +162,7 @@ end
 class TestNewActiveRecord < TestActiveRecord
 
   def setup
-    create_database
+    set_up_db CreateTrafficLights
     @light = TrafficLight.new
   end
 
@@ -247,7 +236,7 @@ end
 
 class TestActiveRecordWithDifferentColumnName < Test::Unit::TestCase
   def setup
-    create_database
+    set_up_db CreateDifferentTrafficLights
     @light = DifferentTrafficLight.create!
   end
 
