@@ -167,6 +167,20 @@ You can easily get a listing of all available states:
     state :closed
   end
 
+=== Configuring a different column name with ActiveRecord
+
+To use a different column than <tt>state</tt> to track it's value simply do this:
+
+  class Product < ActiveRecord::Base
+    include Transitions
+    
+    state_machine :attribute_name => :different_column do
+    
+      ...
+    
+    end
+  end
+
 === Documentation, Guides & Examples
 
 - {Online API Documentation}[http://rdoc.info/github/troessner/transitions/master/Transitions]

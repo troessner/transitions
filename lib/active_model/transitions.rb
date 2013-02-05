@@ -25,9 +25,31 @@ module ActiveModel
     extend ActiveSupport::Concern
 
     included do
+      class ::Transitions::Machine
+        unless instance_methods.include?(:new_initialize) || instance_methods.include?(:new_update)
+          attr_reader :attribute_name
+          alias :old_initialize :initialize
+          alias :old_update :update
+
+          def new_initialize(*args, &block)
+            @attribute_name = :state
+            old_initialize(*args, &block)
+          end
+
+          def new_update(options = {}, &block)
+            @attribute_name = options[:attribute_name] if options.key?(:attribute_name)
+            old_update(options, &block)
+          end
+
+          alias :initialize :new_initialize
+          alias :update :new_update
+        else
+          puts "WARNING: Transitions::Machine#new_update or Transitions::Machine#new_initialize already defined. This can possibly break ActiveModel::Transitions."
+        end
+      end
       include ::Transitions
       after_initialize :set_initial_state
-      validates_presence_of :state
+      validate :state_presence
       validate :state_inclusion
     end
     
@@ -43,6 +65,10 @@ module ActiveModel
 
     protected
 
+    def transitions_state_column_name
+      self.class.state_machine.attribute_name
+    end
+
     def write_state(state)
       prev_state = current_state
       write_state_without_persistence(state)
@@ -55,22 +81,27 @@ module ActiveModel
     def write_state_without_persistence(state)
       ivar = self.class.get_state_machine.current_state_variable
       instance_variable_set(ivar, state)
-      self.state = state.to_s
+      self[transitions_state_column_name] = state.to_s
     end
 
     def read_state
-      self.state && self.state.to_sym
+      self[transitions_state_column_name] && self[transitions_state_column_name].to_sym
     end
 
     def set_initial_state
-      self.state ||= self.class.get_state_machine.initial_state.to_s if self.respond_to?(:state=)
+      self[transitions_state_column_name] ||= self.class.get_state_machine.initial_state.to_s if self.has_attribute?(transitions_state_column_name)
+    end
+
+    def state_presence
+      unless self[transitions_state_column_name].present?
+        self.errors.add(transitions_state_column_name, :presence)
+      end
     end
 
     def state_inclusion
-      unless self.class.get_state_machine.states.map{|s| s.name.to_s }.include?(self.state.to_s)
-        self.errors.add(:state, :inclusion, :value => self.state)
+      unless self.class.get_state_machine.states.map{|s| s.name.to_s }.include?(self[transitions_state_column_name].to_s)
+        self.errors.add(transitions_state_column_name, :inclusion, :value => self[transitions_state_column_name])
       end
     end
   end
 end
-
