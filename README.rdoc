@@ -98,6 +98,17 @@ you can use this feature a la:
   >> Order.pick_line_items
   => [#<Order id: 3, state: "pick_line_items", description: nil, created_at: "2011-08-23 15:48:46", updated_at: "2011-08-23 15:48:46">]
 
+==== Using <tt>guard</tt>
+
+Each event definition takes an optional "guard" argument, which acts as a predicate for the transition.
+You can pass in a Symbol, a String, or a Proc like this:
+
+  event :discontinue do
+    transitions :to => :discontinued, :from => [:available, :out_of_stock], :guard => :can_discontinue
+  end
+
+Any arguments passed to the event method will be passed on to the <tt>guard</tt> predicate.
+
 ==== Using <tt>on_transition</tt>
 
 Each event definition takes an optional "on_transition" argument, which allows you to execute methods on transition.
@@ -106,6 +117,8 @@ You can pass in a Symbol, a String, a Proc or an Array containing method names a
   event :discontinue do
     transitions :to => :discontinued, :from => [:available, :out_of_stock], :on_transition => [:do_discontinue, :notify_clerk]
   end
+
+Any arguments passed to the event method will be passed on to the <tt>on_transition</tt> callback.
 
 ==== Using <tt>success</tt>
 
