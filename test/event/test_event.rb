@@ -5,6 +5,7 @@ class TestEvent < Test::Unit::TestCase
     @state_name = :close_order
     @success_as_symbol = :success_callback
     @success_as_lambda = lambda { |record| record.success_callback }
+    @success_as_array  = [@success_as_symbol, @success_as_lambda]
   end
 
   def event_with_symbol_success_callback
@@ -16,6 +17,12 @@ class TestEvent < Test::Unit::TestCase
 
   def event_with_lambda_success_callback
     @event = Transitions::Event.new(nil, @state_name, {:success => @success_as_lambda}) do
+      transitions :to => :closed, :from => [:open, :received]
+    end
+  end
+
+  def event_with_array_success_callback
+    @event = Transitions::Event.new(nil, @state_name, {:success => @success_as_array}) do
       transitions :to => :closed, :from => [:open, :received]
     end
   end
@@ -37,6 +44,24 @@ class TestEvent < Test::Unit::TestCase
 
   test "should set the success callback with a lambda" do
     assert_respond_to event_with_lambda_success_callback.success, :call
+  end
+
+  test "should build a block which calls the given success_callback lambda on the passed record instance" do
+    record = mock("SomeRecordToGetCalled")
+    record.expects(:success_callback)
+
+    event_with_lambda_success_callback.success.call(record)
+  end
+
+  test "should set the success callback with an array" do
+    assert_respond_to event_with_array_success_callback.success, :call
+  end
+
+  test "should build a block which calls the given success_callback array on the passed record instance for each callback" do
+    record = mock("SomeRecordToGetCalled")
+    record.expects(:success_callback).twice
+
+    event_with_array_success_callback.success.call(record)
   end
 
   test "should create StateTransitions" do

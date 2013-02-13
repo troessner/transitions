@@ -78,7 +78,7 @@ module Transitions
     end
 
     def update(options = {}, &block)
-      @success       = build_sucess_callback(options[:success]) if options.key?(:success)
+      @success       = build_success_callback(options[:success]) if options.key?(:success)
       self.timestamp = options[:timestamp] if options[:timestamp]
       instance_eval(&block) if block
       self
@@ -129,12 +129,18 @@ module Transitions
       end
     end
 
-    def build_sucess_callback(callback_symbol_or_proc)
-      case callback_symbol_or_proc
+    def build_success_callback(callback_names)
+      case callback_names
+      when Array
+        lambda do |record|
+          callback_names.each do |callback|
+            build_success_callback(callback).call(record)
+          end
+        end
       when Proc
-        callback_symbol_or_proc
+        callback_names
       when Symbol
-        lambda { |record| record.send(callback_symbol_or_proc) }
+        lambda { |record| record.send(callback_names) }
       end
     end
 

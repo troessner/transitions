@@ -135,6 +135,12 @@ perfom some more complex success callbacks:
     transitions :to => :discontinued, :from => [:available, :out_of_stock]
   end
 
+If you need it, you can even call multiple methods or lambdas just passing an array:
+
+  event :discontinue, :success => [:notify_admin, lambda { |order| AdminNotifier.notify_about_discontinued_order(order) }] do
+    transitions :to => :discontinued, :from => [:available, :out_of_stock]
+  end
+
 ==== Timestamps
 
 If you'd like to note the time of a state change, Transitions comes with timestamps free!
