@@ -89,7 +89,7 @@ module ActiveModel
     end
 
     def set_initial_state
-      self[transitions_state_column_name] ||= self.class.get_state_machine.initial_state.to_s if self.respond_to?(transitions_state_column_name)
+      self[transitions_state_column_name] ||= self.class.get_state_machine.initial_state.to_s if self.has_attribute?(transitions_state_column_name)
     end
 
     def state_presence
