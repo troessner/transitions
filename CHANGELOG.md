@@ -1,3 +1,10 @@
+# 1.0.6
+
+* (troessner) Revert 'Fixing set_initial_state with Mongoid' because of https://github.com/troessner/transitions/issues/76
+* (divins) Multiple success callbacks
+* (cstrahan) Pass additional args to guard function
+* (cmw) Support for configurable column names
+
 # 1.0.5
 
 * (troessner) Fix unhelpful error message when event can not be fired.
