@@ -200,6 +200,11 @@ To use a different column than <tt>state</tt> to track it's value simply do this
     end
   end
 
+=== Known bugs / limitations
+
+- Right now it seems like `transitions` does not play well with `mongoid`. A possible fix had to be rolled back due to other side effects: https://github.com/troessner/transitions/issues/76. Since I know virtually zero about mongoid, a pull request would be highly appreciated.
+- Multiple state machines are and will not be supported. For the rationale behind this see the Changelog.
+
 === Documentation, Guides & Examples
 
 - {Online API Documentation}[http://rdoc.info/github/troessner/transitions/master/Transitions]
