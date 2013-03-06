@@ -26,25 +26,23 @@ module ActiveModel
 
     included do
       class ::Transitions::Machine
-        unless instance_methods.include?(:new_initialize) || instance_methods.include?(:new_update)
+        unless instance_methods.include?(:new_transitions_initialize) || instance_methods.include?(:new_transitions_update)
           attr_reader :attribute_name
-          alias :old_initialize :initialize
-          alias :old_update :update
+          alias :old_transitions_initialize :initialize
+          alias :old_transitions_update :update
 
-          def new_initialize(*args, &block)
+          def new_transitions_initialize(*args, &block)
             @attribute_name = :state
-            old_initialize(*args, &block)
+            old_transitions_initialize(*args, &block)
           end
 
-          def new_update(options = {}, &block)
+          def new_transitions_update(options = {}, &block)
             @attribute_name = options[:attribute_name] if options.key?(:attribute_name)
-            old_update(options, &block)
+            old_transitions_update(options, &block)
           end
 
-          alias :initialize :new_initialize
-          alias :update :new_update
-        else
-          puts "WARNING: Transitions::Machine#new_update or Transitions::Machine#new_initialize already defined. This can possibly break ActiveModel::Transitions."
+          alias :initialize :new_transitions_initialize
+          alias :update :new_transitions_update
         end
       end
       include ::Transitions
