@@ -1,3 +1,7 @@
+# 1.0.7
+
+* (cmw) Better prevention of name clashes when creating initializer methods
+
 # 1.0.6
 
 * (troessner) Revert 'Fixing set_initial_state with Mongoid' because of https://github.com/troessner/transitions/issues/76
