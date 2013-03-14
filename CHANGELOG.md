@@ -1,3 +1,7 @@
+# 1.0.8
+
+* (phillipp | Phillipp Röll) Fixes a wrong select for scopes if the state machines attribute_name is set to something other than the default
+
 # 1.0.7
 
 * (cmw) Better prevention of name clashes when creating initializer methods
