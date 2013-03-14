@@ -19,7 +19,7 @@ end
 class CreateBunnies < ActiveRecord::Migration
   def self.up
     create_table(:bunnies, :force => true) do |t|
-      t.string :state
+      t.string :status # Explicitly use another state column to ensure that this whole enchilada is working with other state column names than the default ones.
     end
   end
 end
@@ -29,7 +29,7 @@ set_up_db CreateBunnies, CreatePuppies
 class Bunny < ActiveRecord::Base
   include ActiveModel::Transitions
 
-  state_machine :auto_scopes => true do
+  state_machine :attribute_name => :status, :auto_scopes => true do
     state :hobbling
   end
 end
