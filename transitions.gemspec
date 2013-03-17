@@ -15,7 +15,6 @@ Gem::Specification.new do |s|
   s.rubyforge_project         = "transitions"
 
   s.add_development_dependency "bundler", "~> 1"
-  s.add_development_dependency "test-unit", "~> 2.5"
   s.add_development_dependency "mocha", '~> 0.11.0' # With mocha 0.12 we get: undefined method `run' for #<StateMachineMachineTest:0x94918b8> (NoMethodError)
   s.add_development_dependency "rake"
   s.add_development_dependency "random_data"
