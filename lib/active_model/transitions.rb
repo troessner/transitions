@@ -26,7 +26,7 @@ module ActiveModel
 
     included do
       class ::Transitions::Machine
-        unless instance_methods.include?(:new_transitions_initialize) || instance_methods.include?(:new_transitions_update)
+        unless method_defined?(:new_transitions_initialize) || method_defined?(:new_transitions_update)
           attr_reader :attribute_name
           alias :old_transitions_initialize :initialize
           alias :old_transitions_update :update
