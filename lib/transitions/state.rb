@@ -67,7 +67,7 @@ module Transitions
     private
     def define_state_query_method(machine)
       method_name, state_name = "#{@name}?", @name # Instance vars are out of scope when calling define_method below, so we use local variables.
-      if machine.klass.instance_methods.include?(method_name.to_sym)
+      if machine.klass.method_defined?(method_name.to_sym)
         raise InvalidMethodOverride, "Transitions: Can not define method `#{method_name}` because it is already defined - either rename the existing method or the state."
       end
       machine.klass.send :define_method, method_name do
