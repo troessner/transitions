@@ -102,7 +102,7 @@ module Transitions
         if @klass.respond_to?(state_name)
           raise InvalidMethodOverride, "Transitions: Can not define scope `#{state_name}` because there is already an equally named method defined - either rename the existing method or the state."
         end
-        @klass.scope state_name, @klass.where(@klass.state_machine.attribute_name => state_name)
+        @klass.scope state_name, -> { @klass.where(@klass.state_machine.attribute_name => state_name) }
       end
     end
   end
