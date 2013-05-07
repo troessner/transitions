@@ -1,6 +1,7 @@
-=== Travis Build Status 
+=== Overview 
 
 {<img src="https://secure.travis-ci.org/troessner/transitions.png?branch=master"/>}[http://travis-ci.org/troessner/transitions]
+{<img src="https://badge.fury.io/rb/transitions.png" alt="Gem Version" />}[http://badge.fury.io/rb/transitions]
 
 === Synopsis
 
