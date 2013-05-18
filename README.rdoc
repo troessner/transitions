@@ -7,6 +7,15 @@
 
 <tt>transitions</tt> is a ruby state machine implementation.
 
+=== Compatibility
+
+Supported ruby versions:
+
+* 1.9.3
+* 2.0
+
+<tt>transitions</tt> does not work with ruby 1.8.7 (see {this issue}[https://github.com/troessner/transitions/issues/86] for example).
+
 === Installation
 
 ==== Rails
