@@ -88,6 +88,7 @@ module ActiveModel
 
     def set_initial_state
       self[transitions_state_column_name] ||= self.class.get_state_machine.initial_state.to_s if self.has_attribute?(transitions_state_column_name)
+      self.class.get_state_machine.state_index[self[transitions_state_column_name].to_sym].call_action(:enter, self)
     end
 
     def state_presence

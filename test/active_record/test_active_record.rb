@@ -24,9 +24,10 @@ set_up_db CreateDifferentTrafficLights
 
 class TrafficLight < ActiveRecord::Base
   include ActiveModel::Transitions
+  attr_reader :power
 
   state_machine :auto_scopes => true do
-    state :off
+    state :off, enter: :turn_power_on
 
     state :red
     state :green
@@ -47,6 +48,11 @@ class TrafficLight < ActiveRecord::Base
     event :reset do
       transitions :to => :red, :from => [:off]
     end
+  end
+
+  def turn_power_on
+    raise "the power should not have been on already" if @power == :on
+    @power = :on
   end
 end
 
@@ -80,6 +86,11 @@ class TestActiveRecord < Test::Unit::TestCase
   test "states initial state" do
     assert @light.off?
     assert_equal :off, @light.current_state
+  end
+
+  test "calls enter when setting the initial state" do
+    @new_light = TrafficLight.new
+    assert_equal :on, @new_light.power
   end
 
   test "transition to a valid state" do
