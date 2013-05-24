@@ -45,7 +45,7 @@ This goes into your Gemfile:
      event :discontinued do
        transitions :to => :discontinued, :from => [:available, :out_of_stock], :on_transition => :do_discontinue
      end
-     event :out_of_stock do
+     event :out_of_stock, :success => :reorder do
        transitions :to => :out_of_stock, :from => [:available, :discontinued]
      end
      event :available do
@@ -71,12 +71,12 @@ whereever you load your dependencies in your application.
 
 ==== Getting and setting the current state
 
-Use the (surprise ahead) `current_state` method - in case you didn't set a state explicitly you'll get back the state that you defined as initial state.
+Use the (surprise ahead) <tt>current_state</tt> method - in case you didn't set a state explicitly you'll get back the state that you defined as initial state.
 
   >> Product.new.current_state
   => :available
 
-You can also set a new state explicitly via `update_current_state(new_state, persist = true / false)` but you should never do this unless you really know what you're doing and why - rather use events / state transitions (see below).
+You can also set a new state explicitly via <tt>update_current_state(new_state, persist = true / false)</tt> but you should never do this unless you really know what you're doing and why - rather use events / state transitions (see below).
 
 Predicate methods are also available using the name of the state.
 
@@ -115,7 +115,8 @@ you can use this feature a la:
 
 ==== Using <tt>guard</tt>
 
-Each event definition takes an optional "guard" argument, which acts as a predicate for the transition.
+Each event definition takes an optional <tt>guard</tt> argument, which acts as a predicate for the transition.
+
 You can pass in a Symbol, a String, or a Proc like this:
 
   event :discontinue do
@@ -126,7 +127,8 @@ Any arguments passed to the event method will be passed on to the <tt>guard</tt>
 
 ==== Using <tt>on_transition</tt>
 
-Each event definition takes an optional "on_transition" argument, which allows you to execute methods on transition.
+Each event definition takes an optional <tt>on_transition</tt> argument, which allows you to execute methods on transition.
+
 You can pass in a Symbol, a String, a Proc or an Array containing method names as Symbol or String like this:
 
   event :discontinue do
@@ -137,14 +139,13 @@ Any arguments passed to the event method will be passed on to the <tt>on_transit
 
 ==== Using <tt>success</tt>
 
-In case you need to trigger a method call after a successful transition you can use <tt>success</tt>:
+In case you need to trigger a method call after a successful transition you can use <tt>success</tt>. This will be called after the <tt>save!</tt> is complete (if you use the <tt>state_name!</tt> method) and should be used for any methods that require that the object be persisted.
 
   event :discontinue, :success => :notfiy_admin do
     transitions :to => :discontinued, :from => [:available, :out_of_stock]
   end
 
-In addition to just specify the method name on the record as a symbol you can pass a lambda to
-perfom some more complex success callbacks:
+In addition to just specify the method name on the record as a symbol you can pass a lambda to perfom some more complex success callbacks:
 
   event :discontinue, :success => lambda { |order| AdminNotifier.notify_about_discontinued_order(order) } do
     transitions :to => :discontinued, :from => [:available, :out_of_stock]
@@ -159,8 +160,7 @@ If you need it, you can even call multiple methods or lambdas just passing an ar
 ==== Timestamps
 
 If you'd like to note the time of a state change, Transitions comes with timestamps free!
-To activate them, simply pass the :timestamp option to the event definition with a value of either true or
-the name of the timestamp column.
+To activate them, simply pass the <tt>timestamp</tt> option to the event definition with a value of either true or the name of the timestamp column.
 *NOTE - This should be either true, a String or a Symbol*
 
   # This will look for an attribute called exploded_at or exploded_on (in that order)
@@ -176,7 +176,8 @@ the name of the timestamp column.
 
 ====  Using <tt>event_fired</tt> and <tt>event_failed</tt>
 
-In case you define `event_fired` and / or `event_failed`, `transitions` will use those callbacks correspondingly.
+In case you define <tt>event_fired</tt> and / or <tt>event_failed</tt>, <tt>transitions</tt> will use those callbacks correspondingly.
+
 You can use those callbacks like this:
 
   def event_fired(current_state, new_state, event)
