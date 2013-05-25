@@ -155,8 +155,21 @@ as Symbol or String like this:
       transitions :to => :discontinued, :from => [:available, :out_of_stock], :on_transition => [:do_discontinue, :notify_clerk]
     end
 
-Any arguments passed to the event method will be passed on to the
-`on_transition` callback.
+Any arguments passed to the event method will be passed on to the `on_transition` callback.
+
+`on_transition` is called after `guard` and before `enter` on the state that it is transitioning to.
+
+#### Using `enter` and `exit`
+
+If you want to trigger a method call when the object enters or exits a state regardless
+of the transition that made that happen, use `enter` and `exit`.
+
+`exit` will be called before the transition out of the state is executed. If you want the method
+to only be called if the transition is successful, then use another approach.
+
+`enter` will be called after the transition has been made but before the object is persisted. If you want
+the method to only be called after a successful transition to a new state including persistence,
+use the `success` argument to an event instead.
 
 #### Using `success`
 
@@ -256,9 +269,8 @@ To use a different column than `state` to track it's value simply do this:
 
 ### Documentation, Guides & Examples
 
-*   [Online API
-    Documentation](http://rdoc.info/github/troessner/transitions/master/Transi
-    tions)
+*   [Online API Documentation](http://rdoc.info/github/troessner/transitions/master/Transitions)
+*   [Railscasts #392: A Tour of State Machines](http://railscasts.com/episodes/392-a-tour-of-state-machines) (requires Pro subscription)
 
 
 ### Copyright
