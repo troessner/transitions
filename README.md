@@ -117,6 +117,9 @@ Given a model like this:
       state_machine :auto_scopes => true do
         state :pick_line_items
         state :picking_line_items
+        event :move_cart do
+          transitions to: :pick_line_items, from: :picking_line_items
+        end
       end
     end
 
@@ -229,12 +232,17 @@ You can use those callbacks like this:
       MyLogger.warn "Event failed #{event.inspect}"
     end
 
-#### Listing all the available states
+#### Listing all the available states and events
 
 You can easily get a listing of all available states:
 
     Order.available_states # Uses the <tt>default</tt> state machine
     # => [:pick_line_items, :picking_line_items]
+
+Same goes for the available events:
+
+    Order.available_events
+    # => [:move_cart]
 
 #### Explicitly setting the initial state with the `initial` option
 
