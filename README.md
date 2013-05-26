@@ -105,6 +105,11 @@ the bang(!)-version will call `save!`.  The `can_discontinue?` method will not
 modify state but instead returns a boolean letting you know if a given
 transition is possible.
 
+In addition, a `can_transition?` method is added to the object that expects one or more event names as arguments. This semi-verbose method name is used to avoid collission with [https://github.com/ryanb/cancan](the authorization gem CanCan).
+
+    >> Product.new.can_transition? :out_of_stock
+    => true
+
 #### Automatic scope generation
 
 `transitions` will automatically generate scopes for you if you are using

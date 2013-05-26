@@ -14,6 +14,10 @@ class MachineTestSubject
     event :timeout do
       transitions :from => :open, :to => :closed
     end
+
+    event :restart do
+      transitions :from => :closed, to: :open
+    end
   end
 end
 
@@ -30,6 +34,17 @@ class TransitionsMachineTest < Test::Unit::TestCase
     events = MachineTestSubject.get_state_machine.events_for(:open)
     assert events.include?(:shutdown)
     assert events.include?(:timeout)
+  end
+
+  test "knows that it can use a transition when it is available" do
+    machine = MachineTestSubject.new
+    machine.restart
+    assert machine.can_transition?(:shutdown)
+  end
+
+  test "knows that it can't use a transition when it is unavailable" do
+    machine = MachineTestSubject.new
+    assert machine.cant_transition?(:shutdown)
   end
 
   test "test fire_event" do
