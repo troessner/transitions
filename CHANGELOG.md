@@ -1,39 +1,46 @@
-# 1.0.8
+#  0.1.9
+
+* (barelyknow) add can_transition? and cant_transition? methods
+* (barelyknow) add available_events method to class with state machine
+* (Sean Devine) fire enter on create
+* (jotto) change scopes to use proc so it works in rails 3 and 4
+
+# 0.1.8
 
 * (phillipp | Phillipp Röll) Fixes a wrong select for scopes if the state machines attribute_name is set to something other than the default
 
-# 1.0.7
+# 0.1.7
 
 * (cmw) Better prevention of name clashes when creating initializer methods
 
-# 1.0.6
+# 0.1.6
 
 * (troessner) Revert 'Fixing set_initial_state with Mongoid' because of https://github.com/troessner/transitions/issues/76
 * (divins) Multiple success callbacks
 * (cstrahan) Pass additional args to guard function
 * (cmw) Support for configurable column names
 
-# 1.0.5
+# 0.1.5
 
 * (troessner) Fix unhelpful error message when event can not be fired.
 * (simonc) Fixing set_initial_state with Mongoid
 
-# 1.0.4
+# 0.1.4
 
 (troessner)
 
 * Raise exception if we try to overwrite existing instance methods when defining state predicate methods
 * Improve exception message if we try to overwrite existing class methods when ActiveRecord scopes
 
-# 1.0.3
+# 0.1.3
 
 (troessner) Make sure `empty?` works on symbols.
 
-# 1.0.2
+# 0.1.2
 
 (troessner) Slightly improved handling of current states.
 
-# 1.0.1
+# 0.1.1
 
 * (troessner) Remove feature:
                 `Do not override existing methods when defining state query methods but warn the user.`
@@ -41,7 +48,7 @@
               https://github.com/troessner/transitions/issues/62 for details.
 * (bnmrrs) Add helper methods to check if a given transition is possible.
 
-# 1.0.0
+# 0.1.0
 
 (troessner) Remove suppport for multipe state machines
 
