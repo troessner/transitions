@@ -39,4 +39,17 @@ class TestStateTransitionGuardCheck < Test::Unit::TestCase
 
     st.perform(obj, *args)
   end
+
+  test "should call the method on the object if guard is a symbol" do
+    opts = {:from => "foo", :to => "bar", :guard => [:test_guard, :test_another_guard] }
+    st = Transitions::StateTransition.new(opts)
+
+    obj = stub
+    obj.expects(:test_guard).with(*args).returns(true)
+    obj.expects(:test_another_guard).with(*args).returns(true)
+
+    assert st.perform(obj, *args)
+  end
+
+
 end

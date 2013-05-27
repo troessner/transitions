@@ -30,14 +30,18 @@ module Transitions
     end
 
     def perform(obj, *args)
-      case @guard
+      [@guard].flatten.all? { |g| perform_guard(obj, g, *args) }
+    end
+
+    def perform_guard(obj, guard, *args)
+      case guard
       when Symbol, String
-        obj.send(@guard, *args)
+        obj.send(guard, *args)
       when Proc
-        @guard.call(obj, *args)
+        guard.call(obj, *args)
       else
         true
-      end
+      end      
     end
 
     def execute(obj, *args)
