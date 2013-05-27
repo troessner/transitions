@@ -142,10 +142,16 @@ you can use this feature a la:
 Each event definition takes an optional `guard` argument, which acts as a
 predicate for the transition.
 
-You can pass in a Symbol, a String, or a Proc like this:
+You can pass in Symbols, Strings, or Procs like this:
 
     event :discontinue do
       transitions :to => :discontinued, :from => [:available, :out_of_stock], :guard => :can_discontinue
+    end
+
+or
+
+    event :discontinue do
+      transitions :to => :discontinued, :from => [:available, :out_of_stock], :guard => [:can_discontinue, :super_sure?]
     end
 
 Any arguments passed to the event method will be passed on to the `guard`
