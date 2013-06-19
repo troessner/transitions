@@ -72,6 +72,10 @@ module Transitions
     instance_variable_set(ivar, new_state)
   end
 
+  def available_transitions
+    self.class.get_state_machine.events_for(current_state)
+  end
+
   def can_transition?(*events)
     events.all? do |event|
       self.class.get_state_machine.events_for(current_state).include?(event.to_sym)
