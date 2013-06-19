@@ -36,6 +36,13 @@ class TransitionsMachineTest < Test::Unit::TestCase
     assert events.include?(:timeout)
   end
 
+  test "knows all available transitions for current state" do
+    machine = MachineTestSubject.new
+    assert_equal [:restart], machine.available_transitions
+    machine.restart
+    assert_equal [:shutdown, :timeout], machine.available_transitions
+  end
+
   test "knows that it can use a transition when it is available" do
     machine = MachineTestSubject.new
     machine.restart
