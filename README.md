@@ -107,6 +107,11 @@ In addition, a `can_transition?` method is added to the object that expects one 
     >> Product.new.can_transition? :out_of_stock
     => true
 
+If you need to get all available transitions for current state you can simply call:
+
+    >> Product.new.available_transitions
+    => [:discontinued, :out_of_stock]
+    
 #### Automatic scope generation
 
 `transitions` will automatically generate scopes for you if you are using
