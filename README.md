@@ -68,7 +68,7 @@ wherever you load your dependencies in your application.
 *   You can only use one state machine per model. While in theory you can
     define two or more, this won't work as you would expect. Not supporting
     this was intentional, if you're interested in the ratione look up version
-    1.0.0 in the CHANGELOG.
+    0.1.0 in the CHANGELOG.
 
 *   Use symbols, not strings for declaring the state machine. Using strings is
     **not** supported as is using whitespace in names (because `transitions`
