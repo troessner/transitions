@@ -1,3 +1,7 @@
+# 0.1.10
+
+* (troessner) Fix: Using a custom ActiveRecord select query without the name of the state attribute would trigger an exception.
+
 #  0.1.9
 
 * (barelyknow) add can_transition? and cant_transition? methods
