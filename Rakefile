@@ -2,6 +2,8 @@ require "bundler"
 Bundler::GemHelper.install_tasks
 Bundler.setup
 
+require 'appraisal'
+
 require "rake/testtask"
 Rake::TestTask.new(:test) do |test|
   test.libs = %w(lib test)

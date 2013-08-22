@@ -19,8 +19,8 @@ Gem::Specification.new do |s|
   s.add_development_dependency "mocha", '~> 0.11.0' # With mocha 0.12 we get: undefined method `run' for #<StateMachineMachineTest:0x94918b8> (NoMethodError)
   s.add_development_dependency "rake"
   s.add_development_dependency "random_data"
-  s.add_development_dependency "sqlite3"
-  s.add_development_dependency "activerecord", "~> 3"
+  s.add_development_dependency 'appraisal'
+  s.add_development_dependency "activerecord", [">= 3.0", "<= 4.0"]
 
   s.files        = `git ls-files`.split("\n")
   s.executables  = `git ls-files`.split("\n").map{|f| f =~ /^bin\/(.*)/ ? $1 : nil}.compact
