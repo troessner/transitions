@@ -56,10 +56,6 @@ class TrafficLight < ActiveRecord::Base
   end
 end
 
-class ProtectedTrafficLight < TrafficLight
-  attr_protected :state
-end
-
 class ValidatingTrafficLight < TrafficLight
   validate {|t| errors.add(:base, 'This TrafficLight will never validate after creation') unless t.new_record? }
 end
@@ -122,14 +118,6 @@ class TestActiveRecord < Test::Unit::TestCase
     assert_equal :off, @light.current_state
   end
 
-  test "transition does persists state when state is protected" do
-    protected_light = ProtectedTrafficLight.create!
-    protected_light.reset!
-    assert_equal :red, protected_light.current_state
-    protected_light.reload
-    assert_equal "red", protected_light.state
-  end
-
   test "transition with wrong state will not validate" do
     for s in @light.class.get_state_machine.states
       @light.state = s.name
@@ -167,6 +155,22 @@ class TestActiveRecord < Test::Unit::TestCase
     @light.green_on
     assert_equal "green", @light.state
     assert_equal "red", @light.reload.state
+  end
+end
+
+if ActiveRecord::VERSION::MAJOR == 3
+  class ProtectedTrafficLight < TrafficLight
+    attr_protected :state
+  end
+
+  class TestMassAssignmentActiveRecord < TestActiveRecord
+    test "transition does persists state when state is protected" do
+      protected_light = ProtectedTrafficLight.create!
+      protected_light.reset!
+      assert_equal :red, protected_light.current_state
+      protected_light.reload
+      assert_equal "red", protected_light.state
+    end
   end
 end
 
