@@ -1,9 +1,9 @@
 require "helper"
 
-class CreateBears < ActiveRecord::Migration
+class CreateBunnies < ActiveRecord::Migration
   def self.up
-    create_table(:bears, :force => true) do |t|
-      t.string :state
+    create_table(:bunnies, :force => true) do |t|
+      t.string :status # Explicitly use another state column to ensure that this whole enchilada is working with other state column names than the default ones.
     end
   end
 end
@@ -15,16 +15,6 @@ class CreatePuppies < ActiveRecord::Migration
     end
   end
 end
-
-class CreateBunnies < ActiveRecord::Migration
-  def self.up
-    create_table(:bunnies, :force => true) do |t|
-      t.string :status # Explicitly use another state column to ensure that this whole enchilada is working with other state column names than the default ones.
-    end
-  end
-end
-
-set_up_db CreateBunnies, CreatePuppies
 
 class Bunny < ActiveRecord::Base
   include ActiveModel::Transitions
@@ -44,7 +34,7 @@ end
 
 class TestScopes < Test::Unit::TestCase
   def setup
-    set_up_db CreateBears, CreateBunnies, CreatePuppies
+    set_up_db CreateBunnies, CreatePuppies
     @bunny = Bunny.create!
   end
 

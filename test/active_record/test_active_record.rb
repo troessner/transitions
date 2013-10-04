@@ -5,11 +5,10 @@ class CreateTrafficLights < ActiveRecord::Migration
     create_table(:traffic_lights, :force => true) do |t|
       t.string :state
       t.string :name
+      t.string :power
     end
   end
 end
-
-set_up_db CreateTrafficLights
 
 class CreateDifferentTrafficLights < ActiveRecord::Migration
   def self.up
@@ -20,11 +19,8 @@ class CreateDifferentTrafficLights < ActiveRecord::Migration
   end
 end
 
-set_up_db CreateDifferentTrafficLights
-
 class TrafficLight < ActiveRecord::Base
   include ActiveModel::Transitions
-  attr_reader :power
 
   state_machine :auto_scopes => true do
     state :off, enter: :turn_power_on
@@ -51,8 +47,8 @@ class TrafficLight < ActiveRecord::Base
   end
 
   def turn_power_on
-    raise "the power should not have been on already" if @power == :on
-    @power = :on
+    raise "the power should not have been on already" if power == "on"
+    self.power = "on"
   end
 end
 
@@ -86,7 +82,12 @@ class TestActiveRecord < Test::Unit::TestCase
 
   test "calls enter when setting the initial state" do
     @new_light = TrafficLight.new
-    assert_equal :on, @new_light.power
+    assert_equal "on", @new_light.power
+  end
+
+  test "does not call enter when loading a persisted record" do
+    assert_equal "on", @light.power
+    assert_nothing_raised { TrafficLight.find(@light.id) }
   end
 
   test "transition to a valid state" do
@@ -148,7 +149,7 @@ class TestActiveRecord < Test::Unit::TestCase
     @light.update_attribute(:state, 'green')
     assert @light.reload.green?, "reloaded state should come from database, not instance variable"
   end
-  
+
   test "calling non-bang event updates state attribute" do
     @light.reset!
     assert @light.red?
@@ -159,13 +160,20 @@ class TestActiveRecord < Test::Unit::TestCase
 end
 
 if ActiveRecord::VERSION::MAJOR == 3
-  class ProtectedTrafficLight < TrafficLight
-    attr_protected :state
-  end
 
-  class TestMassAssignmentActiveRecord < TestActiveRecord
+  class TestMassAssignmentActiveRecord < Test::Unit::TestCase
+    # attr_protected unfortunately invokes a db call, so this test requires that
+    # we define the class after the table already exists.
+    def setup
+      set_up_db CreateTrafficLights
+
+      @light_with_protected_state = Class.new(TrafficLight) do
+        attr_protected :state
+      end
+    end
+
     test "transition does persists state when state is protected" do
-      protected_light = ProtectedTrafficLight.create!
+      protected_light = @light_with_protected_state.create!
       protected_light.reset!
       assert_equal :red, protected_light.current_state
       protected_light.reload
@@ -309,7 +317,7 @@ class TestActiveRecordWithDifferentColumnName < Test::Unit::TestCase
     @light.update_attribute(:different_state, 'green')
     assert @light.reload.green?, "reloaded state should come from database, not instance variable"
   end
-  
+
   test "calling non-bang event updates state attribute" do
     @light.reset!
     assert @light.red?

@@ -50,10 +50,10 @@ module ActiveModel
       validate :state_presence
       validate :state_inclusion
     end
-    
+
     # The optional options argument is passed to find when reloading so you may
     # do e.g. record.reload(:lock => true) to reload the same record with an
-    # exclusive row lock. 
+    # exclusive row lock.
     def reload(options = nil)
       super.tap do
         sm = self.class.get_state_machine
@@ -75,7 +75,7 @@ module ActiveModel
       write_state_without_persistence(prev_state)
       raise
     end
-    
+
     def write_state_without_persistence(state)
       ivar = self.class.get_state_machine.current_state_variable
       instance_variable_set(ivar, state)
@@ -88,8 +88,8 @@ module ActiveModel
 
     def set_initial_state
       # In case we use a query with a custom select that excludes our state attribute name we need to skip the initialization below.
-      if self.has_attribute?(transitions_state_column_name)
-        self[transitions_state_column_name] ||= self.class.get_state_machine.initial_state.to_s
+      if self.has_attribute?(transitions_state_column_name) && state_not_set?
+        self[transitions_state_column_name] = self.class.get_state_machine.initial_state.to_s
         self.class.get_state_machine.state_index[self[transitions_state_column_name].to_sym].call_action(:enter, self)
       end
     end
@@ -104,6 +104,10 @@ module ActiveModel
       unless self.class.get_state_machine.states.map{|s| s.name.to_s }.include?(self[transitions_state_column_name].to_s)
         self.errors.add(transitions_state_column_name, :inclusion, :value => self[transitions_state_column_name])
       end
+    end
+
+    def state_not_set?
+      self[transitions_state_column_name].nil?
     end
   end
 end

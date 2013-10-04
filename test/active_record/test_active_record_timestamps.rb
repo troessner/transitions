@@ -13,8 +13,6 @@ class CreateOrders < ActiveRecord::Migration
   end
 end
 
-set_up_db CreateOrders
-
 class Order < ActiveRecord::Base
   include ActiveModel::Transitions
 
