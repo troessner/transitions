@@ -22,44 +22,48 @@ issue](https://github.com/troessner/transitions/issues/86) for example).
 #### Rails
 
 This goes into your Gemfile:
-
-    gem "transitions", :require => ["transitions", "active_model/transitions"]
+```ruby
+gem "transitions", :require => ["transitions", "active_model/transitions"]
+```
 
 … and this into your ORM model:
-
-    include ActiveModel::Transitions
+```ruby
+include ActiveModel::Transitions
+```
 
 #### Standalone
-
-    gem install transitions
+```shell
+gem install transitions
+```
 
 ### Using transitions
+```ruby
+class Product
+  include ActiveModel::Transitions
 
-    class Product
-      include ActiveModel::Transitions
+  state_machine do
+    state :available # first one is initial state
+    state :out_of_stock, :exit => :exit_out_of_stock
+    state :discontinued, :enter => lambda { |product| product.cancel_orders }
 
-      state_machine do
-        state :available # first one is initial state
-        state :out_of_stock, :exit => :exit_out_of_stock
-        state :discontinued, :enter => lambda { |product| product.cancel_orders }
-
-        event :discontinued do
-          transitions :to => :discontinued, :from => [:available, :out_of_stock], :on_transition => :do_discontinue
-        end
-        event :out_of_stock, :success => :reorder do
-          transitions :to => :out_of_stock, :from => [:available, :discontinued]
-        end
-        event :available do
-          transitions :to => :available, :from => [:out_of_stock], :guard => lambda { |product| product.in_stock > 0 }
-        end
-      end
+    event :discontinued do
+      transitions :to => :discontinued, :from => [:available, :out_of_stock], :on_transition => :do_discontinue
     end
-
+    event :out_of_stock, :success => :reorder do
+      transitions :to => :out_of_stock, :from => [:available, :discontinued]
+    end
+    event :available do
+      transitions :to => :available, :from => [:out_of_stock], :guard => lambda { |product| product.in_stock > 0 }
+    end
+  end
+end
+```
 In this example we assume that you are in a rails project using Bundler, which
 would automatically require `transitions`. If this is not the case for you you
 have to add
-
-    require 'transitions'
+```ruby
+require 'transitions'
+```
 
 wherever you load your dependencies in your application.
 
@@ -80,18 +84,20 @@ wherever you load your dependencies in your application.
 
 Use the (surprise ahead) `current_state` method - in case you didn't set a
 state explicitly you'll get back the state that you defined as initial state.
-
-    >> Product.new.current_state
-    => :available
+```ruby
+>> Product.new.current_state
+=> :available
+```
 
 You can also set a new state explicitly via `update_current_state(new_state,
 persist = true / false)` but you should never do this unless you really know
 what you're doing and why - rather use events / state transitions (see below).
 
 Predicate methods are also available using the name of the state.
-
-    >> Product.new.available?
-    => true
+```ruby
+>> Product.new.available?
+=> true
+```
 
 #### Events
 
@@ -103,14 +109,16 @@ modify state but instead returns a boolean letting you know if a given
 transition is possible.
 
 In addition, a `can_transition?` method is added to the object that expects one or more event names as arguments. This semi-verbose method name is used to avoid collission with [https://github.com/ryanb/cancan](the authorization gem CanCan).
-
-    >> Product.new.can_transition? :out_of_stock
-    => true
+```ruby
+>> Product.new.can_transition? :out_of_stock
+=> true
+```
 
 If you need to get all available transitions for current state you can simply call:
-
-    >> Product.new.available_transitions
-    => [:discontinued, :out_of_stock]
+```ruby
+>> Product.new.available_transitions
+=> [:discontinued, :out_of_stock]
+```
     
 #### Automatic scope generation
 
@@ -118,26 +126,28 @@ If you need to get all available transitions for current state you can simply ca
 ActiveRecord and tell it to do so via the `auto_scopes` option:
 
 Given a model like this:
-
-    class Order < ActiveRecord::Base
-      include ActiveModel::Transitions
-      state_machine :auto_scopes => true do
-        state :pick_line_items
-        state :picking_line_items
-        event :move_cart do
-          transitions to: :pick_line_items, from: :picking_line_items
-        end
-      end
+```ruby
+class Order < ActiveRecord::Base
+  include ActiveModel::Transitions
+  state_machine :auto_scopes => true do
+    state :pick_line_items
+    state :picking_line_items
+    event :move_cart do
+      transitions to: :pick_line_items, from: :picking_line_items
     end
+  end
+end
+```
 
 you can use this feature a la:
-
-    >> Order.pick_line_items
-    => []
-    >> Order.create!
-    => #<Order id: 3, state: "pick_line_items", description: nil, created_at: "2011-08-23 15:48:46", updated_at: "2011-08-23 15:48:46">
-    >> Order.pick_line_items
-    => [#<Order id: 3, state: "pick_line_items", description: nil, created_at: "2011-08-23 15:48:46", updated_at: "2011-08-23 15:48:46">]
+```ruby
+>> Order.pick_line_items
+=> []
+>> Order.create!
+=> #<Order id: 3, state: "pick_line_items", description: nil, created_at: "2011-08-23 15:48:46", updated_at: "2011-08-23 15:48:46">
+>> Order.pick_line_items
+=> [#<Order id: 3, state: "pick_line_items", description: nil, created_at: "2011-08-23 15:48:46", updated_at: "2011-08-23 15:48:46">]
+```
 
 #### Using `guard`
 
@@ -145,16 +155,18 @@ Each event definition takes an optional `guard` argument, which acts as a
 predicate for the transition.
 
 You can pass in Symbols, Strings, or Procs like this:
-
-    event :discontinue do
-      transitions :to => :discontinued, :from => [:available, :out_of_stock], :guard => :can_discontinue
-    end
+```ruby
+event :discontinue do
+  transitions :to => :discontinued, :from => [:available, :out_of_stock], :guard => :can_discontinue
+end
+```
 
 or
-
-    event :discontinue do
-      transitions :to => :discontinued, :from => [:available, :out_of_stock], :guard => [:can_discontinue, :super_sure?]
-    end
+```ruby
+event :discontinue do
+  transitions :to => :discontinued, :from => [:available, :out_of_stock], :guard => [:can_discontinue, :super_sure?]
+end
+```
 
 Any arguments passed to the event method will be passed on to the `guard`
 predicate.
@@ -166,10 +178,11 @@ you to execute methods on transition.
 
 You can pass in a Symbol, a String, a Proc or an Array containing method names
 as Symbol or String like this:
-
-    event :discontinue do
-      transitions :to => :discontinued, :from => [:available, :out_of_stock], :on_transition => [:do_discontinue, :notify_clerk]
-    end
+```ruby
+event :discontinue do
+  transitions :to => :discontinued, :from => [:available, :out_of_stock], :on_transition => [:do_discontinue, :notify_clerk]
+end
+```
 
 Any arguments passed to the event method will be passed on to the `on_transition` callback.
 
@@ -193,24 +206,27 @@ In case you need to trigger a method call after a successful transition you
 can use `success`. This will be called after the `save!` is complete (if you
 use the `state_name!` method) and should be used for any methods that require
 that the object be persisted.
-
-    event :discontinue, :success => :notfiy_admin do
-      transitions :to => :discontinued, :from => [:available, :out_of_stock]
-    end
+```ruby
+event :discontinue, :success => :notfiy_admin do
+  transitions :to => :discontinued, :from => [:available, :out_of_stock]
+end
+```
 
 In addition to just specify the method name on the record as a symbol you can
 pass a lambda to perfom some more complex success callbacks:
-
-    event :discontinue, :success => lambda { |order| AdminNotifier.notify_about_discontinued_order(order) } do
-      transitions :to => :discontinued, :from => [:available, :out_of_stock]
-    end
+```ruby
+event :discontinue, :success => lambda { |order| AdminNotifier.notify_about_discontinued_order(order) } do
+  transitions :to => :discontinued, :from => [:available, :out_of_stock]
+end
+```
 
 If you need it, you can even call multiple methods or lambdas just passing an
 array:
-
-    event :discontinue, :success => [:notify_admin, lambda { |order| AdminNotifier.notify_about_discontinued_order(order) }] do
-      transitions :to => :discontinued, :from => [:available, :out_of_stock]
-    end
+```ruby
+event :discontinue, :success => [:notify_admin, lambda { |order| AdminNotifier.notify_about_discontinued_order(order) }] do
+  transitions :to => :discontinued, :from => [:available, :out_of_stock]
+end
+```
 
 #### Timestamps
 
@@ -218,17 +234,18 @@ If you'd like to note the time of a state change, Transitions comes with
 timestamps free! To activate them, simply pass the `timestamp` option to the
 event definition with a value of either true or the name of the timestamp
 column. *NOTE - This should be either true, a String or a Symbol*
+```ruby
+# This will look for an attribute called exploded_at or exploded_on (in that order)
+# If present, it will be updated
+event :explode, :timestamp => true do
+  transitions :from => :complete, :to => :exploded
+end
 
-    # This will look for an attribute called exploded_at or exploded_on (in that order)
-    # If present, it will be updated
-    event :explode, :timestamp => true do
-      transitions :from => :complete, :to => :exploded
-    end
-
-    # This will look for an attribute named repaired_on to update upon save
-    event :rebuild, :timestamp => :repaired_on do
-      transitions :from => :exploded, :to => :rebuilt
-    end
+# This will look for an attribute named repaired_on to update upon save
+event :rebuild, :timestamp => :repaired_on do
+  transitions :from => :exploded, :to => :rebuilt
+end
+```
 
 #### Using `event_fired` and `event_failed`
 
@@ -236,47 +253,52 @@ In case you define `event_fired` and / or `event_failed`, `transitions` will
 use those callbacks correspondingly.
 
 You can use those callbacks like this:
+```ruby
+def event_fired(current_state, new_state, event)
+  MyLogger.info "Event fired #{event.inspect}"
+end
 
-    def event_fired(current_state, new_state, event)
-      MyLogger.info "Event fired #{event.inspect}"
-    end
-
-    def event_failed(event)
-      MyLogger.warn "Event failed #{event.inspect}"
-    end
+def event_failed(event)
+  MyLogger.warn "Event failed #{event.inspect}"
+end
+```
 
 #### Listing all the available states and events
 
 You can easily get a listing of all available states:
-
-    Order.available_states # Uses the <tt>default</tt> state machine
-    # => [:pick_line_items, :picking_line_items]
+```ruby
+Order.available_states # Uses the <tt>default</tt> state machine
+# => [:pick_line_items, :picking_line_items]
+```
 
 Same goes for the available events:
-
-    Order.available_events
-    # => [:move_cart]
+```ruby
+Order.available_events
+# => [:move_cart]
+```
 
 #### Explicitly setting the initial state with the `initial` option
-
-    state_machine :initial => :closed do
-      state :open
-      state :closed
-    end
+```ruby
+state_machine :initial => :closed do
+  state :open
+  state :closed
+end
+```
 
 ### Configuring a different column name with ActiveRecord
 
 To use a different column than `state` to track it's value simply do this:
+```ruby
+class Product < ActiveRecord::Base
+  include Transitions
 
-    class Product < ActiveRecord::Base
-      include Transitions
+  state_machine :attribute_name => :different_column do
 
-      state_machine :attribute_name => :different_column do
+    ...
 
-        ...
-
-      end
-    end
+  end
+end
+```
 
 ### Known bugs / limitations
 
