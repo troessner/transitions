@@ -52,11 +52,11 @@ module Transitions
         if transition.perform(obj, *args)
           next_state = to_state || Array(transition.to).first
           transition.execute(obj, *args)
+          update_event_timestamp(obj, next_state) if timestamp_defined?
           break
         end
       end
       # Update timestamps on obj if a timestamp has been defined
-      update_event_timestamp(obj, next_state) if timestamp_defined?
       next_state
     end
 
