@@ -9,6 +9,7 @@ class CreateOrders < ActiveRecord::Migration
       t.datetime :prepared_on
       t.datetime :dispatched_at
       t.date :cancellation_date
+      t.boolean :allow_transition, :default => true
     end
   end
 end
@@ -31,7 +32,7 @@ class Order < ActiveRecord::Base
 
     # should set paid_at timestamp
     event :pay, :timestamp => true do
-      transitions :from => :placed, :to => :paid
+      transitions :from => :placed, :to => :paid, :guard => lambda { |obj| obj.allow_transition }
     end
 
     # should set prepared_on
@@ -79,6 +80,14 @@ class TestActiveRecordTimestamps < Test::Unit::TestCase
     @order.pay!
     @order.reload
     assert_not_nil @order.paid_at
+  end
+  
+  test "moving to paid should not set paid_at if our guard evaluates to false" do
+    @order = create_order(:placed)    
+    @order.update_attribute :allow_transition, false
+    @order.pay!
+    @order.reload
+    assert_nil @order.paid_at
   end
   
   test "moving to prepared should set prepared_on" do
