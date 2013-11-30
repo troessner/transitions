@@ -1,3 +1,7 @@
+# 0.1.12
+
+* (troessner) Fix issue 107: timestamps are updated even if guard fails.
+
 # 0.1.10
 
 * (troessner) Fix: Using a custom ActiveRecord select query without the name of the state attribute would trigger an exception.
