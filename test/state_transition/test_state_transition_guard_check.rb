@@ -7,7 +7,7 @@ class TestStateTransitionGuardCheck < Test::Unit::TestCase
     opts = {:from => "foo", :to => "bar"}
       st = Transitions::StateTransition.new(opts)
 
-    assert st.perform(nil, *args)
+    assert st.executable?(nil, *args)
   end
 
   test "should call the method on the object if guard is a symbol" do
@@ -17,7 +17,7 @@ class TestStateTransitionGuardCheck < Test::Unit::TestCase
     obj = stub
     obj.expects(:test_guard).with(*args)
 
-    st.perform(obj, *args)
+    st.executable?(obj, *args)
   end
 
   test "should call the method on the object if guard is a string" do
@@ -27,7 +27,7 @@ class TestStateTransitionGuardCheck < Test::Unit::TestCase
     obj = stub
     obj.expects(:test_guard).with(*args)
 
-    st.perform(obj, *args)
+    st.executable?(obj, *args)
   end
 
   test "should call the proc passing the object if the guard is a proc" do
@@ -37,7 +37,7 @@ class TestStateTransitionGuardCheck < Test::Unit::TestCase
     obj = stub
     obj.expects(:test_guard).with(*args)
 
-    st.perform(obj, *args)
+    st.executable?(obj, *args)
   end
 
   test "should call the method on the object if guard is a symbol" do
@@ -48,7 +48,7 @@ class TestStateTransitionGuardCheck < Test::Unit::TestCase
     obj.expects(:test_guard).with(*args).returns(true)
     obj.expects(:test_another_guard).with(*args).returns(true)
 
-    assert st.perform(obj, *args)
+    assert st.executable?(obj, *args)
   end
 
 end

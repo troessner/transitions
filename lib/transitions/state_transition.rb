@@ -29,7 +29,7 @@ module Transitions
       @options = opts
     end
 
-    def perform(obj, *args)
+    def executable?(obj, *args)
       [@guard].flatten.all? { |g| perform_guard(obj, g, *args) }
     end
 
