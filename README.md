@@ -7,15 +7,19 @@
 
 `transitions` is a ruby state machine implementation.
 
-### Compatibility
+### Ruby Compatibility
 
-Supported ruby versions:
+Supported versions:
 
 *   1.9.3
 *   2.0
 
 `transitions` does not work with ruby 1.8.7 (see [this
 issue](https://github.com/troessner/transitions/issues/86) for example).
+
+### Rails Compatibility
+
+Right now `transitions` does **only** support rails 3. Rails 4 is **not** supported right now but I am working on fixing this.
 
 ### Installation
 
