@@ -176,49 +176,6 @@ end
 Any arguments passed to the event method will be passed on to the `guard`
 predicate.
 
-#### Using `on_transition`
-
-Each event definition takes an optional `on_transition` argument, which allows
-you to execute methods on transition.
-
-You can pass in a Symbol, a String, a Proc or an Array containing method names
-as Symbol or String like this:
-```ruby
-event :discontinue do
-  transitions :to => :discontinued, :from => [:available, :out_of_stock], :on_transition => [:do_discontinue, :notify_clerk]
-end
-```
-
-Any arguments passed to the event method will be passed on to the `on_transition` callback.
-
-`on_transition` is called after `guard` and before `enter` on the state that it is transitioning to.
-
-#### Using `enter` and `exit`
-
-If you want to trigger a method call when the object enters or exits a state regardless
-of the transition that made that happen, use `enter` and `exit`.
-
-`exit` will be called before the transition out of the state is executed. If you want the method
-to only be called if the transition is successful, then use another approach.
-
-`enter` will be called after the transition has been made but before the object is persisted. If you want
-the method to only be called after a successful transition to a new state including persistence,
-use the `success` argument to an event instead.
-
-An example:
-
-```ruby
-class Motor < ActiveRecord::Base
-  include ActiveModel::Transitions
-
-  state_machine do
-    state :off, enter: :turn_power_off
-    state :on,  exit: :prepare_shutdown
-  end
-end
-```
-
-
 #### Using `success`
 
 In case you need to trigger a method call after a successful transition you
@@ -246,6 +203,50 @@ event :discontinue, :success => [:notify_admin, lambda { |order| AdminNotifier.n
   transitions :to => :discontinued, :from => [:available, :out_of_stock]
 end
 ```
+
+#### Using `enter` and `exit`
+
+If you want to trigger a method call when the object enters or exits a state regardless
+of the transition that made that happen, use `enter` and `exit`.
+
+`exit` will be called before the transition out of the state is executed. If you want the method
+to only be called if the transition is successful, then use another approach.
+
+`enter` will be called after the transition has been made but before the object is persisted. If you want
+the method to only be called after a successful transition to a new state including persistence,
+use the `success` argument to an event instead.
+
+An example:
+
+```ruby
+class Motor < ActiveRecord::Base
+  include ActiveModel::Transitions
+
+  state_machine do
+    state :off, enter: :turn_power_off
+    state :on,  exit: :prepare_shutdown
+  end
+end
+```
+
+#### [DEPRECATED] Using `on_transition`
+
+**This callback will soon be removed - rather use the `success` and / or `enter` / `exit` callbacks**
+
+Each event definition takes an optional `on_transition` argument, which allows
+you to execute methods on transition.
+
+You can pass in a Symbol, a String, a Proc or an Array containing method names
+as Symbol or String like this:
+```ruby
+event :discontinue do
+  transitions :to => :discontinued, :from => [:available, :out_of_stock], :on_transition => [:do_discontinue, :notify_clerk]
+end
+```
+
+Any arguments passed to the event method will be passed on to the `on_transition` callback.
+
+`on_transition` is called after `guard` and before `enter` on the state that it is transitioning to.
 
 #### Timestamps
 
