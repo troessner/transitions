@@ -205,6 +205,20 @@ to only be called if the transition is successful, then use another approach.
 the method to only be called after a successful transition to a new state including persistence,
 use the `success` argument to an event instead.
 
+An example:
+
+```ruby
+class Motor < ActiveRecord::Base
+  include ActiveModel::Transitions
+
+  state_machine do
+    state :off, enter: :turn_power_off
+    state :on,  exit: :prepare_shutdown
+  end
+end
+```
+
+
 #### Using `success`
 
 In case you need to trigger a method call after a successful transition you
