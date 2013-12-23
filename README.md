@@ -21,7 +21,7 @@ issue](https://github.com/troessner/transitions/issues/86) for example).
 
 *   3
 *   4
-*   
+
 ### Installation
 
 #### Rails
