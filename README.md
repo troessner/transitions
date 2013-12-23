@@ -17,10 +17,11 @@ Supported versions:
 `transitions` does not work with ruby 1.8.7 (see [this
 issue](https://github.com/troessner/transitions/issues/86) for example).
 
-### Rails Compatibility
+### Supported Rails versions:
 
-Right now `transitions` does **only** support rails 3. Rails 4 is **not** supported right now but I am working on fixing this.
-
+*   3
+*   4
+*   
 ### Installation
 
 #### Rails
@@ -288,6 +289,9 @@ state_machine :initial => :closed do
   state :closed
 end
 ```
+
+Your initial state **must** be listed in the state definition below, otherwise `transitions` will raise a rather unhelpful exception like "NoMethodError: undefined method `call_action' for nil:NilClass" (there's a ticket to fix this already: https://github.com/troessner/transitions/issues/112)
+
 
 ### Configuring a different column name with ActiveRecord
 
