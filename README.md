@@ -131,7 +131,7 @@ If you need to get all available transitions for current state you can simply ca
 `transitions` offers you the possibility to define a couple of callbacks during the different stages / places of transitioning from one state to another. So let's say you have an event `discontinue` which transitions the current state from `in_stock` to `sold_out`. The callback sequence would look like this:
 
 
-`discontinue` event -> current_state `in_stock` executes `exit` callback -> `on_transition` callback is executed -> new_state `sold_out` executes `enter` callback -> the `success` callback of the `discontinue` event is executed
+`discontinue` event -> current_state `in_stock` executes `exit` callback -> `guard` is checked -> `on_transition` callback is executed -> new_state `sold_out` executes `enter` callback -> the `success` callback of the `discontinue` event is executed
 
 
 Each of those callbacks is explained in detail below.
@@ -166,7 +166,7 @@ end
 
 
 Each event definition takes an optional `on_transition` argument, which allows
-you to execute code on transition. This callback is executed after the `exit` callback of the former state (if it has been defined) and before the `enter` callback of the new state. There is no check if this callbacks succeeds (meaning that `transitions` does not evaluate its return value somewhere). However, you can easily add some properly abstracted error handling yourself by raising an exception in this callback and then handling this exception in the (also defined by you) `event_failed` callback (see below).
+you to execute code on transition. This callback is executed after the `exit` callback of the former state (if it has been defined) and after the `guard` check but before the `enter` callback of the new state. There is no check if this callbacks succeeds (meaning that `transitions` does not evaluate its return value somewhere). However, you can easily add some properly abstracted error handling yourself by raising an exception in this callback and then handling this exception in the (also defined by you) `event_failed` callback (see below).
 
 You can pass in a Symbol, a String, a Proc or an Array containing method names
 as Symbol or String like this:
@@ -178,7 +178,6 @@ end
 
 Any arguments passed to the event method will be passed on to the `on_transition` callback.
 
-`on_transition` is called after `guard` and before `enter` on the state that it is transitioning to.
 
 #### Callback #3 : Event callback `success`
 
