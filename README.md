@@ -229,12 +229,11 @@ class Motor < ActiveRecord::Base
 end
 ```
 
-#### [DEPRECATED] Using `on_transition`
+#### Using `on_transition`
 
-**This callback will soon be removed - rather use the `success` and / or `enter` / `exit` callbacks**
 
 Each event definition takes an optional `on_transition` argument, which allows
-you to execute methods on transition.
+you to execute code on transition. This callback is executed after the `exit` callback of the former state (if it has been defined) and before the `enter` callback of the new state. There is no check if this callbacks succeeds (meaning that `transitions` does not evaluate its return value somewhere). However, you can easily add some properly abstracted error handling yourself by raising an exception in this callback and then handling this exception in the (also defined by you) `event_failed` callback (see below).
 
 You can pass in a Symbol, a String, a Proc or an Array containing method names
 as Symbol or String like this:
