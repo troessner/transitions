@@ -131,10 +131,35 @@ If you need to get all available transitions for current state you can simply ca
 `transitions` offers you the possibility to define a couple of callbacks during the different stages / places of transitioning from one state to another. So let's say you have an event `discontinue` which transitions the current state from `in_stock` to `sold_out`. The callback sequence would look like this:
 
 
-`discontinue` event -> current_state `in_stock` executes `exit` callback -> `guard` is checked -> `on_transition` callback is executed -> new_state `sold_out` executes `enter` callback -> the `success` callback of the `discontinue` event is executed
+      | discontinue event |
+            |
+            |
+            |
+      | current_state `in_stock` | ----> executes `exit` callback
+            |
+            |
+            |
+      | current_state `in_stock` | ----> executes `on_transition` callback if and only the `guard` check was successfull. If not successfull, the chain aborts here and the `event_failed` callback is executed
+            |
+            |
+            |
+      | current_state `in_stock` | ----> executes `enter` callback for new state `sold_out`
+            |
+            |
+            |
+      | current_state `in_stock` | ----> executes `event_fired` callback
+            |
+            |
+            |
+      | current_state `in_stock` | ----> move state from `in_stock` to `sold_out`
+            |
+            |
+            |
+      | current_state `sold_out` | ----> executes `success` callback of the `discontinue` event
 
 
-Each of those callbacks is explained in detail below.
+
+This all looks very complicated (I know), but don't worry, in 99% of all cases you don't have to care about the details and the usage itself is straightforward as you can see in the examples below where each callback is explained a little more throrough.
 
 
 #### Callback # 1: State callbacks `enter` and `exit`
@@ -166,7 +191,7 @@ end
 
 
 Each event definition takes an optional `on_transition` argument, which allows
-you to execute code on transition. This callback is executed after the `exit` callback of the former state (if it has been defined) and after the `guard` check but before the `enter` callback of the new state. There is no check if this callbacks succeeds (meaning that `transitions` does not evaluate its return value somewhere). However, you can easily add some properly abstracted error handling yourself by raising an exception in this callback and then handling this exception in the (also defined by you) `event_failed` callback (see below).
+you to execute code on transition. This callback is executed after the `exit` callback of the former state (if it has been defined) but before the `enter` callback of the new state and only if the `guard` check succeeds. There is no check if the callback itself succeeds (meaning that `transitions` does not evaluate its return value somewhere). However, you can easily add some properly abstracted error handling yourself by raising an exception in this callback and then handling this exception in the (also defined by you) `event_failed` callback (see below and / or the wonderful ascii diagram above).
 
 You can pass in a Symbol, a String, a Proc or an Array containing method names
 as Symbol or String like this:
