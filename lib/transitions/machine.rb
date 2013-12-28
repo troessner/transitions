@@ -1,25 +1,3 @@
-# Copyright (c) 2009 Rick Olson
-
-# Permission is hereby granted, free of charge, to any person
-# obtaining a copy of this software and associated documentation files
-# (the "Software"), to deal in the Software without restriction,
-# including without limitation the rights to use, copy, modify, merge,
-# publish, distribute, sublicense, and/or sell copies of the Software,
-# and to permit persons to whom the Software is furnished to do so,
-# subject to the following conditions:
-
-# The above copyright notice and this permission notice shall be
-# included in all copies or substantial portions of the Software.
-
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-# NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-# BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-# ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-# CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-# SOFTWARE.
-
 module Transitions
   class Machine
     attr_writer :initial_state
@@ -43,31 +21,22 @@ module Transitions
       self
     end
 
-    # TODO Refactor me please?
+    # TODO There is still way to much parameter passing around going on down below.
     def fire_event(event, record, persist, *args)
-      state_index[record.current_state].call_action(:exit, record)
-      begin
-        if new_state = @events[event].fire(record, nil, *args)
-          state_index[new_state].call_action(:enter, record)
-
-          if record.respond_to?(:event_fired)
-            record.send(:event_fired, record.current_state, new_state, event)
-          end
-
-          record.update_current_state(new_state, persist)
-          @events[event].success.call(record) if @events[event].success
-          return true
-        else
-          record.send(:event_failed, event) if record.respond_to?(:event_failed)
-          return false
-        end
-      rescue => e
-        if record.respond_to?(:event_failed)
-          record.send(:event_failed, event)
-          return false
-        else
-          raise e
-        end
+      handle_state_exit_callback record
+      if new_state = transition_to_new_state(record, event, *args)
+        handle_state_enter_callback record, new_state
+        handle_event_fired_calllback record, new_state, event
+        record.update_current_state(new_state, persist)
+        handle_event_success_callback record, event
+      else
+        handle_event_failed_callback record, event
+      end
+    rescue => e
+      if record.respond_to?(:event_failed)
+        record.send(:event_failed, event)
+      else
+        raise e
       end
     end
 
@@ -81,7 +50,33 @@ module Transitions
       :@current_state
     end
 
-    private
+  private
+
+    def handle_state_exit_callback(record)
+      state_index[record.current_state].call_action(:exit, record)
+    end
+
+    def transition_to_new_state(record, event, *args)
+      @events[event].fire(record, nil, *args)
+    end
+
+    def handle_state_enter_callback(record, new_state)
+      state_index[new_state].call_action(:enter, record)
+    end
+
+    def handle_event_fired_calllback(record, new_state, event)
+      if record.respond_to?(:event_fired)
+        record.send(:event_fired, record.current_state, new_state, event)
+      end
+    end
+
+    def handle_event_success_callback(record, event)
+      @events[event].success.call(record) if @events[event].success
+    end
+
+    def handle_event_failed_callback(record, event)
+      record.send(:event_failed, event) if record.respond_to?(:event_failed)
+    end
 
     def state(name, options = {})
       unless @state_index.key? name # Just ignore duplicates
