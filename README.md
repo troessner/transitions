@@ -2,6 +2,8 @@
 [![Build status](https://secure.travis-ci.org/troessner/transitions.png?branch=master)](http://travis-ci.org/troessner/transitions) 
 [![Gem Version](https://badge.fury.io/rb/transitions.png)](http://badge.fury.io/rb/transitions)
 [![Code Climate](https://codeclimate.com/github/troessner/transitions.png)](https://codeclimate.com/github/troessner/transitions)
+[![Dependency Status](https://gemnasium.com/troessner/transitions.png)](https://gemnasium.com/troessner/transitions)
+[![Coverage Status](https://coveralls.io/repos/troessner/transitions/badge.png)](https://coveralls.io/r/troessner/transitions)
 
 ### Synopsis
 
