@@ -61,7 +61,10 @@ module ActiveModel
     end
 
     def read_state
-      self[transitions_state_column_name] && self[transitions_state_column_name].to_sym
+      column_value = self[transitions_state_column_name]
+      result       = column_value && column_value.to_sym
+
+      result if self.class.available_states.include?(result)
     end
 
     def set_initial_state

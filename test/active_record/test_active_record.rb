@@ -71,6 +71,14 @@ class TestActiveRecord < Test::Unit::TestCase
     assert_equal "off", @light.state
   end
 
+  test 'record with an empty state column' do
+    @light.state = ''
+    @light.save(validate: false)
+
+    assert_equal :off, @light.current_state
+    assert_equal :off, @light.current_state
+  end
+
   test "new active records defaults current state to the initial state" do
     assert_equal :off, @light.current_state
   end
