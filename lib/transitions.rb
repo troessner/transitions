@@ -67,17 +67,20 @@ module Transitions
   end
 
   def current_state
-    sm   = self.class.get_state_machine
-    ivar = sm.current_state_variable
-
+    sm    = self.class.get_state_machine
+    ivar  = sm.current_state_variable
     value = instance_variable_get(ivar)
-    return value if value
 
     if ::Transitions.active_record_descendant?(self.class)
-      value = instance_variable_set(ivar, read_state)
+      value = read_state unless value.present?
     end
 
-    !(value.nil? || value.to_s.empty?) ? value : sm.initial_state
+    value = sm.initial_state unless value.present?
+
+    if ::Transitions.active_record_descendant?(self.class)
+      instance_variable_set(ivar, value)
+    end
+    value
   end
 
   def self.active_record_descendant?(klazz)
