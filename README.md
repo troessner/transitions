@@ -3,6 +3,7 @@
 [![Gem Version](https://badge.fury.io/rb/transitions.png)](http://badge.fury.io/rb/transitions)
 [![Code Climate](https://codeclimate.com/github/troessner/transitions.png)](https://codeclimate.com/github/troessner/transitions)
 [![Dependency Status](https://gemnasium.com/troessner/transitions.png)](https://gemnasium.com/troessner/transitions)
+[![Inline docs](http://inch-pages.github.io/github/troessner/transitions.png)](http://inch-pages.github.io/github/troessner/transitions)
 
 
 ### Synopsis
