@@ -345,7 +345,7 @@ state_machine :initial => :closed do
 end
 ```
 
-Your initial state **must** be listed in the state definition below, otherwise `transitions` will raise a rather unhelpful exception like "NoMethodError: undefined method `call_action' for nil:NilClass" (there's a ticket to fix this already: https://github.com/troessner/transitions/issues/112)
+The explicitly specified state **must** be one of the states listed in the state definition below, otherwise `transitions` will raise a rather unhelpful exception like "NoMethodError: undefined method `call_action' for nil:NilClass" (there's a ticket to fix this already: https://github.com/troessner/transitions/issues/112)
 
 
 ### Configuring a different column name with ActiveRecord
@@ -369,7 +369,7 @@ end
     possible fix had to be rolled back due to other side effects:
     https://github.com/troessner/transitions/issues/76. Since I know virtually
     zero about mongoid, a pull request would be highly appreciated.
-*   Multiple state machines are and will not be supported. For the rationale
+*   Multiple state machines are not and will not be supported. For the rationale
     behind this see the Changelog.
 
 
