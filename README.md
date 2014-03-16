@@ -236,6 +236,18 @@ event :discontinue, :success => [:notify_admin, lambda { |order| AdminNotifier.n
 end
 ```
 
+#### Callback caveats
+
+Since callbacks will not be called by you but by `transitions` the scope is different when they are called and you'll run into problems if you use classes / modules in those callbacks that have the same names like `transitions` ones, e.g. "Event":
+
+```Ruby
+def event_fired(current_state, new_state, event)
+  Event.create!
+end
+```
+
+This will crash because `transitions` uses an Event class as well, and, since the scope has changed when `transitions` calls this method, `transitions` will use it's own Event class here, not yours.
+In this case you can try to prefix your models with the "::" operator and see if that solves your problems. See https://github.com/troessner/transitions/issues/123 for details.
 
 #### Automatic scope generation
 
