@@ -16,6 +16,7 @@ Supported versions:
 
 *   1.9.3
 *   2.0
+*   2.1
 
 `transitions` does not work with ruby 1.8.7 (see [this
 issue](https://github.com/troessner/transitions/issues/86) for example).
