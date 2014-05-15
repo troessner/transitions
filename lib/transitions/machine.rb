@@ -65,7 +65,7 @@ module Transitions
     end
 
     def handle_event_fired_calllback(record, new_state, event)
-      if record.respond_to?(:event_fired)
+      if record.respond_to?(:event_fired, true)
         record.send(:event_fired, record.current_state, new_state, event)
       end
     end
@@ -75,7 +75,9 @@ module Transitions
     end
 
     def handle_event_failed_callback(record, event)
-      record.send(:event_failed, event) if record.respond_to?(:event_failed)
+      if record.respond_to?(:event_failed, true)
+        record.send(:event_failed, event)
+      end
     end
 
     def state(name, options = {})
