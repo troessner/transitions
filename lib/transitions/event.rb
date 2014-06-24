@@ -16,6 +16,13 @@ module Transitions
         machine.klass.send(:define_method, "can_#{name.to_s}?") do |*args|
           machine.events_for(current_state).include?(name.to_sym)
         end
+
+        machine.klass.send(:define_method, "can_execute_#{name.to_s}?") do |*args|
+          event = name.to_sym
+
+          send("can_#{name.to_s}?", *args) &&
+          machine.events[event].can_execute_transition_from_state?(current_state, self, *args)
+        end
       end
       update(options, &block)
     end
@@ -40,6 +47,10 @@ module Transitions
 
     def transitions_from_state?(state)
       @transitions.any? { |t| t.from? state }
+    end
+
+    def can_execute_transition_from_state?(state, obj, *args)
+      @transitions.select { |t| t.from? state }.any? { |t| t.executable?(obj, *args) }
     end
 
     def ==(event)
