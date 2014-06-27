@@ -73,7 +73,7 @@ module Transitions
     value = instance_variable_get(ivar)
     return value if value
 
-    if ::Transitions.active_record_descendant?(self.class)
+    if respond_to? :read_state
       value = instance_variable_set(ivar, read_state)
     end
 
