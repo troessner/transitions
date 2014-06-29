@@ -44,7 +44,8 @@ module Transitions
   def update_current_state(new_state, persist = false)
     sm   = self.class.get_state_machine
     ivar = sm.current_state_variable
-    if ::Transitions.active_record_descendant?(self.class)
+
+    if respond_to?(:write_state) && respond_to?(:write_state_without_persistence)
       write_state(new_state) if persist
       write_state_without_persistence(new_state) # TODO This seems like a duplicate, `write_new` already calls `write_state_without_persistence`.
     end
