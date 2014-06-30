@@ -45,7 +45,7 @@ module Transitions
     sm   = self.class.get_state_machine
     ivar = sm.current_state_variable
 
-    if respond_to?(:write_state) && respond_to?(:write_state_without_persistence)
+    if Transitions.active_model_descendant?(self.class)
       write_state(new_state) if persist
       write_state_without_persistence(new_state) # TODO This seems like a duplicate, `write_new` already calls `write_state_without_persistence`.
     end
@@ -74,14 +74,14 @@ module Transitions
     value = instance_variable_get(ivar)
     return value if value
 
-    if respond_to? :read_state
+    if Transitions.active_model_descendant?(self.class)
       value = instance_variable_set(ivar, read_state)
     end
 
     !(value.nil? || value.to_s.empty?) ? value : sm.initial_state
   end
 
-  def self.active_record_descendant?(klazz)
-    defined?(ActiveRecord::Base) && klazz < ActiveRecord::Base
+  def self.active_model_descendant?(klazz)
+    defined?(ActiveModel) && klazz.included_modules.include?(ActiveModel::Dirty)
   end
 end
