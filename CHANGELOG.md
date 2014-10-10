@@ -1,3 +1,8 @@
+# 0.1.13
+
+* (Nathan Amick and Ryan Long) Allow passing non-Proc callables as guards
+* (troessner) Bugfixes, Refactorings and documentation improvements
+
 # 0.1.12
 
 * (troessner) Fix issue 107: timestamps are updated even if guard fails.
