@@ -32,7 +32,7 @@ module ActiveModel
     # The optional options argument is passed to find when reloading so you may
     # do e.g. record.reload(:lock => true) to reload the same record with an
     # exclusive row lock.
-    def reload(options = nil)
+    def reload(*)
       super.tap do
         sm = self.class.get_state_machine
         remove_instance_variable(sm.current_state_variable) if instance_variable_defined?(sm.current_state_variable)
