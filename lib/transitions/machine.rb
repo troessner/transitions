@@ -17,7 +17,7 @@ module Transitions
       @initial_state = options[:initial] if options.key?(:initial)
       @auto_scopes = options[:auto_scopes]
       instance_eval(&block) if block
-      include_scopes if @auto_scopes && ::Transitions.active_record_descendant?(klass)
+      include_scopes if @auto_scopes && ::Transitions.active_model_descendant?(klass)
       self
     end
 

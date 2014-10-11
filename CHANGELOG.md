@@ -1,3 +1,7 @@
+# 0.1.14
+
+* (Randy Schmidt / r38y) Make reading state work for non-AR models.
+
 # 0.1.13
 
 * (Nathan Amick and Ryan Long) Allow passing non-Proc callables as guards
