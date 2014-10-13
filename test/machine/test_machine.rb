@@ -16,8 +16,12 @@ class MachineTestSubject
     end
 
     event :restart do
-      transitions :from => :closed, to: :open
+      transitions :from => :closed, to: :open, guard: :restart_allowed?
     end
+  end
+
+  def restart_allowed?(allowed = true)
+    allowed
   end
 end
 
@@ -52,6 +56,12 @@ class TransitionsMachineTest < Test::Unit::TestCase
   test "knows that it can't use a transition when it is unavailable" do
     machine = MachineTestSubject.new
     assert machine.cant_transition?(:shutdown)
+  end
+
+  test "knows that it can't transition to a state denied by a guard" do
+    machine = MachineTestSubject.new
+    assert machine.can_execute_restart? true
+    refute machine.can_execute_restart? false
   end
 
   test "test fire_event" do
