@@ -63,8 +63,4 @@ class TransitionsMachineTest < Test::Unit::TestCase
     assert machine.can_execute_restart? true
     refute machine.can_execute_restart? false
   end
-
-  test "test fire_event" do
-    pend "Implement me"
-  end
 end
