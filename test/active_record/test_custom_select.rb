@@ -1,9 +1,9 @@
-require "helper"
+require 'helper'
 
 # Regression test for https://github.com/troessner/transitions/issues/95
 class CreateSwitches < ActiveRecord::Migration
   def self.up
-    create_table(:switches, :force => true) do |t|
+    create_table(:switches, force: true) do |t|
       t.string :state
     end
   end
@@ -24,7 +24,7 @@ class TestCustomSelect < Test::Unit::TestCase
     Switch.create!
   end
 
-  test "should not trigger an exception when we use a custom select query which excludes the name of our state attribute" do
+  test 'should not trigger an exception when we use a custom select query which excludes the name of our state attribute' do
     result = Switch.select(:id)
     assert_nothing_raised NoMethodError do
       result.inspect

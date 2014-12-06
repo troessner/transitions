@@ -1,8 +1,8 @@
-require "helper"
+require 'helper'
 
 class CreateBunnies < ActiveRecord::Migration
   def self.up
-    create_table(:bunnies, :force => true) do |t|
+    create_table(:bunnies, force: true) do |t|
       t.string :status # Explicitly use another state column to ensure that this whole enchilada is working with other state column names than the default ones.
     end
   end
@@ -10,7 +10,7 @@ end
 
 class CreatePuppies < ActiveRecord::Migration
   def self.up
-    create_table(:puppies, :force => true) do |t|
+    create_table(:puppies, force: true) do |t|
       t.string :state
     end
   end
@@ -19,7 +19,7 @@ end
 class Bunny < ActiveRecord::Base
   include ActiveModel::Transitions
 
-  state_machine :attribute_name => :status, :auto_scopes => true do
+  state_machine attribute_name: :status, auto_scopes: true do
     state :hobbling
   end
 end
@@ -38,11 +38,11 @@ class TestScopes < Test::Unit::TestCase
     @bunny = Bunny.create!
   end
 
-  test "scopes exist" do
+  test 'scopes exist' do
     assert_respond_to Bunny, :hobbling
   end
 
-  test "scope returns correct object" do
+  test 'scope returns correct object' do
     assert_equal Bunny.hobbling.first, @bunny
   end
 
@@ -55,7 +55,7 @@ class TestScopes < Test::Unit::TestCase
       Class.new(ActiveRecord::Base) do
         include ActiveModel::Transitions
 
-        state_machine :auto_scopes => true do
+        state_machine auto_scopes: true do
           state :new
         end
       end

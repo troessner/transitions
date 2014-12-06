@@ -1,4 +1,4 @@
-require "helper"
+require 'helper'
 
 class Bus
   include Transitions
@@ -13,7 +13,7 @@ class TestStatePredicateMethod < Test::Unit::TestCase
     @bus = Bus.new
   end
 
-  test "should generate predicate methods for states" do
+  test 'should generate predicate methods for states' do
     assert_true @bus.respond_to?(:parking?)
     assert_true @bus.send(:parking?)
   end

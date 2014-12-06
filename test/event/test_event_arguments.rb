@@ -1,4 +1,4 @@
-require "helper"
+require 'helper'
 
 class ArgumentsTestSubject
   include Transitions
@@ -9,7 +9,7 @@ class ArgumentsTestSubject
     state :opened
 
     event :open do
-      transitions :from => :initial, :to => :opened, :on_transition => :update_date
+      transitions from: :initial, to: :opened, on_transition: :update_date
     end
   end
 
@@ -19,7 +19,7 @@ class ArgumentsTestSubject
 end
 
 class StateMachineMachineTest < Test::Unit::TestCase
-  test "pass arguments to transition method" do
+  test 'pass arguments to transition method' do
     subject = ArgumentsTestSubject.new
     assert_equal :initial, subject.current_state
     subject.open!(Date.yesterday)
@@ -27,4 +27,3 @@ class StateMachineMachineTest < Test::Unit::TestCase
     assert_equal Date.yesterday, subject.date
   end
 end
-

@@ -1,5 +1,5 @@
-require "helper"
-require_relative "./machine_template"
+require 'helper'
+require_relative './machine_template'
 
 class TestFireEventMachine < Test::Unit::TestCase
   def setup
@@ -9,19 +9,19 @@ class TestFireEventMachine < Test::Unit::TestCase
     assert_not_nil @event
   end
 
-  test "fire_event returns true if state transition was successful" do
+  test 'fire_event returns true if state transition was successful' do
     @machine.stubs(:transition_to_new_state).returns(:closed)
 
     assert_equal true, @machine.fire_event(@event, @record, false)
   end
 
-  test "fire_event returns false if state transition was unsuccessful" do
+  test 'fire_event returns false if state transition was unsuccessful' do
     @machine.stubs(:transition_to_new_state).returns(false)
 
     assert_equal false, @machine.fire_event(@event, @record, false)
   end
 
-  test "fire_event returns false if state transition raises" do
+  test 'fire_event returns false if state transition raises' do
     @machine.stubs(:transition_to_new_state).raises(StandardError)
 
     assert_equal false, @machine.fire_event(@event, @record, false)

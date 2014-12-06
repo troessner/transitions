@@ -8,7 +8,7 @@ class Car
     state :driving
 
     event :start_driving do
-      transitions :from => :parked, :to => :driving
+      transitions from: :parked, to: :driving
     end
   end
 end
@@ -18,14 +18,14 @@ class TestStateTransitionEventFiredCallback < Test::Unit::TestCase
     @car = Car.new
   end
 
-  test "should execute the event_fired callback after successfull event execution if it callback is defined" do
+  test 'should execute the event_fired callback after successfull event execution if it callback is defined' do
     @car.stubs(:event_fired)
     @car.expects(:event_fired).with(:parked, :driving, :start_driving).once
 
     @car.start_driving!
   end
 
-  test "should not execute the event_fired callback after successfull event execution if it callback is not defined" do
+  test 'should not execute the event_fired callback after successfull event execution if it callback is not defined' do
     pend 'Test fails right now although functionality is working as expected'
     # This test fails right now even though it works as expected in the console.
     # The reason for this is, that mocha's `expects` does a little bit more than just set up an expectation,
