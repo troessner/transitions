@@ -10,11 +10,11 @@ module Transitions
       update(options)
     end
 
-    def ==(state)
-      if state.is_a? Symbol
-        name == state
+    def ==(other)
+      if other.is_a? Symbol
+        name == other
       else
-        name == state.name
+        name == other.name
       end
     end
 
@@ -45,9 +45,13 @@ module Transitions
     private
 
     def define_state_query_method(machine)
-      method_name, state_name = "#{@name}?", @name # Instance vars are out of scope when calling define_method below, so we use local variables.
+      # Instance vars are out of scope when calling define_method below, so we use local variables.
+      method_name, state_name = "#{@name}?", @name
       if machine.klass.method_defined?(method_name.to_sym)
-        fail InvalidMethodOverride, "Transitions: Can not define method `#{method_name}` because it is already defined - either rename the existing method or the state."
+        fail InvalidMethodOverride, <<-EOS
+          Transitions: Can not define method `#{method_name}` because it is already defined - either
+          rename the existing method or the state."
+          EOS
       end
       machine.klass.send :define_method, method_name do
         current_state.to_s == state_name.to_s

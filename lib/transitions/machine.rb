@@ -21,7 +21,7 @@ module Transitions
       self
     end
 
-    # TODO There is still way to much parameter passing around going on down below.
+    # TODO: There is still way to much parameter passing around going on down below.
     def fire_event(event, record, persist, *args)
       handle_state_exit_callback record
       if new_state = transition_to_new_state(record, event, *args)
@@ -49,7 +49,7 @@ module Transitions
     end
 
     def current_state_variable
-      # TODO Refactor me away.
+      # TODO: Refactor me away.
       :@current_state
     end
 
@@ -100,7 +100,10 @@ module Transitions
       @states.each do |state|
         state_name = state.name.to_s
         if @klass.respond_to?(state_name)
-          fail InvalidMethodOverride, "Transitions: Can not define scope `#{state_name}` because there is already an equally named method defined - either rename the existing method or the state."
+          fail InvalidMethodOverride, <<-EOS
+            Transitions: Can not define scope `#{state_name}` because there is already an equally named
+            method defined - either rename the existing method or the state.
+            EOS
         end
         @klass.scope state_name, -> { @klass.where(@klass.state_machine.attribute_name => state_name) }
       end

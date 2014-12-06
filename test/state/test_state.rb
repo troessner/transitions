@@ -6,7 +6,7 @@ class TestState < Test::Unit::TestCase
       include Transitions
       state_machine do
       end
-    end.get_state_machine
+    end.state_machine
     state_name = :astate
     @options = { machine: machine, custom_key: :my_key }
     @state   = Transitions::State.new(state_name, @options)

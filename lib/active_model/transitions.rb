@@ -3,24 +3,26 @@ module ActiveModel
     extend ActiveSupport::Concern
 
     included do
-      class ::Transitions::Machine
-        unless method_defined?(:new_transitions_initialize) || method_defined?(:new_transitions_update)
-          attr_reader :attribute_name
-          alias_method :old_transitions_initialize, :initialize
-          alias_method :old_transitions_update, :update
+      module ::Transitions
+        class Machine
+          unless method_defined?(:new_transitions_initialize) || method_defined?(:new_transitions_update)
+            attr_reader :attribute_name
+            alias_method :old_transitions_initialize, :initialize
+            alias_method :old_transitions_update, :update
 
-          def new_transitions_initialize(*args, &block)
-            @attribute_name = :state
-            old_transitions_initialize(*args, &block)
+            def new_transitions_initialize(*args, &block)
+              @attribute_name = :state
+              old_transitions_initialize(*args, &block)
+            end
+
+            def new_transitions_update(options = {}, &block)
+              @attribute_name = options[:attribute_name] if options.key?(:attribute_name)
+              old_transitions_update(options, &block)
+            end
+
+            alias_method :initialize, :new_transitions_initialize
+            alias_method :update, :new_transitions_update
           end
-
-          def new_transitions_update(options = {}, &block)
-            @attribute_name = options[:attribute_name] if options.key?(:attribute_name)
-            old_transitions_update(options, &block)
-          end
-
-          alias_method :initialize, :new_transitions_initialize
-          alias_method :update, :new_transitions_update
         end
       end
       include ::Transitions
@@ -34,7 +36,7 @@ module ActiveModel
     # exclusive row lock.
     def reload(*)
       super.tap do
-        sm = self.class.get_state_machine
+        sm = self.class.state_machine
         remove_instance_variable(sm.current_state_variable) if instance_variable_defined?(sm.current_state_variable)
       end
     end
@@ -55,7 +57,7 @@ module ActiveModel
     end
 
     def write_state_without_persistence(state)
-      ivar = self.class.get_state_machine.current_state_variable
+      ivar = self.class.state_machine.current_state_variable
       instance_variable_set(ivar, state)
       self[transitions_state_column_name] = state.to_s
     end
@@ -65,10 +67,11 @@ module ActiveModel
     end
 
     def set_initial_state
-      # In case we use a query with a custom select that excludes our state attribute name we need to skip the initialization below.
+      # In case we use a query with a custom select that excludes
+      # our state attribute name we need to skip the initialization below.
       if self.has_attribute?(transitions_state_column_name) && state_not_set?
-        self[transitions_state_column_name] = self.class.get_state_machine.initial_state.to_s
-        self.class.get_state_machine.state_index[self[transitions_state_column_name].to_sym].call_action(:enter, self)
+        self[transitions_state_column_name] = self.class.state_machine.initial_state.to_s
+        self.class.state_machine.state_index[self[transitions_state_column_name].to_sym].call_action(:enter, self)
       end
     end
 
@@ -79,7 +82,7 @@ module ActiveModel
     end
 
     def state_inclusion
-      unless self.class.get_state_machine.states.map { |s| s.name.to_s }.include?(self[transitions_state_column_name].to_s)
+      unless self.class.state_machine.states.map { |s| s.name.to_s }.include?(self[transitions_state_column_name].to_s)
         errors.add(transitions_state_column_name, :inclusion, value: self[transitions_state_column_name])
       end
     end
