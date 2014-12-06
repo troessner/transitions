@@ -29,12 +29,15 @@ module Transitions
         handle_event_fired_callback record, new_state, event
         record.update_current_state(new_state, persist)
         handle_event_success_callback record, event
+        return true
       else
         handle_event_failed_callback record, event
+        return false
       end
     rescue => e
       if record.respond_to?(:event_failed)
         record.send(:event_failed, event)
+        return false
       else
         raise e
       end
