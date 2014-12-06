@@ -9,11 +9,11 @@ class Car
     state :switched_off
 
     event :start_driving do
-      transitions :from => :parked, :to => :driving
+      transitions from: :parked, to: :driving
     end
 
     event :switch_off_engine do
-      transitions :from => :parked, :to => :switched_off
+      transitions from: :parked, to: :switched_off
     end
   end
 end
@@ -23,7 +23,7 @@ class TestStateTransitionEventFailedCallback < Test::Unit::TestCase
     @car = Car.new
   end
 
- test "should execute the event_failed_callback and don't raise error if callback is defined" do
+  test "should execute the event_failed_callback and don't raise error if callback is defined" do
     @car.start_driving
     @car.expects(:event_failed).with(:switch_off_engine)
     @car.switch_off_engine

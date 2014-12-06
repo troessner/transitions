@@ -1,9 +1,9 @@
-require "transitions/event"
-require "transitions/machine"
-require "transitions/presenter"
-require "transitions/state"
-require "transitions/state_transition"
-require "transitions/version"
+require 'transitions/event'
+require 'transitions/machine'
+require 'transitions/presenter'
+require 'transitions/state'
+require 'transitions/state_transition'
+require 'transitions/version'
 
 module Transitions
   class InvalidTransition     < StandardError; end
@@ -26,10 +26,12 @@ module Transitions
       block ? @state_machine.update(options, &block) : @state_machine
     end
 
-    def get_state_machine; @state_machine; end
+    def get_state_machine
+      @state_machine
+    end
 
     def available_states
-      @state_machine.states.map(&:name).sort_by {|x| x.to_s}
+      @state_machine.states.map(&:name).sort_by(&:to_s)
     end
 
     def available_events

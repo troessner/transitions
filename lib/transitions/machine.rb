@@ -45,7 +45,7 @@ module Transitions
 
     def events_for(state)
       events = @events.values.select { |event| event.transitions_from_state?(state) }
-      events.map! { |event| event.name }
+      events.map!(&:name)
     end
 
     def current_state_variable
@@ -53,7 +53,7 @@ module Transitions
       :@current_state
     end
 
-  private
+    private
 
     def handle_state_exit_callback(record)
       state_index[record.current_state].call_action(:exit, record)
@@ -85,7 +85,7 @@ module Transitions
 
     def state(name, options = {})
       unless @state_index.key? name # Just ignore duplicates
-        state = State.new(name, :machine => self)
+        state = State.new(name, machine: self)
         state.update options
         @state_index[name] = state
         @states << state
@@ -100,11 +100,10 @@ module Transitions
       @states.each do |state|
         state_name = state.name.to_s
         if @klass.respond_to?(state_name)
-          raise InvalidMethodOverride, "Transitions: Can not define scope `#{state_name}` because there is already an equally named method defined - either rename the existing method or the state."
+          fail InvalidMethodOverride, "Transitions: Can not define scope `#{state_name}` because there is already an equally named method defined - either rename the existing method or the state."
         end
         @klass.scope state_name, -> { @klass.where(@klass.state_machine.attribute_name => state_name) }
       end
     end
   end
 end
-

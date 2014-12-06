@@ -6,8 +6,8 @@ module ActiveModel
       class ::Transitions::Machine
         unless method_defined?(:new_transitions_initialize) || method_defined?(:new_transitions_update)
           attr_reader :attribute_name
-          alias :old_transitions_initialize :initialize
-          alias :old_transitions_update :update
+          alias_method :old_transitions_initialize, :initialize
+          alias_method :old_transitions_update, :update
 
           def new_transitions_initialize(*args, &block)
             @attribute_name = :state
@@ -19,8 +19,8 @@ module ActiveModel
             old_transitions_update(options, &block)
           end
 
-          alias :initialize :new_transitions_initialize
-          alias :update :new_transitions_update
+          alias_method :initialize, :new_transitions_initialize
+          alias_method :update, :new_transitions_update
         end
       end
       include ::Transitions
@@ -74,13 +74,13 @@ module ActiveModel
 
     def state_presence
       unless self[transitions_state_column_name].present?
-        self.errors.add(transitions_state_column_name, :presence)
+        errors.add(transitions_state_column_name, :presence)
       end
     end
 
     def state_inclusion
-      unless self.class.get_state_machine.states.map{|s| s.name.to_s }.include?(self[transitions_state_column_name].to_s)
-        self.errors.add(transitions_state_column_name, :inclusion, :value => self[transitions_state_column_name])
+      unless self.class.get_state_machine.states.map { |s| s.name.to_s }.include?(self[transitions_state_column_name].to_s)
+        errors.add(transitions_state_column_name, :inclusion, value: self[transitions_state_column_name])
       end
     end
 

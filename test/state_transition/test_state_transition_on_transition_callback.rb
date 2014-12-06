@@ -14,16 +14,16 @@ class Truck
     state :driving
 
     event :turn_key do
-      transitions :from => :parked, :to => :running, :on_transition => :start_engine
+      transitions from: :parked, to: :running, on_transition: :start_engine
     end
 
     event :start_driving do
-      transitions :from => :parked, :to => :driving, :on_transition => [:start_engine, :loosen_handbrake, :push_gas_pedal]
+      transitions from: :parked, to: :driving, on_transition: [:start_engine, :loosen_handbrake, :push_gas_pedal]
     end
   end
 
-  %w!start_engine loosen_handbrake push_gas_pedal!.each do |m|
-    define_method(m){ @test_recorder << m }
+  %w(start_engine loosen_handbrake push_gas_pedal).each do |m|
+    define_method(m) { @test_recorder << m }
   end
 end
 

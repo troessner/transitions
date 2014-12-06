@@ -1,7 +1,7 @@
 module Transitions
   module Presenter
     def available_states
-      @state_machine.states.map(&:name).sort_by {|x| x.to_s}
+      @state_machine.states.map(&:name).sort_by(&:to_s)
     end
 
     def available_events
