@@ -1,5 +1,7 @@
-# 0.1.14
+# 0.2.0
 
+* (troessner) Fix missing explicit returns in our callback handling
+* (Lee Henson) add can_execute_event? to check against guard clauses
 * (Randy Schmidt / r38y) Make reading state work for non-AR models.
 
 # 0.1.13
