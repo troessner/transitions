@@ -215,7 +215,7 @@ can use `success`. This will be called after the `save!` is complete (if you
 use the `state_name!` method) and should be used for any methods that require
 that the object be persisted.
 ```ruby
-event :discontinue, :success => :notfiy_admin do
+event :discontinue, :success => :notify_admin do
   transitions :to => :discontinued, :from => [:available, :out_of_stock]
 end
 ```
