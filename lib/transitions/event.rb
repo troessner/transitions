@@ -29,7 +29,7 @@ module Transitions
 
     def fire(obj, to_state = nil, *args)
       transitions = @transitions.select { |t| t.from == obj.current_state }
-      fail InvalidTransition, error_message_for_invalid_transitions(obj) if transitions.size == 0
+      fail InvalidTransition, error_message_for_invalid_transitions(obj) if no_transitions_possible?(transitions)
 
       next_state = nil
       transitions.each do |transition|
@@ -41,7 +41,6 @@ module Transitions
           break
         end
       end
-      # Update timestamps on obj if a timestamp has been defined
       next_state
     end
 
@@ -53,11 +52,11 @@ module Transitions
       @transitions.select { |t| t.from? state }.any? { |t| t.executable?(obj, *args) }
     end
 
-    def ==(event)
-      if event.is_a? Symbol
-        name == event
+    def ==(other)
+      if other.is_a? Symbol
+        name == other
       else
-        name == event.name
+        name == other.name
       end
     end
 
@@ -90,6 +89,10 @@ module Transitions
     end
 
     private
+
+    def no_transitions_possible?(transitions)
+      transitions.size == 0
+    end
 
     # Returns the name of the timestamp attribute for this event
     # If the timestamp was simply true it returns the default_timestamp_name
@@ -128,7 +131,7 @@ module Transitions
       when Proc
         callback_names
       when Symbol
-        lambda { |record| record.send(callback_names) }
+        ->(record) { record.send(callback_names) }
       end
     end
 

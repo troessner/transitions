@@ -26,10 +26,6 @@ module Transitions
       block ? @state_machine.update(options, &block) : @state_machine
     end
 
-    def get_state_machine
-      @state_machine
-    end
-
     def available_states
       @state_machine.states.map(&:name).sort_by(&:to_s)
     end
@@ -44,24 +40,25 @@ module Transitions
   end
 
   def update_current_state(new_state, persist = false)
-    sm   = self.class.get_state_machine
+    sm   = self.class.state_machine
     ivar = sm.current_state_variable
 
     if Transitions.active_model_descendant?(self.class)
       write_state(new_state) if persist
-      write_state_without_persistence(new_state) # TODO This seems like a duplicate, `write_new` already calls `write_state_without_persistence`.
+      # TODO: Line below seems like a duplicate, `write_new` already calls `write_state_without_persistence`.
+      write_state_without_persistence(new_state)
     end
 
     instance_variable_set(ivar, new_state)
   end
 
   def available_transitions
-    self.class.get_state_machine.events_for(current_state)
+    self.class.state_machine.events_for(current_state)
   end
 
   def can_transition?(*events)
     events.all? do |event|
-      self.class.get_state_machine.events_for(current_state).include?(event.to_sym)
+      self.class.state_machine.events_for(current_state).include?(event.to_sym)
     end
   end
 
@@ -70,7 +67,7 @@ module Transitions
   end
 
   def current_state
-    sm   = self.class.get_state_machine
+    sm   = self.class.state_machine
     ivar = sm.current_state_variable
 
     value = instance_variable_get(ivar)
@@ -84,6 +81,7 @@ module Transitions
   end
 
   def self.active_model_descendant?(klazz)
-    defined?(ActiveModel) && klazz.included_modules.include?(ActiveModel::Dirty) # Checking directly for "ActiveModel" wouldn't work so we use some arbitrary module close to it.
+    # Checking directly for "ActiveModel" wouldn't work so we use some arbitrary module close to it
+    defined?(ActiveModel) && klazz.included_modules.include?(ActiveModel::Dirty)
   end
 end

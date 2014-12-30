@@ -4,7 +4,7 @@ require_relative './machine_template'
 class TestFireEventMachine < Test::Unit::TestCase
   def setup
     @record  = MachineTestSubject.new
-    @machine = MachineTestSubject.get_state_machine
+    @machine = MachineTestSubject.state_machine
     @event   = @machine.events_for(@record.current_state).first
     assert_not_nil @event
   end

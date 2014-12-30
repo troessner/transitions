@@ -27,15 +27,15 @@ end
 
 class TransitionsMachineTest < Test::Unit::TestCase
   test 'sets #initial_state from :initial option' do
-    assert_equal :closed, MachineTestSubject.get_state_machine.initial_state
+    assert_equal :closed, MachineTestSubject.state_machine.initial_state
   end
 
-  test '`get_state_machine` returns Transitions::Machine' do
-    assert_kind_of Transitions::Machine, MachineTestSubject.get_state_machine
+  test '`state_machine` returns Transitions::Machine' do
+    assert_kind_of Transitions::Machine, MachineTestSubject.state_machine
   end
 
   test 'finds events for given state' do
-    events = MachineTestSubject.get_state_machine.events_for(:open)
+    events = MachineTestSubject.state_machine.events_for(:open)
     assert events.include?(:shutdown)
     assert events.include?(:timeout)
   end

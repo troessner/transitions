@@ -120,7 +120,7 @@ class TestActiveRecord < Test::Unit::TestCase
   end
 
   test 'transition with wrong state will not validate' do
-    for s in @light.class.get_state_machine.states
+    for s in @light.class.state_machine.states
       @light.state = s.name
       assert @light.valid?
     end
