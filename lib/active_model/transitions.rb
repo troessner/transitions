@@ -66,7 +66,7 @@ module ActiveModel
 
     def set_initial_state
       # In case we use a query with a custom select that excludes our state attribute name we need to skip the initialization below.
-      if self.has_attribute?(transitions_state_column_name) && state_not_set?
+      if self.attribute_names.include?(transitions_state_column_name.to_s) && state_not_set?
         self[transitions_state_column_name] = self.class.get_state_machine.initial_state.to_s
         self.class.get_state_machine.state_index[self[transitions_state_column_name].to_sym].call_action(:enter, self)
       end
