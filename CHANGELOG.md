@@ -1,3 +1,7 @@
+# 0.2.1
+
+* (ozydingo / Andrew Schwartz) Don't use ActiveModel#has_attribute? since this adds the attribute name to self.attribute_names
+
 # 0.2.0
 
 * (troessner) Fix missing explicit returns in our callback handling
