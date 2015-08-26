@@ -45,6 +45,11 @@ include ActiveModel::Transitions
 gem install transitions
 ```
 
+… and this into your class:
+```ruby
+include Transitions
+```
+
 ### Using transitions
 ```ruby
 class Product
