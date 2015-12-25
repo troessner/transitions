@@ -1,29 +1,28 @@
-# -*- encoding: utf-8 -*-
-require File.expand_path('../lib/transitions/version', __FILE__)
+# coding: utf-8
+lib = File.expand_path('../lib', __FILE__)
+$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+require 'transitions/version'
 
-Gem::Specification.new do |s|
-  s.name        = 'transitions'
-  s.version     = Transitions::VERSION
-  s.platform    = Gem::Platform::RUBY
-  s.authors     = ['Jakub Kuzma', 'Timo Roessner']
-  s.email       = 'timo.roessner@googlemail.com'
-  s.homepage    = 'http://github.com/troessner/transitions'
-  s.summary     = 'State machine extracted from ActiveModel'
-  s.description = 'Lightweight state machine extracted from ActiveModel'
+Gem::Specification.new do |spec|
+  spec.name          = 'transitions'
+  spec.version       = Transitions::VERSION
+  spec.authors       = ['Timo Rößner']
+  spec.email         = ['timo.roessner@googlemail.com']
 
-  s.required_rubygems_version = '>= 1.3.6'
-  s.rubyforge_project         = 'transitions'
+  spec.summary       = 'State machine extracted from ActiveModel'
+  spec.description   = 'Lightweight state machine extracted from ActiveModel'
+  spec.homepage      = 'http://github.com/troessner/transitions'
+  spec.license       = 'MIT'
 
-  s.add_development_dependency 'bundler', '~> 1'
-  s.add_development_dependency 'test-unit', '~> 2.5'
-  s.add_development_dependency 'mocha', '~> 0.11.0' # With mocha 0.12 we get: undefined method `run' for #<StateMachineMachineTest:0x94918b8> (NoMethodError)
-  s.add_development_dependency 'rake'
-  s.add_development_dependency 'random_data'
-  s.add_development_dependency 'appraisal'
-  s.add_development_dependency 'activerecord', ['>= 3.0', '<= 4.0']
+  spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
+  spec.require_paths = ['lib']
 
-  s.files        = `git ls-files`.split("\n")
-  s.executables  = `git ls-files`.split("\n").map { |f| f =~ /^bin\/(.*)/ ? Regexp.last_match[1] : nil }.compact
-  s.require_path = 'lib'
-  s.license      = 'MIT'
+  spec.add_development_dependency 'bundler', '~> 1.0'
+  spec.add_development_dependency 'rake', '~> 10.0'
+  spec.add_development_dependency 'test-unit', '~> 2.5'
+  spec.add_development_dependency 'mocha', '~> 0.11.0' # With mocha 0.12 we get: undefined method `run' for #<StateMachineMachineTest:0x94918b8> (NoMethodError)
+  spec.add_development_dependency 'random_data'
+  spec.add_development_dependency 'appraisal'
+  spec.add_development_dependency 'activerecord', ['>= 3.0', '<= 4.0']
+  spec.add_development_dependency 'rubocop'
 end

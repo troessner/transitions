@@ -1,6 +1,7 @@
 sudo: false
 cache: bundler
 language: ruby
+bundler_args: --without local_development
 rvm:
   - 2.1
   - 2.2
