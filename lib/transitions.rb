@@ -6,7 +6,7 @@ require 'transitions/state_transition'
 require 'transitions/version'
 
 module Transitions
-  class InvalidTransition     < StandardError; end
+  class InvalidTransition < StandardError; end
   class InvalidMethodOverride < StandardError; end
   include Presenter
 
@@ -49,7 +49,7 @@ module Transitions
 
     if Transitions.active_model_descendant?(self.class)
       write_state(new_state) if persist
-      write_state_without_persistence(new_state) # TODO This seems like a duplicate, `write_new` already calls `write_state_without_persistence`.
+      write_state_without_persistence(new_state) # TODO: This seems like a duplicate, `write_new` already calls `write_state_without_persistence`.
     end
 
     instance_variable_set(ivar, new_state)

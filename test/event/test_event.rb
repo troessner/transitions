@@ -4,7 +4,7 @@ class TestEvent < Test::Unit::TestCase
   def setup
     @state_name = :close_order
     @success_as_symbol = :success_callback
-    @success_as_lambda = lambda { |record| record.success_callback }
+    @success_as_lambda = ->(record) { record.success_callback }
     @success_as_array  = [@success_as_symbol, @success_as_lambda]
   end
 

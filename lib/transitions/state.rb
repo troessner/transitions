@@ -29,7 +29,7 @@ module Transitions
     end
 
     def display_name
-      @display_name ||= name.to_s.gsub(/_/, ' ').capitalize
+      @display_name ||= name.to_s.tr('_', ' ').capitalize
     end
 
     def for_select
@@ -45,7 +45,8 @@ module Transitions
     private
 
     def define_state_query_method(machine)
-      method_name, state_name = "#{@name}?", @name # Instance vars are out of scope when calling define_method below, so we use local variables.
+      method_name = "#{@name}?"
+      state_name = @name # Instance vars are out of scope when calling define_method below, so we use local variables.
       if machine.klass.method_defined?(method_name.to_sym)
         fail InvalidMethodOverride, "Transitions: Can not define method `#{method_name}` because it is already defined - either rename the existing method or the state."
       end
