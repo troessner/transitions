@@ -1,3 +1,7 @@
+# 1.0.0
+
+* (troessner) Only support ruby 2.1 and 2.2.
+
 # 0.2.1
 
 * (ozydingo / Andrew Schwartz) Don't use ActiveModel#has_attribute? since this adds the attribute name to self.attribute_names
