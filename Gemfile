@@ -2,11 +2,12 @@ source 'https://rubygems.org'
 
 gemspec
 
-gem 'activerecord', '~> 3.2.14'
-gem 'activerecord-jdbcsqlite3-adapter', platforms: :jruby
-
-platforms :ruby do
-  gem 'sqlite3'
+group :local_development do
   gem 'pry'
-  gem 'byebug'
+  gem 'sqlite3'
+
+  platforms :mri do
+    gem 'pry-byebug'
+    gem 'pry-stack_explorer'
+  end
 end
