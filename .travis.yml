@@ -1,9 +1,16 @@
+sudo: false
+cache: bundler
+language: ruby
 rvm:
-  - 1.9.3
-  - 2.0.0
   - 2.1
-  - jruby-19mode
+  - 2.2
   - rbx-2
+  - jruby
+matrix:
+  fast_finish: true
+notifications:
+  email:
+    - timo.roessner@googlemail.com
 gemfile:
   - gemfiles/rails_3_0.gemfile
   - gemfiles/rails_3_1.gemfile
