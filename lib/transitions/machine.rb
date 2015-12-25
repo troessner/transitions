@@ -5,7 +5,10 @@ module Transitions
     attr_reader :klass, :auto_scopes
 
     def initialize(klass, options = {}, &block)
-      @klass, @states, @state_index, @events = klass, [], {}, {}
+      @klass = klass
+      @states = []
+      @state_index = {}
+      @events = {}
       update(options, &block)
     end
 
@@ -21,7 +24,7 @@ module Transitions
       self
     end
 
-    # TODO There is still way to much parameter passing around going on down below.
+    # TODO: There is still way to much parameter passing around going on down below.
     def fire_event(event, record, persist, *args)
       handle_state_exit_callback record
       if new_state = transition_to_new_state(record, event, *args)
@@ -49,7 +52,7 @@ module Transitions
     end
 
     def current_state_variable
-      # TODO Refactor me away.
+      # TODO: Refactor me away.
       :@current_state
     end
 

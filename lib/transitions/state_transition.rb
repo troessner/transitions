@@ -3,7 +3,10 @@ module Transitions
     attr_reader :from, :to, :options
 
     def initialize(opts)
-      @from, @to, @guard, @on_transition = opts[:from], opts[:to], opts[:guard], opts[:on_transition]
+      @from = opts[:from]
+      @to = opts[:to]
+      @guard = opts[:guard]
+      @on_transition = opts[:on_transition]
       @options = opts
     end
 
@@ -24,7 +27,7 @@ module Transitions
           obj.send(callback, *args)
         end
       else
-        # TODO We probably should check for this in the constructor and not that late.
+        # TODO: We probably should check for this in the constructor and not that late.
         fail ArgumentError, "You can only pass a Symbol, a String, a Proc or an Array to 'on_transition' - got #{@on_transition.class}." unless @on_transition.nil?
       end
     end

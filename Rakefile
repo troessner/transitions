@@ -10,6 +10,10 @@ Rake::TestTask.new(:test) do |test|
   test.verbose = true
 end
 
-RuboCop::RakeTask.new
+RuboCop::RakeTask.new do |task|
+  task.options << '--display-cop-names'
+  task.patterns = ['lib/**/*.rb', 'test/**/*.rb']
+end
 
 task default: :test
+task default: :rubocop

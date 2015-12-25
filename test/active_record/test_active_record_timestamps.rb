@@ -32,7 +32,7 @@ class Order < ActiveRecord::Base
 
     # should set paid_at timestamp
     event :pay, timestamp: true do
-      transitions from: :placed, to: :paid, guard: lambda { |obj| obj.allow_transition }
+      transitions from: :placed, to: :paid, guard: ->(obj) { obj.allow_transition }
     end
 
     # should set prepared_on

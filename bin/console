@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
-require "bundler/setup"
-require "transitions"
+require 'bundler/setup'
+require 'transitions'
 
-require "pry"
+require 'pry'
 Pry.start

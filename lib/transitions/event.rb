@@ -3,7 +3,9 @@ module Transitions
     attr_reader :name, :success, :timestamp
 
     def initialize(machine, name, options = {}, &block)
-      @machine, @name, @transitions = machine, name, []
+      @machine = machine
+      @name = name
+      @transitions = []
       if machine
         machine.klass.send(:define_method, "#{name}!") do |*args|
           machine.fire_event(name, self, true, *args)
@@ -128,7 +130,7 @@ module Transitions
       when Proc
         callback_names
       when Symbol
-        lambda { |record| record.send(callback_names) }
+        ->(record) { record.send(callback_names) }
       end
     end
 

@@ -14,7 +14,7 @@ class DrivingSchoolCar
     state :driving
     state :switched_off
 
-    event :start_driving, success: lambda { |_car| DrivingInstructor.applause! } do
+    event :start_driving, success: ->(_car) { DrivingInstructor.applause! } do
       transitions from: :parked, to: :driving, on_transition: [:start_engine, :loosen_handbrake, :push_gas_pedal]
     end
 
