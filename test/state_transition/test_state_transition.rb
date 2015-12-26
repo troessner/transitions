@@ -6,8 +6,7 @@ class TestStateTransition < Test::Unit::TestCase
     st = Transitions::StateTransition.new(opts)
 
     assert_equal opts[:from], st.from
-    assert_equal opts[:to],   st.to
-    assert_equal opts,        st.options
+    assert_equal opts[:to], st.to
   end
 
   test 'should pass equality check if from and to are the same' do

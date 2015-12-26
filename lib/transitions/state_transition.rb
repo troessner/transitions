@@ -1,6 +1,8 @@
 module Transitions
   class StateTransition
-    attr_reader :from, :to, :options
+    attr_reader :from, :to, :guard, :on_transition
+    # TODO: `from` and `to` should be private as well
+    private :guard, :on_transition
 
     def initialize(opts)
       @from = opts[:from]
@@ -10,10 +12,32 @@ module Transitions
       @options = opts
     end
 
+    #
+    # @param obj [Any] - the subject
+    # @param args [Array<Symbol>] - any arguments passed into the transition method
+    #   E.g. something like
+    #     car.drive!(:fast, :now)
+    #   with `car` being the subject and `drive` the transition method would result
+    #   in `args` looking like this:
+    #     [:fast, :now]
+    #
+    # @return [Bool]
+    #
     def executable?(obj, *args)
       [@guard].flatten.all? { |g| perform_guard(obj, g, *args) }
     end
 
+    #
+    # @param obj [Any] - the subject
+    # @param args [Array<Symbol>] - any arguments passed into the transition method
+    #   E.g. something like
+    #     car.drive!(:fast, :now)
+    #   with `car` being the subject and `drive` the transition method would result
+    #   in `args` looking like this:
+    #     [:fast, :now]
+    #
+    # @return [void]
+    #
     def execute(obj, *args)
       case @on_transition
       when Symbol, String
