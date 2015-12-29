@@ -38,6 +38,8 @@ module Transitions
     #
     # @return [void]
     #
+    # rubocop:disable Metrics/MethodLength
+    #
     def execute(obj, *args)
       case @on_transition
       when Symbol, String
@@ -52,12 +54,14 @@ module Transitions
         end
       else
         # TODO: We probably should check for this in the constructor and not that late.
-        fail ArgumentError, "You can only pass a Symbol, a String, a Proc or an Array to 'on_transition' - got #{@on_transition.class}." unless @on_transition.nil?
+        fail ArgumentError,
+             "You can only pass a Symbol, a String, a Proc or an Array to 'on_transition'"\
+             " - got #{@on_transition.class}." unless @on_transition.nil?
       end
     end
 
-    def ==(obj)
-      @from == obj.from && @to == obj.to
+    def ==(other)
+      @from == other.from && @to == other.to
     end
 
     def from?(value)

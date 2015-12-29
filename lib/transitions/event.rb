@@ -1,4 +1,5 @@
 module Transitions
+  # rubocop:disable Metrics/ClassLength
   class Event
     attr_reader :name, :success, :timestamp
 
@@ -36,12 +37,12 @@ module Transitions
       next_state = nil
       transitions.each do |transition|
         next if to_state && !Array(transition.to).include?(to_state)
-        if transition.executable?(obj, *args)
-          next_state = to_state || Array(transition.to).first
-          transition.execute(obj, *args)
-          update_event_timestamp(obj, next_state) if timestamp_defined?
-          break
-        end
+        next unless transition.executable?(obj, *args)
+
+        next_state = to_state || Array(transition.to).first
+        transition.execute(obj, *args)
+        update_event_timestamp(obj, next_state) if timestamp_defined?
+        break
       end
       # Update timestamps on obj if a timestamp has been defined
       next_state
@@ -55,11 +56,11 @@ module Transitions
       @transitions.select { |t| t.from? state }.any? { |t| t.executable?(obj, *args) }
     end
 
-    def ==(event)
-      if event.is_a? Symbol
-        name == event
+    def ==(other)
+      if other.is_a? Symbol
+        name == other
       else
-        name == event.name
+        name == other.name
       end
     end
 
@@ -102,8 +103,8 @@ module Transitions
 
     # If @timestamp is true, try a default timestamp name
     def default_timestamp_name(obj, next_state)
-      at_name = '%s_at' % next_state
-      on_name = '%s_on' % next_state
+      at_name = "#{next_state}_at"
+      on_name = "#{next_state}_on"
       case
       when obj.respond_to?(at_name) then at_name
       when obj.respond_to?(on_name) then on_name
@@ -135,7 +136,8 @@ module Transitions
     end
 
     def error_message_for_invalid_transitions(obj)
-      "Can't fire event `#{name}` in current state `#{obj.current_state}` for `#{obj.class.name}` #{obj.class < ActiveRecord::Base && obj.persisted? ? "with ID #{obj.id} " : nil}"
+      "Can't fire event `#{name}` in current state `#{obj.current_state}` for `#{obj.class.name}`"\
+      " #{obj.class < ActiveRecord::Base && obj.persisted? ? "with ID #{obj.id} " : nil}"
     end
   end
 end

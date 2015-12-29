@@ -12,7 +12,7 @@ end
 
 RuboCop::RakeTask.new do |task|
   task.options << '--display-cop-names'
-  task.patterns = ['lib/**/*.rb', 'test/**/*.rb']
+  task.patterns = ['lib/**/*.rb']
 end
 
 task default: :test
