@@ -3,7 +3,7 @@ module ActiveModel
     extend ActiveSupport::Concern
 
     included do
-      class ::Transitions::Machine
+      ::Transitions::Machine.class_eval do
         unless method_defined?(:new_transitions_initialize) || method_defined?(:new_transitions_update)
           attr_reader :attribute_name
           alias_method :old_transitions_initialize, :initialize
@@ -64,28 +64,35 @@ module ActiveModel
       self[transitions_state_column_name] && self[transitions_state_column_name].to_sym
     end
 
+    #
+    # rubocop:disable Metrics/AbcSize
+    #
     def set_initial_state
-      # In case we use a query with a custom select that excludes our state attribute name we need to skip the initialization below.
-      if attribute_names.include?(transitions_state_column_name.to_s) && state_not_set?
-        self[transitions_state_column_name] = self.class.get_state_machine.initial_state.to_s
-        self.class.get_state_machine.state_index[self[transitions_state_column_name].to_sym].call_action(:enter, self)
-      end
+      # In case we use a query with a custom select that excludes our state attribute
+      # name we need to skip the initialization below.
+      return unless attribute_names.include?(transitions_state_column_name.to_s) && state_not_set?
+      self[transitions_state_column_name] = self.class.get_state_machine.initial_state.to_s
+      self.class.get_state_machine.state_index[self[transitions_state_column_name].to_sym].call_action(:enter, self)
     end
 
     def state_presence
-      unless self[transitions_state_column_name].present?
-        errors.add(transitions_state_column_name, :presence)
-      end
+      return if self[transitions_state_column_name].present?
+      errors.add(transitions_state_column_name, :presence)
     end
 
     def state_inclusion
-      unless self.class.get_state_machine.states.map { |s| s.name.to_s }.include?(self[transitions_state_column_name].to_s)
-        errors.add(transitions_state_column_name, :inclusion, value: self[transitions_state_column_name])
-      end
+      return if state_included?
+      errors.add(transitions_state_column_name, :inclusion, value: self[transitions_state_column_name])
     end
 
     def state_not_set?
       self[transitions_state_column_name].nil?
+    end
+
+    def state_included?
+      self.class.get_state_machine.states
+        .map { |s| s.name.to_s }
+        .include?(self[transitions_state_column_name].to_s)
     end
   end
 end
