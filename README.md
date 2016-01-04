@@ -289,6 +289,11 @@ end
 Any arguments passed to the event method will be passed on to the `guard`
 predicate.
 
+Note that guards will **not** raise on failure on their own. This means that if you want to
+treat the failure of a guard exceptional you'll need to raise an exception yourself explicitly
+in that guard (see [here](https://github.com/troessner/transitions/issues/149) for the
+corresponding discussion).
+
 
 #### Timestamps
 
