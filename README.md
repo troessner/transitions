@@ -57,7 +57,7 @@ class Product
 end
 ```
 In this example we assume that you are in a rails project using Bundler, which
-would automatically require `transitions`. If this is not the case for you you
+would automatically require `transitions`. If this is not the case then you
 have to add
 ```ruby
 require 'transitions'
@@ -69,7 +69,7 @@ wherever you load your dependencies in your application.
 
 *   You can only use one state machine per model. While in theory you can
     define two or more, this won't work as you would expect. Not supporting
-    this was intentional, if you're interested in the ratione look up version
+    this was intentional, if you're interested in the rational look up version
     0.1.0 in the CHANGELOG.
 
 *   Use symbols, not strings for declaring the state machine. Using strings is
@@ -106,13 +106,13 @@ the bang(!)-version will call `save!`.  The `can_discontinue?` method will not
 modify state but instead returns a boolean letting you know if a given
 transition is possible.
 
-In addition, a `can_transition?` method is added to the object that expects one or more event names as arguments. This semi-verbose method name is used to avoid collission with [https://github.com/ryanb/cancan](the authorization gem CanCan).
+In addition, a `can_transition?` method is added to the object that expects one or more event names as arguments. This semi-verbose method name is used to avoid collisions with [https://github.com/ryanb/cancan](the authorization gem CanCan).
 ```ruby
 >> Product.new.can_transition? :out_of_stock
 => true
 ```
 
-If you need to get all available transitions for current state you can simply call:
+If you need to get all available transitions for the current state you can simply call:
 ```ruby
 >> Product.new.available_transitions
 => [:discontinued, :out_of_stock]
