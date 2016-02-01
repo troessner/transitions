@@ -15,3 +15,7 @@ Metrics/AbcSize:
 Metrics/CyclomaticComplexity:
   Exclude:
     - 'lib/transitions/event.rb'
+Style/ConditionalAssignment:
+  Exclude:
+    - 'lib/transitions/event.rb'
+    - 'lib/transitions/state.rb'

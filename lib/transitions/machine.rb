@@ -40,12 +40,9 @@ module Transitions
         return false
       end
     rescue => e
-      if record.respond_to?(:event_failed)
-        record.send(:event_failed, event)
-        return false
-      else
-        raise e
-      end
+      raise e unless record.respond_to?(:event_failed)
+      record.send(:event_failed, event)
+      return false
     end
 
     def events_for(state)
