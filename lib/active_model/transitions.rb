@@ -91,8 +91,8 @@ module ActiveModel
 
     def state_included?
       self.class.get_state_machine.states
-        .map { |s| s.name.to_s }
-        .include?(self[transitions_state_column_name].to_s)
+          .map { |s| s.name.to_s }
+          .include?(self[transitions_state_column_name].to_s)
     end
   end
 end
