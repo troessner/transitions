@@ -44,9 +44,12 @@ module Transitions
     base.extend(ClassMethods)
   end
 
+  def get_state_machine
+    self.class.get_state_machine
+  end
+
   def update_current_state(new_state, persist = false)
-    sm   = self.class.get_state_machine
-    ivar = sm.current_state_variable
+    ivar = get_state_machine.current_state_variable
 
     if Transitions.active_model_descendant?(self.class)
       write_state(new_state) if persist
@@ -58,7 +61,7 @@ module Transitions
   end
 
   def available_transitions
-    self.class.get_state_machine.events_for(current_state)
+    get_state_machine.events_for(current_state)
   end
 
   def can_transition?(*events)
@@ -72,7 +75,7 @@ module Transitions
   end
 
   def current_state
-    sm   = self.class.get_state_machine
+    sm   = get_state_machine
     ivar = sm.current_state_variable
 
     value = instance_variable_get(ivar)
