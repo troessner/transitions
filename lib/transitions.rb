@@ -11,6 +11,8 @@ module Transitions
   include Presenter
 
   module ClassMethods
+    include Presenter
+
     def inherited(klass)
       super # Make sure we call other callbacks possibly defined upstream the ancestor chain.
       klass.state_machine = state_machine
@@ -29,14 +31,6 @@ module Transitions
     # rubocop:disable Style/AccessorMethodName
     def get_state_machine
       @state_machine
-    end
-
-    def available_states
-      @state_machine.states.map(&:name).sort_by(&:to_s)
-    end
-
-    def available_events
-      @state_machine.events.keys.sort
     end
   end
 
