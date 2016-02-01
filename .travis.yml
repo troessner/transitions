@@ -10,6 +10,8 @@ rvm:
   - rbx-2
   - jruby
 matrix:
+  allow_failures:
+    - rvm: rbx-2
   fast_finish: true
 notifications:
   email:
