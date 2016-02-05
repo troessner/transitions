@@ -11,6 +11,8 @@ module Transitions
   include Presenter
 
   module ClassMethods
+    include Presenter
+
     def inherited(klass)
       super # Make sure we call other callbacks possibly defined upstream the ancestor chain.
       klass.state_machine = state_machine
@@ -30,23 +32,18 @@ module Transitions
     def get_state_machine
       @state_machine
     end
-
-    def available_states
-      @state_machine.states.map(&:name).sort_by(&:to_s)
-    end
-
-    def available_events
-      @state_machine.events.keys.sort
-    end
   end
 
   def self.included(base)
     base.extend(ClassMethods)
   end
 
+  def get_state_machine
+    self.class.get_state_machine
+  end
+
   def update_current_state(new_state, persist = false)
-    sm   = self.class.get_state_machine
-    ivar = sm.current_state_variable
+    ivar = get_state_machine.current_state_variable
 
     if Transitions.active_model_descendant?(self.class)
       write_state(new_state) if persist
@@ -58,7 +55,7 @@ module Transitions
   end
 
   def available_transitions
-    self.class.get_state_machine.events_for(current_state)
+    get_state_machine.events_for(current_state)
   end
 
   def can_transition?(*events)
@@ -72,7 +69,7 @@ module Transitions
   end
 
   def current_state
-    sm   = self.class.get_state_machine
+    sm   = get_state_machine
     ivar = sm.current_state_variable
 
     value = instance_variable_get(ivar)
