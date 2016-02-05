@@ -1,3 +1,7 @@
+# 1.0.1
+
+* (avyy) Fix @state_machine lookup for Presenter's methods
+
 # 1.0.0
 
 * (troessner) Only support ruby 2.1 and 2.2.
