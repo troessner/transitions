@@ -1,0 +1,10 @@
+engines:
+  rubocop:
+    enabled: true
+  reek:
+    enabled: true
+ratings:
+  paths:
+  - lib/**/*
+exclude_paths:
+- spec/**/*
