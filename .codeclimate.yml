@@ -5,6 +5,6 @@ engines:
     enabled: true
 ratings:
   paths:
-  - lib/**/*
+  - lib/**
 exclude_paths:
 - test/**/*
