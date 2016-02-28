@@ -3,6 +3,7 @@ require 'bundler/gem_tasks'
 require 'appraisal'
 require 'rake/testtask'
 require 'rubocop/rake_task'
+require 'reek/rake/task'
 
 Rake::TestTask.new(:test) do |test|
   test.libs = %w(lib test)
@@ -15,5 +16,6 @@ RuboCop::RakeTask.new do |task|
   task.patterns = ['lib/**/*.rb']
 end
 
-task default: :test
-task default: :rubocop
+Reek::Rake::Task.new
+
+task default: [:test, :reek, :rubocop]
