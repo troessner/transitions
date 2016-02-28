@@ -1,0 +1,85 @@
+---
+DuplicateMethodCall:
+  exclude:
+  - ActiveModel::Transitions#read_state
+  - ActiveModel::Transitions#reload
+  - ActiveModel::Transitions#set_initial_state
+  - ActiveModel::Transitions#set_initial_state
+  - Transitions::Event#error_message_for_invalid_transitions
+  - Transitions::Event#fire
+  - Transitions::Event#fire
+  - Transitions::Event#initialize
+  - Transitions::Event#initialize
+  - Transitions::Event#update
+  - Transitions::Machine#handle_event_success_callback
+  - Transitions::Machine#handle_event_success_callback
+  - Transitions::Machine#initial_state
+  - Transitions::State#define_state_query_method
+IrresponsibleModule:
+  exclude:
+  - ActiveModel::Transitions
+  - Transitions::Machine
+  - Transitions::Presenter
+  - Transitions::State
+  - Transitions::StateTransition
+  - Transitions
+  - Transitions::ClassMethods
+  - Transitions::InvalidMethodOverride
+  - Transitions::InvalidTransition
+NilCheck:
+  exclude:
+  - ActiveModel::Transitions#state_not_set?
+  - Transitions::Event#timestamp_defined?
+  - Transitions::StateTransition#execute
+  - Transitions#current_state
+UncommunicativeVariableName:
+  exclude:
+  - ActiveModel::Transitions#state_included?
+  - Transitions::Event#can_execute_transition_from_state?
+  - Transitions::Event#fire
+  - Transitions::Event#transitions
+  - Transitions::Event#transitions_from_state?
+  - Transitions::Machine#fire_event
+  - Transitions::StateTransition#executable?
+FeatureEnvy:
+  exclude:
+  - Transitions::Event#can_execute_transition_from_state?
+  - Transitions::Event#default_timestamp_name
+  - Transitions::Event#error_message_for_invalid_transitions
+NestedIterators:
+  exclude:
+  - Transitions::Event#build_success_callback
+TooManyInstanceVariables:
+  exclude:
+  - Transitions::Event
+  - Transitions::Machine
+  - Transitions::StateTransition
+TooManyStatements:
+  exclude:
+  - Transitions::Event#build_success_callback
+  - Transitions::Event#fire
+  - Transitions::Machine#fire_event
+  - Transitions#current_state
+Attribute:
+  exclude:
+  - Transitions::Machine#events
+  - Transitions::Machine#initial_state
+  - Transitions::Machine#state_index
+  - Transitions::Machine#states
+DataClump:
+  exclude:
+  - Transitions::Machine
+LongParameterList:
+  exclude:
+  - Transitions::Machine#fire_event
+UtilityFunction:
+  exclude:
+  - Transitions::Machine#handle_event_failed_callback
+  - Transitions::Machine#handle_event_fired_callback
+  - Transitions::StateTransition#perform_guard
+BooleanParameter:
+  exclude:
+  - Transitions#update_current_state
+ControlParameter:
+  exclude:
+  - Transitions#update_current_state
