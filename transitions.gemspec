@@ -24,5 +24,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'random_data'
   spec.add_development_dependency 'appraisal'
   spec.add_development_dependency 'activerecord', ['>= 3.0', '<= 4.0']
-  spec.add_development_dependency 'rubocop', '= 0.36'
+  spec.add_development_dependency 'rubocop', '~> 0.36.0'
 end

@@ -19,3 +19,5 @@ Style/ConditionalAssignment:
   Exclude:
     - 'lib/transitions/event.rb'
     - 'lib/transitions/state.rb'
+Style/FrozenStringLiteralComment:
+  Enabled: false
