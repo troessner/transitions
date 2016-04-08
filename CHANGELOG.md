@@ -1,3 +1,7 @@
+# 1.1.0
+
+* (itkin) `available_states` and `available_events` should list states or events in the order they are defined
+
 # 1.0.1
 
 * (avyy) Fix @state_machine lookup for Presenter's methods
