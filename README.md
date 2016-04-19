@@ -398,6 +398,10 @@ Supported implementations:
     behind this see the Changelog.
 
 
+### Associated projects
+
+* [GraphvizTransitions](https://github.com/itkin/graphviz_transitions) - Adds support for generating graphs based on states, events and transitions
+
 ### Documentation, Guides & Examples
 
 *   [Online API Documentation](http://rdoc.info/github/troessner/transitions/master/Transitions)
