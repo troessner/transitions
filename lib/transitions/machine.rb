@@ -95,6 +95,7 @@ module Transitions
       (@events[name] ||= Event.new(self, name)).update(options, &block)
     end
 
+    # :reek:TooManyStatements: { max_statements: 7 }
     def include_scopes
       @states.each do |state|
         state_name = state.name.to_s
@@ -103,7 +104,8 @@ module Transitions
                "Transitions: Can not define scope `#{state_name}` because there is already"\
                'an equally named method defined - either rename the existing method or the state.'
         end
-        @klass.scope state_name, -> { @klass.where(@klass.state_machine.attribute_name => state_name) }
+        scope = @klass.instance_exec { -> { where(state_machine.attribute_name => state_name) } }
+        @klass.scope state_name, scope
       end
     end
   end
