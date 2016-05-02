@@ -1,3 +1,7 @@
+# 1.1.1
+
+* (beornborn) use instance_exec for defining scope because @klass sometimes is resolved as nil
+
 # 1.1.0
 
 * (itkin) `available_states` and `available_events` should list states or events in the order they are defined
