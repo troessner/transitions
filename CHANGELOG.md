@@ -1,3 +1,7 @@
+# 1.2.0
+
+* (atomaka) Allow timestamp to accept an array of timestamps
+
 # 1.1.1
 
 * (beornborn) use instance_exec for defining scope because @klass sometimes is resolved as nil
