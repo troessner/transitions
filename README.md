@@ -300,7 +300,8 @@ corresponding discussion).
 If you'd like to note the time of a state change, Transitions comes with
 timestamps free! To activate them, simply pass the `timestamp` option to the
 event definition with a value of either true or the name of the timestamp
-column. *NOTE - This should be either true, a String or a Symbol*
+column. *NOTE - This should be either true, a String, a Symbol, or an Array of
+these*
 ```ruby
 # This will look for an attribute called exploded_at or exploded_on (in that order)
 # If present, it will be updated
