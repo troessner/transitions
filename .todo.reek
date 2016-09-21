@@ -4,14 +4,10 @@ DuplicateMethodCall:
   - ActiveModel::Transitions#read_state
   - ActiveModel::Transitions#reload
   - ActiveModel::Transitions#set_initial_state
-  - ActiveModel::Transitions#set_initial_state
   - Transitions::Event#error_message_for_invalid_transitions
   - Transitions::Event#fire
-  - Transitions::Event#fire
-  - Transitions::Event#initialize
   - Transitions::Event#initialize
   - Transitions::Event#update
-  - Transitions::Machine#handle_event_success_callback
   - Transitions::Machine#handle_event_success_callback
   - Transitions::Machine#initial_state
   - Transitions::State#define_state_query_method
@@ -46,6 +42,19 @@ FeatureEnvy:
   - Transitions::Event#can_execute_transition_from_state?
   - Transitions::Event#default_timestamp_name
   - Transitions::Event#error_message_for_invalid_transitions
+InstanceVariableAssumption:
+  exclude:
+  - Transitions::Event
+  - Transitions::Machine
+  - Transitions::State
+ManualDispatch:
+  exclude:
+  - Transitions::Event#default_timestamp_name
+  - Transitions::Machine#fire_event
+  - Transitions::Machine#handle_event_failed_callback
+  - Transitions::Machine#handle_event_fired_callback
+  - Transitions::Machine#include_scopes
+  - Transitions::StateTransition#perform_guard
 NestedIterators:
   exclude:
   - Transitions::Event#build_success_callback
@@ -56,6 +65,7 @@ TooManyInstanceVariables:
   - Transitions::StateTransition
 TooManyStatements:
   exclude:
+  - initialize
   - Transitions::Event#build_success_callback
   - Transitions::Event#fire
   - Transitions::Machine#fire_event

@@ -5,6 +5,7 @@ class CreateOrders < ActiveRecord::Migration
     create_table(:orders, force: true) do |t|
       t.string :state
       t.string :order_number
+      t.datetime :processed_at
       t.datetime :paid_at
       t.datetime :prepared_on
       t.datetime :dispatched_at
@@ -48,6 +49,11 @@ class Order < ActiveRecord::Base
     # should set cancellation_date
     event :cancel, timestamp: :cancellation_date do
       transitions from: [:placed, :paid, :prepared], to: :cancelled
+    end
+
+    # should set cancellation_date
+    event :autocancel, timestamp: [:cancellation_date, :processed_at] do
+      transitions from: :paid, to: :cancelled
     end
 
     # should raise an exception as there is no timestamp col
@@ -109,6 +115,14 @@ class TestActiveRecordTimestamps < Test::Unit::TestCase
     @order.cancel!
     @order.reload
     assert_not_nil @order.cancellation_date
+  end
+
+  test 'moving to cancelled should set cancellation_date' do
+    @order = create_order(:paid)
+    @order.autocancel!
+    @order.reload
+    assert_not_nil @order.cancellation_date
+    assert_not_nil @order.processed_at
   end
 
   test 'moving to reopened should raise an exception as there is no attribute' do

@@ -8,6 +8,7 @@ module Transitions
       @machine = machine
       @name = name
       @transitions = []
+      @timestamps = []
       if machine
         machine.klass.send(:define_method, "#{name}!") do |*args|
           machine.fire_event(name, self, true, *args)
@@ -67,29 +68,33 @@ module Transitions
 
     # Has the timestamp option been specified for this event?
     def timestamp_defined?
-      !@timestamp.nil?
+      !@timestamps.nil?
     end
 
     def update(options = {}, &block)
       @success       = build_success_callback(options[:success]) if options.key?(:success)
-      self.timestamp = options[:timestamp] if options[:timestamp]
+      self.timestamp = Array(options[:timestamp]) if options[:timestamp]
       instance_eval(&block) if block
       self
     end
 
     # update the timestamp attribute on obj
     def update_event_timestamp(obj, next_state)
-      obj.send "#{timestamp_attribute_name(obj, next_state)}=", Time.now
+      @timestamps.each do |timestamp|
+        obj.public_send "#{timestamp_attribute_name(obj, next_state, timestamp)}=", Time.now
+      end
     end
 
     # Set the timestamp attribute.
     # @raise [ArgumentError] timestamp should be either a String, Symbol or true
-    def timestamp=(value)
-      case value
-      when String, Symbol, TrueClass
-        @timestamp = value
-      else
-        fail ArgumentError, 'timestamp must be either: true, a String or a Symbol'
+    def timestamp=(values)
+      values.each do |value|
+        case value
+        when String, Symbol, TrueClass
+          @timestamps << value
+        else
+          fail ArgumentError, 'timestamp must be either: true, a String or a Symbol'
+        end
       end
     end
 
@@ -98,8 +103,8 @@ module Transitions
     # Returns the name of the timestamp attribute for this event
     # If the timestamp was simply true it returns the default_timestamp_name
     # otherwise, returns the user-specified timestamp name
-    def timestamp_attribute_name(obj, next_state)
-      timestamp == true ? default_timestamp_name(obj, next_state) : @timestamp
+    def timestamp_attribute_name(obj, next_state, user_timestamp)
+      user_timestamp == true ? default_timestamp_name(obj, next_state) : user_timestamp
     end
 
     # If @timestamp is true, try a default timestamp name
