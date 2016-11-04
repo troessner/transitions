@@ -84,6 +84,6 @@ module Transitions
 
   def self.active_model_descendant?(klazz)
     # Checking directly for "ActiveModel" wouldn't work so we use some arbitrary module close to it.
-    defined?(ActiveModel) && klazz.included_modules.include?(ActiveModel::Dirty)
+    defined?(ActiveModel) && klazz.included_modules.include?(ActiveModel::Validations)
   end
 end
