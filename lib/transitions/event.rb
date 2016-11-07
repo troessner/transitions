@@ -142,7 +142,8 @@ module Transitions
     end
 
     def error_message_for_invalid_transitions(obj)
-      "Can't fire event `#{name}` in current state `#{obj.current_state}` for `#{obj.class.name}`"
+      "Can't fire event `#{name}` in current state `#{obj.current_state}` for `#{obj.class.name}`"\
+      " #{obj.respond_to?(:id) ? "with ID #{obj.id} " : nil}"
     end
   end
 end
