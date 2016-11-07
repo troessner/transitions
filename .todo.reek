@@ -50,6 +50,7 @@ InstanceVariableAssumption:
 ManualDispatch:
   exclude:
   - Transitions::Event#default_timestamp_name
+  - Transitions::Event#error_message_for_invalid_transitions
   - Transitions::Machine#fire_event
   - Transitions::Machine#handle_event_failed_callback
   - Transitions::Machine#handle_event_fired_callback
