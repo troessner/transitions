@@ -1,3 +1,8 @@
+# 1.2.1 (2016-11-07)
+
+* (jdguzman) remove explicit ActiveRecord dependency
+* (jdguzman) fix module lookup to get it to work with mongoid
+
 # 1.2.0
 
 * (atomaka) Allow timestamp to accept an array of timestamps
