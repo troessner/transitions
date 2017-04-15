@@ -92,6 +92,9 @@ module Transitions
     end
 
     def event(name, options = {}, &block)
+      if options.key?(:timestamps)
+        Rails.logger.info "WARNING: You specified an unknown option 'timestamps' for the event #{name.inspect}. Did you mean to say 'timestamp'?"
+      end
       (@events[name] ||= Event.new(self, name)).update(options, &block)
     end
 
