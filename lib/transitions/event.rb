@@ -129,15 +129,15 @@ module Transitions
     def build_success_callback(callback_names)
       case callback_names
       when Array
-        lambda do |record|
+        lambda do |record, *args|
           callback_names.each do |callback|
-            build_success_callback(callback).call(record)
+            build_success_callback(callback).call(record, *args)
           end
         end
       when Proc
         callback_names
       when Symbol
-        ->(record) { record.send(callback_names) }
+        ->(record, *args) { record.method(callback_names).arity > 0 ? record.send(callback_names, *args) : record.send(callback_names) }
       end
     end
 
