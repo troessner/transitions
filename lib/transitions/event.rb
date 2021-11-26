@@ -10,39 +10,39 @@ module Transitions
       @transitions = []
       @timestamps = []
       if machine
-        machine.klass.send(:define_method, "#{name}!") do |*args|
-          machine.fire_event(name, self, true, *args)
+        machine.klass.send(:define_method, "#{name}!") do |*args, **kwargs|
+          machine.fire_event(name, self, true, *args, **kwargs)
         end
 
-        machine.klass.send(:define_method, name.to_s) do |*args|
-          machine.fire_event(name, self, false, *args)
+        machine.klass.send(:define_method, name.to_s) do |*args, **kwargs|
+          machine.fire_event(name, self, false, *args, **kwargs)
         end
 
         machine.klass.send(:define_method, "can_#{name}?") do |*_args|
           machine.events_for(current_state).include?(name.to_sym)
         end
 
-        machine.klass.send(:define_method, "can_execute_#{name}?") do |*args|
+        machine.klass.send(:define_method, "can_execute_#{name}?") do |*args, **kwargs|
           event = name.to_sym
 
-          send("can_#{name}?", *args) &&
-            machine.events[event].can_execute_transition_from_state?(current_state, self, *args)
+          send("can_#{name}?", *args, **kwargs) &&
+            machine.events[event].can_execute_transition_from_state?(current_state, self, *args, **kwargs)
         end
       end
       update(options, &block)
     end
 
-    def fire(obj, to_state = nil, *args)
+    def fire(obj, to_state = nil, *args, **kwargs)
       transitions = @transitions.select { |t| t.from == obj.current_state }
       fail InvalidTransition, error_message_for_invalid_transitions(obj) if transitions.size == 0
 
       next_state = nil
       transitions.each do |transition|
         next if to_state && !Array(transition.to).include?(to_state)
-        next unless transition.executable?(obj, *args)
+        next unless transition.executable?(obj, *args, **kwargs)
 
         next_state = to_state || Array(transition.to).first
-        transition.execute(obj, *args)
+        transition.execute(obj, *args, **kwargs)
         update_event_timestamp(obj, next_state) if timestamp_defined?
         break
       end
@@ -54,8 +54,8 @@ module Transitions
       @transitions.any? { |t| t.from? state }
     end
 
-    def can_execute_transition_from_state?(state, obj, *args)
-      @transitions.select { |t| t.from? state }.any? { |t| t.executable?(obj, *args) }
+    def can_execute_transition_from_state?(state, obj, *args, **kwargs)
+      @transitions.select { |t| t.from? state }.any? { |t| t.executable?(obj, *args, **kwargs) }
     end
 
     def ==(other)

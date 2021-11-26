@@ -49,7 +49,11 @@ detectors:
     - Transitions::InvalidTransition
   LongParameterList:
     exclude:
+    - Transitions::Event#can_execute_transition_from_state?
+    - Transitions::Event#fire
     - Transitions::Machine#fire_event
+    - Transitions::Machine#transition_to_new_state
+    - Transitions::StateTransition#perform_guard
   ManualDispatch:
     exclude:
     - Transitions::Event#default_timestamp_name

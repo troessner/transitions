@@ -9,9 +9,9 @@ module ActiveModel
           alias_method :old_transitions_initialize, :initialize
           alias_method :old_transitions_update, :update
 
-          def new_transitions_initialize(*args, &block)
+          def new_transitions_initialize(*args, **kwargs, &block)
             @attribute_name = :state
-            old_transitions_initialize(*args, &block)
+            old_transitions_initialize(*args, **kwargs, &block)
           end
 
           def new_transitions_update(options = {}, &block)

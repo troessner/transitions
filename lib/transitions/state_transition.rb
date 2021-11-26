@@ -23,8 +23,8 @@ module Transitions
     #
     # @return [Bool]
     #
-    def executable?(obj, *args)
-      [@guard].flatten.all? { |g| perform_guard(obj, g, *args) }
+    def executable?(obj, *args, **kwargs)
+      [@guard].flatten.all? { |g| perform_guard(obj, g, *args, **kwargs) }
     end
 
     #
@@ -40,17 +40,17 @@ module Transitions
     #
     # rubocop:disable Metrics/MethodLength
     #
-    def execute(obj, *args)
+    def execute(obj, *args, **kwargs)
       case @on_transition
       when Symbol, String
-        obj.send(@on_transition, *args)
+        obj.send(@on_transition, *args, **kwargs)
       when Proc
-        @on_transition.call(obj, *args)
+        @on_transition.call(obj, *args, **kwargs)
       when Array
         @on_transition.each do |callback|
           # Yes, we're passing always the same parameters for each callback in here.
           # We should probably drop args altogether in case we get an array.
-          obj.send(callback, *args)
+          obj.send(callback, *args, **kwargs)
         end
       else
         # TODO: We probably should check for this in the constructor and not that late.
@@ -70,11 +70,11 @@ module Transitions
 
     private
 
-    def perform_guard(obj, guard, *args)
+    def perform_guard(obj, guard, *args, **kwargs)
       if guard.respond_to?(:call)
-        guard.call(obj, *args)
+        guard.call(obj, *args, **kwargs)
       elsif guard.is_a?(Symbol) || guard.is_a?(String)
-        obj.send(guard, *args)
+        obj.send(guard, *args, **kwargs)
       else
         true
       end

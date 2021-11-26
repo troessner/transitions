@@ -27,9 +27,9 @@ module Transitions
     #
     # rubocop:disable Metrics/MethodLength
     #
-    def fire_event(event, record, persist, *args)
+    def fire_event(event, record, persist, *args, **kwargs)
       handle_state_exit_callback record
-      if new_state = transition_to_new_state(record, event, *args)
+      if new_state = transition_to_new_state(record, event, *args, **kwargs)
         handle_state_enter_callback record, new_state
         handle_event_fired_callback record, new_state, event
         record.update_current_state(new_state, persist)
@@ -61,8 +61,8 @@ module Transitions
       state_index[record.current_state].call_action(:exit, record)
     end
 
-    def transition_to_new_state(record, event, *args)
-      @events[event].fire(record, nil, *args)
+    def transition_to_new_state(record, event, *args, **kwargs)
+      @events[event].fire(record, nil, *args, **kwargs)
     end
 
     def handle_state_enter_callback(record, new_state)
