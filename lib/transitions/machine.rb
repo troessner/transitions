@@ -95,7 +95,7 @@ module Transitions
       (@events[name] ||= Event.new(self, name)).update(options, &block)
     end
 
-    # :reek:TooManyStatements: { max_statements: 7 }
+    # :reek:TooManyStatements { max_statements: 7 }
     def include_scopes
       @states.each do |state|
         state_name = state.name.to_s

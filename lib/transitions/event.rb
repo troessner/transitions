@@ -3,7 +3,7 @@ module Transitions
   class Event
     attr_reader :name, :success, :timestamp
 
-    # :reek:TooManyStatements: { max_statements: 13 }
+    # :reek:TooManyStatements { max_statements: 13 }
     def initialize(machine, name, options = {}, &block)
       @machine = machine
       @name = name
