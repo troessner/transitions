@@ -1,7 +1,7 @@
 require 'helper'
 
 # Regression test for https://github.com/troessner/transitions/issues/95
-class CreateSwitches < ActiveRecord::Migration
+class CreateSwitches < ActiveRecord::Migration[4.2]
   def self.up
     create_table(:switches, force: true) do |t|
       t.string :state

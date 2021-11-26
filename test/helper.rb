@@ -9,7 +9,7 @@ require 'random_data'
 
 def db_defaults!
   ActiveRecord::Base.establish_connection(adapter: 'sqlite3', database: ':memory:')
-  ActiveRecord::Migration.verbose = false
+  ActiveRecord::Migration[4.2].verbose = false
 end
 
 def set_up_db(*migrations)
