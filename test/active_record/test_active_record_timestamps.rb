@@ -1,6 +1,6 @@
 require 'helper'
 
-class CreateOrders < ActiveRecord::Migration
+class CreateOrders < ActiveRecord::Migration[4.2]
   def self.up
     create_table(:orders, force: true) do |t|
       t.string :state

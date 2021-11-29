@@ -1,6 +1,6 @@
 require 'helper'
 
-class CreateBunnies < ActiveRecord::Migration
+class CreateBunnies < ActiveRecord::Migration[4.2]
   def self.up
     create_table(:bunnies, force: true) do |t|
       t.string :status # Explicitly use another state column to ensure that this whole enchilada is working with other state column names than the default ones.
@@ -8,7 +8,7 @@ class CreateBunnies < ActiveRecord::Migration
   end
 end
 
-class CreatePuppies < ActiveRecord::Migration
+class CreatePuppies < ActiveRecord::Migration[4.2]
   def self.up
     create_table(:puppies, force: true) do |t|
       t.string :state

@@ -1,6 +1,6 @@
 require 'helper'
 
-class CreateTrafficLights < ActiveRecord::Migration
+class CreateTrafficLights < ActiveRecord::Migration[4.2]
   def self.up
     create_table(:traffic_lights, force: true) do |t|
       t.string :state
@@ -10,7 +10,7 @@ class CreateTrafficLights < ActiveRecord::Migration
   end
 end
 
-class CreateDifferentTrafficLights < ActiveRecord::Migration
+class CreateDifferentTrafficLights < ActiveRecord::Migration[4.2]
   def self.up
     create_table(:different_traffic_lights) do |t|
       t.string :different_state
