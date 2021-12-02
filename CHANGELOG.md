@@ -1,3 +1,7 @@
+# 1.3.0
+
+* Ruby 3.0 support (fishisfast)
+
 # 1.2.1 (2016-11-07)
 
 * (jdguzman) remove explicit ActiveRecord dependency
